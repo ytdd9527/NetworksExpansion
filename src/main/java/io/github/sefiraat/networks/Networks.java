@@ -244,8 +244,6 @@ public class Networks extends JavaPlugin implements SlimefunAddon {
         if (!getServer().getPluginManager().isPluginEnabled("GuizhanLibPlugin")) {
             getLogger().log(Level.SEVERE, "本插件需要 鬼斩前置库插件(GuizhanLibPlugin) 才能运行!");
             getLogger().log(Level.SEVERE, "从此处下载: https://50l.cc/gzlib");
-            getServer().getPluginManager().disablePlugin(this);
-            return;
         }
         try {
             mcVersion = Slimefun.getMinecraftVersion().isAtLeast(MinecraftVersion.MINECRAFT_1_20) ? MCVersion.of(20, 0) : MCVersion.UNKNOWN;
@@ -255,8 +253,6 @@ public class Networks extends JavaPlugin implements SlimefunAddon {
             for (int i = 0; i < 20; i++) {
                 getLogger().severe("你需要更新 Slimefun4 才能正常运行本插件！");
             }
-            getServer().getPluginManager().disablePlugin(this);
-            return;
         }
 
         if (mcVersion == MCVersion.UNKNOWN) {
