@@ -1,7 +1,10 @@
 package io.github.sefiraat.networks.slimefun.tools;
 
 import com.xzavier0722.mc.plugin.slimefun4.storage.util.StorageCacheUtils;
+import com.ytdd9527.networksexpansion.implementation.ExpansionItemStacks;
+import io.github.sefiraat.networks.Networks;
 import io.github.sefiraat.networks.network.NetworkRoot;
+import io.github.sefiraat.networks.slimefun.NetworksSlimefunItemStacks;
 import io.github.sefiraat.networks.slimefun.network.NetworkController;
 import io.github.sefiraat.networks.utils.Theme;
 import io.github.thebusybiscuit.slimefun4.api.events.PlayerRightClickEvent;
@@ -65,7 +68,6 @@ public class NetworkProbe extends SlimefunItem implements CanCooldown {
             final int exporters = root.getExporters().size();
             final int grids = root.getGrids().size();
             final int cells = root.getCells().size();
-            final int wipers = root.getWipers().size();
             final int grabbers = root.getGrabbers().size();
             final int pushers = root.getPushers().size();
             final int cutters = root.getCutters().size();
@@ -106,54 +108,52 @@ public class NetworkProbe extends SlimefunItem implements CanCooldown {
             final ChatColor c = Theme.CLICK_INFO.getColor();
             final ChatColor p = Theme.SUCCESS.getColor();
 
-            player.sendMessage("------------------------------");
-            player.sendMessage("         网络 - 组件统计        ");
-            player.sendMessage("------------------------------");
+            player.sendMessage(Networks.getLocalizationService().getString("messages.completed-operation.probe.split"));
+            player.sendMessage(Networks.getLocalizationService().getString("messages.completed-operation.probe.networks_title"));
+            player.sendMessage(Networks.getLocalizationService().getString("messages.completed-operation.probe.split"));
 
-            player.sendMessage(formatter("网桥", bridges));
-            player.sendMessage(formatter("网络监测器", monitors));
-            player.sendMessage(formatter("网络入口", importers));
-            player.sendMessage(formatter("网络出口", exporters));
-            player.sendMessage(formatter("网格", grids));
-            player.sendMessage(formatter("网络单元", cells));
-            player.sendMessage(formatter("网络清除器", wipers));
-            player.sendMessage(formatter("网络抓取器", grabbers));
-            player.sendMessage(formatter("网络推送器", pushers));
-            player.sendMessage(formatter("网络清除器", purgers));
-            player.sendMessage(formatter("网络自动合成机", crafters));
-            player.sendMessage(formatter("网络能源节点", powerNodes));
-            player.sendMessage(formatter("网络电表", powerDisplays));
-            player.sendMessage(formatter("网络配方编码器", encoders));
-            player.sendMessage(formatter("网络剪切器", cutters));
-            player.sendMessage(formatter("网络粘贴器", pasters));
-            player.sendMessage(formatter("网络吸尘器", vacuums));
-            player.sendMessage(formatter("网络无线发射器", wirelessTransmitters));
-            player.sendMessage(formatter("网络无线接收器", wirelessReceivers));
-            player.sendMessage(formatter("网络插口", powerOutlets));
-            player.sendMessage(formatter("网络阻断器", greedyBlocks));
-            player.sendMessage("------------------------------");
-            player.sendMessage("        网络拓展 - 组件统计      ");
-            player.sendMessage("------------------------------");
-            player.sendMessage(formatter("高级网络入口", advancedImporters));
-            player.sendMessage(formatter("高级网络出口", advancedExporters));
-            player.sendMessage(formatter("高级网络阻断器", advancedGreedyBlocks));
-            player.sendMessage(formatter("高级网络清除器", advancedPurgers));
-            player.sendMessage(formatter("传输器", transfers));
-            player.sendMessage(formatter("传输器 [抓取]", transferGrabbers));
-            player.sendMessage(formatter("传输器 [推送]", transferPushers));
-            player.sendMessage(formatter("链式原版传输器 [推送]", lineTransferVanillaPushers));
-            player.sendMessage(formatter("链式原版传输器 [抓取]", lineTransferVanillaGrabbers));
-            player.sendMessage(formatter("网络监视器 (仅输入)", inputOnlyMonitor));
-            player.sendMessage(formatter("网络监视器 (仅输出)", outputOnlyMonitor));
-            player.sendMessage("------------------------------");
-            player.sendMessage(formatter("物品类型数量", distinctItems));
-            player.sendMessage(formatter("累计物品数量", totalItems));
-            player.sendMessage("------------------------------");
+            player.sendMessage(formatter(NetworksSlimefunItemStacks.NETWORK_BRIDGE.getDisplayName(), bridges));
+            player.sendMessage(formatter(NetworksSlimefunItemStacks.NETWORK_MONITOR.getDisplayName(), monitors));
+            player.sendMessage(formatter(NetworksSlimefunItemStacks.NETWORK_IMPORT.getDisplayName(), importers));
+            player.sendMessage(formatter(NetworksSlimefunItemStacks.NETWORK_EXPORT.getDisplayName(), exporters));
+            player.sendMessage(formatter(NetworksSlimefunItemStacks.NETWORK_GRID.getDisplayName(), grids));
+            player.sendMessage(formatter(NetworksSlimefunItemStacks.NETWORK_CELL.getDisplayName(), cells));
+            player.sendMessage(formatter(NetworksSlimefunItemStacks.NETWORK_GRABBER.getDisplayName(), grabbers));
+            player.sendMessage(formatter(NetworksSlimefunItemStacks.NETWORK_PUSHER.getDisplayName(), pushers));
+            player.sendMessage(formatter(NetworksSlimefunItemStacks.NETWORK_PURGER.getDisplayName(), purgers));
+            player.sendMessage(formatter(NetworksSlimefunItemStacks.NETWORK_AUTO_CRAFTER.getDisplayName(), crafters));
+            player.sendMessage(formatter(NetworksSlimefunItemStacks.NETWORK_CAPACITOR_1.getDisplayName().substring(0, 4), powerNodes));
+            player.sendMessage(formatter(NetworksSlimefunItemStacks.NETWORK_POWER_DISPLAY.getDisplayName(), powerDisplays));
+            player.sendMessage(formatter(NetworksSlimefunItemStacks.NETWORK_RECIPE_ENCODER.getDisplayName(), encoders));
+            player.sendMessage(formatter(NetworksSlimefunItemStacks.NETWORK_CONTROL_X.getDisplayName(), cutters));
+            player.sendMessage(formatter(NetworksSlimefunItemStacks.NETWORK_CONTROL_V.getDisplayName(), pasters));
+            player.sendMessage(formatter(NetworksSlimefunItemStacks.NETWORK_VACUUM.getDisplayName(), vacuums));
+            player.sendMessage(formatter(NetworksSlimefunItemStacks.NETWORK_WIRELESS_TRANSMITTER.getDisplayName(), wirelessTransmitters));
+            player.sendMessage(formatter(NetworksSlimefunItemStacks.NETWORK_WIRELESS_RECEIVER.getDisplayName(), wirelessReceivers));
+            player.sendMessage(formatter(NetworksSlimefunItemStacks.NETWORK_POWER_OUTLET_1.getDisplayName().substring(0, 4), powerOutlets));
+            player.sendMessage(formatter(NetworksSlimefunItemStacks.NETWORK_GREEDY_BLOCK.getDisplayName(), greedyBlocks));
+
+            player.sendMessage(Networks.getLocalizationService().getString("messages.completed-operation.probe.split"));
+            player.sendMessage(Networks.getLocalizationService().getString("messages.completed-operation.probe.expansion_title"));
+            player.sendMessage(Networks.getLocalizationService().getString("messages.completed-operation.probe.split"));
+            player.sendMessage(formatter(ExpansionItemStacks.ADVANCED_IMPORT.getDisplayName(), advancedImporters));
+            player.sendMessage(formatter(ExpansionItemStacks.ADVANCED_EXPORT.getDisplayName(), advancedExporters));
+            player.sendMessage(formatter(ExpansionItemStacks.ADVANCED_GREEDY_BLOCK.getDisplayName(), advancedGreedyBlocks));
+            player.sendMessage(formatter(ExpansionItemStacks.ADVANCED_PURGER.getDisplayName(), advancedPurgers));
+            player.sendMessage(formatter(ExpansionItemStacks.TRANSFER.getDisplayName(), transfers));
+            player.sendMessage(formatter(ExpansionItemStacks.TRANSFER_GRABBER.getDisplayName(), transferGrabbers));
+            player.sendMessage(formatter(ExpansionItemStacks.TRANSFER_PUSHER.getDisplayName(), transferPushers));
+            player.sendMessage(formatter(ExpansionItemStacks.LINE_TRANSFER_VANILLA_PUSHER.getDisplayName(), lineTransferVanillaPushers));
+            player.sendMessage(formatter(ExpansionItemStacks.LINE_TRANSFER_VANILLA_GRABBER.getDisplayName(), lineTransferVanillaGrabbers));
+            player.sendMessage(formatter(ExpansionItemStacks.NETWORK_INPUT_ONLY_MONITOR.getDisplayName(), inputOnlyMonitor));
+            player.sendMessage(formatter(ExpansionItemStacks.NETWORK_OUTPUT_ONLY_MONITOR.getDisplayName(), outputOnlyMonitor));
+            player.sendMessage(Networks.getLocalizationService().getString("messages.completed-operation.probe.split"));
+            player.sendMessage(formatter(Networks.getLocalizationService().getString("messages.completed-operation.probe.distinct_items"), distinctItems));
+            player.sendMessage(formatter(Networks.getLocalizationService().getString("messages.completed-operation.probe.total_items"), totalItems));
+            player.sendMessage(Networks.getLocalizationService().getString("messages.completed-operation.probe.split"));
             player.sendMessage(formatter("累计节点", nodeCount + "/" + root.getMaxNodes()));
             if (root.isOverburdened()) {
-                player.sendMessage(Theme.ERROR + "警告: " + Theme.PASSIVE +
-                        "该网络已达到最大节点数量限制，部分节点可能会无法正常工作。请减少网络节点的数量。"
-                );
+                player.sendMessage(Networks.getLocalizationService().getString("messages.completed-operation.probe.overburdened"));
             }
         }
     }

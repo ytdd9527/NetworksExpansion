@@ -36,6 +36,9 @@ public enum Skins {
     CARGO_STORAGE_UNIT_12_MODEL("2544b09d559cebb406b722700f3bd37cb16d28d2f6814b583c64270084bc68b3"),
     //https://minecraft-heads.com/custom-heads/head/95986-rainbow-chest
     CARGO_STORAGE_UNIT_13_MODEL("e7bc251a6cb0d6d9f05c5711911a6ec24b209dbe64267901a4b03761debcf738"),
+    AUTHOR_SEFIRAAT("bb2725924e09d6b0bdf5ab864e63f80eb880bfa6fe1fa17f9fdb61bc1ae110db"),
+    AUTHOR_YBW0014("82a5c8de37d1a48f41053b8cc2abaec79ffbf0fc11464b290b057dd1d1d3837e"),
+    AUTHOR_TINALNESS("73112785f64d814103931505ace00048c087337785550c99a67449c392b39772"),
 
 
     //https://minecraft-heads.com/custom-heads/head/62847-rainbow-crate

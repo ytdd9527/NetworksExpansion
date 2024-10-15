@@ -1,0 +1,2118 @@
+# <click_info> = Theme.CLICK_INFO
+messages:
+  normal-operation:
+    quantum_storage:
+      waiting_for_input_custom_max_amount: "<passive>[<gold>网络拓展<passive>] <warning>请输入网络高级量子存储的容量.最大限制为: 2147483647!"
+    grid:
+      waiting_for_filter: "<warning>请输入你想要过滤的物品名称(显示名)或类型"
+    directional:
+      display_empty: "&7设置朝向: %s"
+      display_name: "<passive>设置朝向: %s (%s)"
+      display_lore:
+        - "<click_info>左键点击: <passive>设置朝向"
+        - "<click_info>Shift+左键点击: <passive>打开目标方块"
+      set_facing: "<success>已设置朝向此容器!"
+  completed-operation:
+    grid:
+      filter_set: "<success>已启用过滤器"
+    quantum_storage:
+      changed_custom_max_amount: "<passive>[<gold>网络拓展<passive>] <success>已更改容量: %s"
+    remote:
+      bound_to_grid: "<success>网格已绑定至远程访问器"
+    probe:
+      split: "------------------------------"
+      networks_title: "         网络 - 组件统计        "
+      expansion_title: "        网络拓展 - 组件统计      "
+      distinct_items: "物品类型数量"
+      total_items: "累计物品数量"
+      overburdened: "<error>警告: <passive>该网络已达到最大节点数量限制, 部分节点可能会无法正常工作. 请减少网络节点的数量."
+    crayon:
+      enabled: "<success>已开启网络绘制"
+      disabled: "<warning>已关闭网络绘制"
+    configurator:
+      copied: "<success>已复制设置"
+      copied_limit_quantity: "<success>已保存传输数量为: %s"
+      pasted_limit_quantity: "<success>已设置传输数量为: %s"
+      copied_transport_mode: "<success>已保存传输模式为: %s"
+      pasted_transport_mode: "<success>已设置传输模式为: %s"
+      pasted_facing: "<success>方向: <passive>成功应用"
+      pasted_item: "<success>物品 [%d]: <passive>已添加到过滤器"
+  unsupported-operation:
+    directional:
+      unexcepted_value: "意外的值: %s"
+    remote:
+      must_connect_to_grid: "<error>必须连接到一个网格"
+      not_a_grid_found: "<error>无法找到绑定的网格"
+      grid_not_in_range: "<error>绑定的网格不在范围内"
+      no_grid_bound: "<error>该远程访问器没有绑定网格"
+      grid_not_loaded: "<error>绑定的网格所在区块没有加载"
+    quantum_storage:
+      quantum_storage_not_empty: "<warning>量子存储必须为空才能更换物品"
+      custom_max_amount_not_supported: "<warning>这不是一个有效的高级量子存储"
+      invalid_custom_max_amount: "<passive>[<gold>网络拓展<passive>] <error>网络高级量子存储必须为: 1 至 2147483647!"
+    configurator:
+      not_a_copyable_block: "<error>该方块没有指定朝向"
+      not_a_pasteable_block: "<error>你必须指向一个带方向选择的网络方块"
+      facing_not_found: "<error>方向: <passive>未提供"
+      not_enough_items: "<warning>物品 [%d]: <passive>没有足够的物品填充过滤器"
+      no_item_configured_pusher: "<warning>物品 [%d]: <passive>存储的配置中没有物品"
+      no_item_configured: "<warning>物品: <passive>存储的配置中没有物品"
+    debugger:
+      player_is_not_op: "<error>该物品只能由 OP 玩家使用."
+    quantum_workbench:
+      output_slot_full: "<warning>需要清空输出烂"
+    grid:
+      may_duping: "Player \"%s\" attempted to use network grid from a invalid node at %s, the player may trying to cheat or duplicate items."
+  super-head:
+    - "#########################################################################"
+    - "███╗   ██╗███████╗████████╗██╗    ██╗ ██████╗ ██████╗ ██╗  ██╗           "
+    - "████╗  ██║██╔════╝╚══██╔══╝██║    ██║██╔═══██╗██╔══██╗██║ ██╔╝           "
+    - "██╔██╗ ██║█████╗     ██║   ██║ █╗ ██║██║   ██║██████╔╝█████╔╝            "
+    - "██║╚██╗██║██╔══╝     ██║   ██║███╗██║██║   ██║██╔══██╗██╔═██╗            "
+    - "██║ ╚████║███████╗   ██║   ╚███╔███╔╝╚██████╔╝██║  ██║██║  ██╗           "
+    - "╚═╝  ╚═══╝╚══════╝   ╚═╝    ╚══╝╚══╝  ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝           "
+    - "███████╗██╗  ██╗██████╗  █████╗ ███╗   ██╗███████╗██╗ ██████╗ ███╗   ██╗ "
+    - "██╔════╝╚██╗██╔╝██╔══██╗██╔══██╗████╗  ██║██╔════╝██║██╔═══██╗████╗  ██║ "
+    - "█████╗   ╚███╔╝ ██████╔╝███████║██╔██╗ ██║███████╗██║██║   ██║██╔██╗ ██║ "
+    - "██╔══╝   ██╔██╗ ██╔═══╝ ██╔══██║██║╚██╗██║╚════██║██║██║   ██║██║╚██╗██║ "
+    - "███████╗██╔╝ ██╗██║     ██║  ██║██║ ╚████║███████║██║╚██████╔╝██║ ╚████║ "
+    - "╚══════╝╚═╝  ╚═╝╚═╝     ╚═╝  ╚═╝╚═╝  ╚═══╝╚══════╝╚═╝ ╚═════╝ ╚═╝  ╚═══╝ "
+    - "                                                                         "
+    - "                           Networks - 网络                                "
+    - "                      作者: Sefiraat 汉化: ybw0014                         "
+    - "                      NetworksExpansion - 网络拓展                         "
+    - "                      作者: yitoudaidai, tinalness                        "
+    - "                       如遇bug请优先反馈至改版仓库:                           "
+    - "        https://github.com/ytdd9527/NetworksExpansion/issues             "
+    - "                      使用本附属时，请不要直接叉掉进程                         "
+    - "                      而是应该正常/stop以避免数据丢失                         "
+    - "#########################################################################"
+  depend:
+    not-found-guizhanlib: "本插件需要 鬼斩前置库插件(GuizhanLibPlugin) 才能运行!"
+    suggest-download-guizhanlib: "从此处下载: https://50l.cc/gzlib"
+    suggest-download-newer-slimefun: "你需要更新 Slimefun4 才能正常运行本插件！"
+  startup:
+    loaded-language: "已加载语言文件!"
+    getting-config: "正在获取配置信息..."
+    trying-auto-update: "尝试自动更新..."
+    connecting-database: "正在连接数据库文件..."
+    failed-to-connect-database: "数据库文件连接失败!"
+    creating-query-queue: "正在创建队列..."
+    creating-auto-save-thread: "正在创建自动保存线程..."
+    registering-items: "正在注册物品..."
+    registering-listeners: "正在注册监听器..."
+    registering-commands: "正在注册命令..."
+    found-enabled-replacing-guide: "检测到已开启指南替换功能"
+    replacing-guide: "正在替换指南..."
+    disabled-replacing-survival-guide: "已关闭生存模式指南替换功能"
+    enabled-replacing-survival-guide: "已开启生存模式指南替换功能"
+    disabled-replacing-creative-guide: "已关闭作弊模式指南替换功能"
+    enabled-replacing-creative-guide: "已开启作弊模式指南替换功能"
+    guide-risk-warning: "如遇开启后其他插件报错, 请在配置文件(config.yml)中关闭此功能"
+    enabled-successfully: "已启用附属!"
+  shutdown:
+    saving-config: "正在保存配置信息..."
+    disconnecting-database: "正在保存数据库信息，请不要结束进程!"
+    saving-data: "正在保存数据库信息，请不要结束进程! 当前队列: %s"
+    saved-all-data: "已保存数据库信息!"
+    disabled-successfully: "已安全禁用附属!"
+  integrations:
+    found-slimehud: "检测到安装了 SlimeHUD，注册相关功能！"
+    not-found-slimehud: "你必须更新 SlimeHUD 才能让网络添加相关功能. "
+    found-netheopoiesis: "检测到安装了下界乌托邦，注册相关物品！"
+    not-found-netheopoiesis: "你必须安装下界乌托邦才能让相关物品注册. "
+  save-all: "正在保存网络拓展数据."
+icons:
+  power_display:
+    status_title: "<click_info>状态"
+    charge: "<passive>网络电力: %sJ"
+  output-background-stack:
+    name: "<passive>输出"
+    lore:
+      - ""
+  blueprint-background-stack:
+    name: "<passive>合成蓝图"
+    lore:
+      - ""
+  blueprint-back-stack:
+    name: "<passive>空白蓝图"
+    lore:
+      - ""
+  encode-stack:
+    name: "<passive>点击此处进行编码"
+    lore:
+      - ""
+  blank-slot-stack:
+    name: ""
+    lore:
+      - ""
+  page-previous-stack:
+    name: "<click_info>上一页"
+    lore:
+      - ""
+  page-next-stack:
+    name: "<click_info>下一页"
+    lore:
+      - ""
+  change-sort-stack:
+    name: "<click_info>更改排序方式"
+    lore:
+      - ""
+  filter-stack:
+    name: "<click_info>左键设置过滤器 (右键点击以清除)"
+    lore:
+      - ""
+  display-mode-stack:
+    name: "<click_info>点击切换&2显示模式"
+    lore:
+      - "<click_info>当前&2显示模式&7: &6显示网络所有物品"
+      - "<click_info>&e↑ &7在上方放入物品以&e自动搜索物品"
+      - "<click_info>&6Shift+左键&7以切换&2显示模式"
+  history-mode-stack:
+    name: "<click_info>点击切换&2显示模式"
+    lore:
+      - "<click_info>当前&2显示模式&7: &6显示取出物品历史"
+      - "<click_info>&e↑ &7在上方放入物品以&e自动搜索物品"
+      - "<click_info>&6Shift+左键&7以切换&2显示模式"
+      - "<click_info>&c当前模式不可使用搜索！"
+  minus-icon:
+    name: "<color_random_string>减少数量"
+    lore:
+      - ""
+  show-icon:
+    name: "<color_random_string>数量"
+    lore:
+      - "<color_random_string>当前数量: 64"
+  add-icon:
+    name: "<color_random_string>增加数量"
+    lore:
+      - ""
+  transport-mode-icon:
+    name: "<color_random_string>运输模式"
+    lore:
+      - "<color_random_string>当前模式: 无"
+  pusher-template-background-stack:
+    name: "<passive>指定需要推送的物品"
+    lore:
+      - ""
+  background-stack-6x6:
+    name: "<passive> "
+    lore:
+      - ""
+  background-stack-3x3:
+    name: "<passive> "
+    lore:
+      - ""
+  greedy-template-background-stack:
+    name: "<success>需要阻断的物品"
+    lore:
+      - ""
+  storage-background-stack:
+    name: "<success>物品存储"
+    lore:
+      - ""
+  purger-template-background-stack:
+    name: "<success>指定需要清除的物品"
+    lore:
+      - ""
+  grabber-template-background-stack:
+    name: "<passive>指定需要抓取的物品"
+    lore:
+      - ""
+  control-v-template-background-stack:
+    name: "<passive>粘贴物品模版"
+    lore:
+      - ""
+  control-x-template-background-stack:
+    name: "<passive>剪切物品模版"
+    lore:
+      - "<passive>留空将剪切任何方块"
+  export-template-background-stack:
+    name: "<success>指定输出物品"
+    lore:
+      - ""
+  export-output-background-stack:
+    name: "<success>输出栏"
+    lore:
+      - ""
+  power-display-empty:
+    name: "<click_info>状态"
+    lore:
+      - "<passive>未连接"
+  quantum-storage-back-output:
+    name: "<passive>输出"
+    lore:
+      - ""
+  quantum-storage-set-item-supporting-custom-max:
+    name: "<success>设置"
+    lore:
+      - "<passive>拿起物品并点击这里以设置物品"
+      - "<passive>点击这里以设置更改容量"
+      - "<click_info>Shift+左键点击<passive>切换满载清空输入"
+  quantum-storage-set-item:
+    name: "<success>设置"
+    lore:
+      - "<passive>拿起物品并点击这里以设置物品"
+      - "<click_info>Shift+左键点击<passive>切换满载清空输入"
+  quantum-storage-back-input:
+    name: "<passive>输入"
+    lore:
+      - ""
+  quantum-storage-no-item:
+    name: "<error>未指定物品"
+    lore:
+      - "<passive>拿起物品并点击下方的按钮"
+      - "<passive>以设置量子存储保存的物品"
+  quantum-storage-back-item:
+    name: "<passive>当前存储的物品"
+    lore:
+      - ""
+  quantum-workbench-craft-button-stack:
+    name: "<click_info>点击进行量子纠缠"
+    lore:
+      - ""
+  received-background-stack:
+    name: "<success>接收的物品"
+    lore:
+      - ""
+  transmitter-template-background-stack:
+    name: "<success>发送的物品"
+    lore:
+      - ""
+  due-border-icon:
+    name: "&a← 在此放置预期物品"
+    lore:
+      - ""
+  due-input-split-icon:
+    name: "&a↑ 预期物品 & 输入物品 ↓"
+    lore:
+      - ""
+  input-output-split-icon:
+    name: "&a↑ 输入物品 & 输出物品 ↓"
+    lore:
+      - ""
+  decode-item:
+    name: "&6网络解码器"
+    lore:
+      - "&7点击解码网络蓝图"
+  offset-decrease-icon:
+    name: "&a偏移量 -1"
+    lore:
+      - ""
+  offset-show-icon:
+    name: "&a偏移量"
+    lore:
+      - "&7当前偏移量: &e%s"
+  offset-increase-icon:
+    name: "&a偏移量 +1"
+    lore:
+      - ""
+  quick-input:
+    name: "&b快速存入"
+    lore:
+      - "&7> 点击此处将物品栏中所有可用物品"
+      - "&7存入量子存储"
+  quick-output:
+    name: "&6快速取出"
+    lore:
+      - "&7> [左键]点击将物品取出并填满你的物品栏"
+      - "&7> [右键]点击取出1个物品"
+      - "&7> [shift+右键]点击取出64个物品"
+  recipe-types:
+    expansion_workbench_6x6:
+      name: "网络拓展工作台6x6"
+      lore:
+        - "在6x6拓展工作台中制作"
+    expansion_workbench_3x3:
+      name: "网络拓展工作台"
+      lore:
+        - "在拓展工作台中制作"
+    quantum_workbench:
+      name: "网络量子工作台"
+      lore:
+        - "在量子工作台中制作"
+items:
+  NTW_EXPANSION_SURVIVAL_GUIDE:
+    name: "网络拓展指南 (生存模式)"
+    lore:
+      - ""
+
+  NTW_EXPANSION_CREATIVE_GUIDE:
+    name: "网络拓展指南 (作弊模式)"
+    lore:
+      - ""
+
+  NTW_EXPANSION_WORKBENCH:
+    name: "网络拓展工作台"
+    lore:
+      - "可以合成网络拓展的各种材料和机器"
+
+  NTW_EXPANSION_WORKBENCH_6X6:
+    name: "网络拓展工作台 (6x6)"
+    lore:
+      - "不可以合成网络拓展的各种材料和机器"
+
+  NTW_EXPANSION_WORLD_EDIT_AXE:
+    name: "网络粘液创世神"
+    lore:
+      - "仅管理员可用"
+      - "右键选择第一个位置"
+      - "Shift + 右键选择第二个位置"
+
+  NTW_EXPANSION_INFO_TOOL:
+    name: "网络信息工具"
+    lore:
+      - "仅管理员可用"
+      - "右键查看网络中物品的详细信息"
+
+  NTW_EXPANSION_ADVANCED_IMPORT:
+    name: "高级网络入口"
+    lore:
+      - "高级网络入口会将其中的物品送入网络中"
+      - "每个SF tick可传输最多54组物品"
+      - "可接收来自货运网络的物品"
+
+  NTW_EXPANSION_ADVANCED_EXPORT:
+    name: "高级网络出口"
+    lore:
+      - "高级网络出口可以设置成"
+      - "持续将指定数量的物品送出网络"
+      - "可以使用货运网络从中提取物品"
+
+  NTW_EXPANSION_ADVANCED_PURGER:
+    name: "高级网络清除器"
+    lore:
+      - "高级网络清除器会从网络中"
+      - "不断地移除指定物品"
+      - "清除的物品会立即消失，谨慎使用!"
+
+  NTW_EXPANSION_ADVANCED_GREEDY_BLOCK:
+    name: "高级网络阻断器"
+    lore:
+      - "高级网络阻断器可以设置一个物品,"
+      - "然后会从网络各处输入中"
+      - "收集指定的物品,最多为9组."
+      - "收集满后,会阻断该物品在网络中的传输,"
+      - "任何其他网络方块都不会收到该物品."
+
+  NTW_EXPANSION_CAPACITOR_5:
+    name: "网络电容 (5)"
+    lore:
+      - "网络电容可以接收来自"
+      - "能源网络的电力并存储起来"
+      - "以供其他网络设备使用"
+      - ""
+      - "<click_info>容量: &7100,000,000"
+
+  NTW_EXPANSION_CAPACITOR_6:
+    name: "网络电容 (6)"
+    lore:
+      - "网络电容可以接收来自"
+      - "能源网络的电力并存储起来"
+      - "以供其他网络设备使用"
+      - ""
+      - "<click_info>容量: &72,147,483,647"
+
+  NTW_INPUT_ONLY_MONITOR:
+    name: "网络监视器（仅输入）"
+    lore:
+      - "网络监视器可以与附近的方块交互"
+      - "让指定方块可以接入网络"
+      - "指定的方块只能被输入"
+      - ""
+      - "目前支持:"
+      - "无尽科技 - 存储单元"
+      - "蓬松科技 - 蓬松桶"
+      - "网络 - 量子存储"
+      - "<random_color>网络拓展 - 网络抽屉"
+
+  NTW_OUTPUT_ONLY_MONITOR:
+    name: "网络监视器（仅输出）"
+    lore:
+      - "网络监视器可以与附近的方块交互"
+      - "让指定方块可以接入网络"
+      - "指定的方块只能被输出"
+      - ""
+      - "目前支持:"
+      - "无尽科技 - 存储单元"
+      - "蓬松科技 - 蓬松桶"
+      - "网络 - 量子存储"
+      - "<random_color>网络拓展 - 网络抽屉"
+
+  NTW_EXPANSION_LINE_TRANSFER_PUSHER:
+    name: "链式传输器 [推送]"
+    lore:
+      - "&c仅支持粘液容器"
+      - "&6运输距离: 32 格"
+      - "&7默认运输模式: &6首位阻断"
+      - "&c不可调整运输模式"
+      - "&7默认运输数量: &664"
+      - "&c不可调整运输数量"
+      - "&e与乱序技艺的链式传输器不同的是，此机器&c只有连续推送的功能"
+      - "&c而不是连续转移物品！"
+      - "&7运输模式解释: "
+      - "&6首位阻断&7: &e仅推送至第一个可以被推送物品的槽位"
+
+  NTW_EXPANSION_LINE_TRANSFER_GRABBER:
+    name: "链式传输器 [抓取]"
+    lore:
+      - "&c仅支持粘液容器"
+      - "&6运输距离: 32 格"
+      - "&7默认运输模式: &6首位阻断"
+      - "&c不可调整运输模式"
+      - "&7默认运输数量: &664"
+      - "&c不可调整运输数量"
+      - "&e与乱序技艺的链式传输器不同的是，此机器&c只有连续抓取的功能"
+      - "&c而不是连续转移物品！"
+      - "&7运输模式解释: "
+      - "&6首位阻断&7: &e仅抓取第一个有物品的槽位"
+
+  NTW_EXPANSION_LINE_TRANSFER:
+    name: "链式传输器"
+    lore:
+      - "&c仅支持粘液容器"
+      - "&6运输距离: 32 格"
+      - "&7默认运输模式: &6首位阻断"
+      - "&c不可调整运输模式"
+      - "&7默认运输数量: &664"
+      - "&c不可调整运输数量"
+      - "&e与乱序技艺的链式传输器不同的是，此机器&c只有连续推送和抓取的功能"
+      - "&c而不是连续转移物品！"
+      - "&7运输模式解释: "
+      - "&6首位阻断&7: &e仅推送至第一个可以被推送物品的槽位 / 仅抓取第一个有物品的槽位"
+
+  NTW_EXPANSION_LINE_TRANSFER_PLUS_PUSHER:
+    name: "链式传输器Plus [推送]"
+    lore:
+      - "&c仅支持粘液容器"
+      - "&6运输距离: 64 格"
+      - "&7默认运输模式: &6首位阻断"
+      - "&c不可调整运输模式"
+      - "&7默认运输数量: &664"
+      - "&c不可调整运输数量"
+      - "&e与乱序技艺的链式传输器不同的是，此机器&c只有连续推送的功能"
+      - "&c而不是连续转移物品！"
+      - "&7运输模式解释: "
+      - "&6首位阻断&7: &e仅推送至第一个可以被推送物品的槽位"
+
+  NTW_EXPANSION_LINE_TRANSFER_PLUS_GRABBER:
+    name: "链式传输器Plus [抓取]"
+    lore:
+      - "&c仅支持粘液容器"
+      - "&6运输距离: 64 格"
+      - "&7默认运输模式: &6首位阻断"
+      - "&c不可调整运输模式"
+      - "&7默认运输数量: &664"
+      - "&c不可调整运输数量"
+      - "&e与乱序技艺的链式传输器不同的是，此机器&c只有连续抓取的功能"
+      - "&c而不是连续转移物品！"
+      - "&7运输模式解释: "
+      - "&6首位阻断&7: &e仅抓取第一个有物品的槽位"
+
+  NTW_EXPANSION_LINE_TRANSFER_PLUS:
+    name: "链式传输器Plus"
+    lore:
+      - "&c仅支持粘液容器"
+      - "&6运输距离: 64 格"
+      - "&7默认运输模式: &6首位阻断"
+      - "&c不可调整运输模式"
+      - "&7默认运输数量: &664"
+      - "&c不可调整运输数量"
+      - "&e与乱序技艺的链式传输器不同的是，此机器&c只有连续推送和抓取的功能"
+      - "&c而不是连续转移物品！"
+      - "&7运输模式解释: "
+      - "&6首位阻断&7: &e仅推送至第一个可以被推送物品的槽位 / 仅抓取第一个有物品的槽位"
+
+  NTW_EXPANSION_LINE_TRANSFER_VANILLA_PUSHER:
+    name: "链式原版传输器 [推送]"
+    lore:
+      - "&c仅支持原版容器"
+      - "&6运输距离: 32 格"
+      - "&7默认运输模式: &6首位阻断"
+      - "&c不可调整运输模式"
+      - "&7默认运输数量: &664"
+      - "&c不可调整运输数量"
+      - "&e与乱序技艺的链式传输器不同的是，此机器&c只有连续推送的功能"
+      - "&c而不是连续转移物品！"
+      - "&7运输模式解释: "
+      - "&6首位阻断&7: &e仅推送至第一个可以被推送物品的槽位"
+
+  NTW_EXPANSION_LINE_TRANSFER_VANILLA_GRABBER:
+    name: "链式原版传输器 [抓取]"
+    lore:
+      - "&c仅支持原版容器"
+      - "&6运输距离: 32 格"
+      - "&7默认运输模式: &6首位阻断"
+      - "&c不可调整运输模式"
+      - "&7默认运输数量: &664"
+      - "&c不可调整运输数量"
+      - "&e与乱序技艺的链式传输器不同的是，此机器&c只有连续抓取的功能"
+      - "&c而不是连续转移物品！"
+      - "&7运输模式解释: "
+      - "&6首位阻断&7: &e仅抓取第一个有物品的槽位"
+
+  NTW_EXPANSION_ADVANCED_LINE_TRANSFER_PUSHER:
+    name: "高级链式传输 [推送]"
+    lore:
+      - "&c仅支持粘液容器"
+      - "&6运输距离: 32 格"
+      - "&7默认运输模式: &6首位阻断"
+      - "&a可调整运输模式"
+      - "&7默认运输数量: &63456"
+      - "&a可调整运输数量"
+      - "&e与乱序技艺的链式传输器不同的是，此机器&c只有连续推送的功能"
+      - "&c而不是连续转移物品！"
+      - "&7运输模式解释: "
+      - "&6无限制&7: &e可推送至任何槽位"
+      - "&6仅空&7: &e仅推送至空槽位"
+      - "&6仅非空&7: &e仅推送至非空槽位"
+      - "&6仅首位&7: &e仅推送至第一格"
+      - "&6仅末位&7: &e仅推送至最后一格"
+      - "&6首位阻断&7: &e仅推送至第一个可以被推送物品的槽位"
+      - "&6懒惰模式&7: &e当第一格为空时，推送至所有槽位"
+
+  NTW_EXPANSION_ADVANCED_LINE_TRANSFER_GRABBER:
+    name: "高级链式传输 [抓取]"
+    lore:
+      - "&c仅支持粘液容器"
+      - "&6运输距离: 32 格"
+      - "&7默认运输模式: &6首位阻断"
+      - "&a可调整运输模式"
+      - "&7默认运输数量: &63456"
+      - "&a可调整运输数量"
+      - "&e与乱序技艺的链式传输器不同的是，此机器&c只有连续抓取的功能"
+      - "&c而不是连续转移物品！"
+      - "&7运输模式解释: "
+      - "&6无限制&7: &e可抓取任何槽位"
+      - "&6仅空&7: &e仅抓取空槽位"
+      - "&6仅非空&7: &e仅抓取非空槽位"
+      - "&6仅首位&7: &e仅抓取第一格"
+      - "&6仅末位&7: &e仅抓取最后一格"
+      - "&6首位阻断&7: &e仅抓取第一个有物品的槽位"
+      - "&6懒惰模式&7: &e当第一格存在物品时，抓取所有槽位"
+
+  NTW_EXPANSION_ADVANCED_LINE_TRANSFER:
+    name: "高级链式传输"
+    lore:
+      - "&c仅支持粘液容器"
+      - "&6运输距离: 32 格"
+      - "&7默认运输模式: &6首位阻断"
+      - "&a可调整运输模式"
+      - "&7默认运输数量: &63456"
+      - "&a可调整运输数量"
+      - "&e与乱序技艺的链式传输器不同的是，此机器&c只有连续推送和抓取的功能"
+      - "&c而不是连续转移物品！"
+      - "&7运输模式解释: "
+      - "&6无限制&7: &e可推送至任何槽位 / 可抓取任何槽位"
+      - "&6仅空&7: &e仅推送至空槽位 / 仅抓取空槽位"
+      - "&6仅非空&7: &e仅推送至非空槽位 / 仅抓取非空槽位"
+      - "&6仅首位&7: &e仅推送至第一格 / 仅抓取第一格"
+      - "&6仅末位&7: &e仅推送至最后一格 / 仅抓取最后一格"
+      - "&6首位阻断&7: &e仅推送至第一个可以被推送物品的槽位 / 仅抓取第一个有物品的槽位"
+      - "&6懒惰模式&7: &e当第一格为空时，推送至所有槽位 / 当第一格存在物品时，抓取所有槽位"
+
+  NTW_EXPANSION_ADVANCED_LINE_TRANSFER_PLUS_PUSHER:
+    name: "高级链式传输Plus [推送]"
+    lore:
+      - "&c仅支持粘液容器"
+      - "&6运输距离: 64 格"
+      - "&7默认运输模式: &6首位阻断"
+      - "&a可调整运输模式"
+      - "&7默认运输数量: &63456"
+      - "&a可调整运输数量"
+      - "&e与乱序技艺的链式传输器不同的是，此机器&c只有连续推送的功能"
+      - "&c而不是连续转移物品！"
+      - "&7运输模式解释: "
+      - "&6无限制&7: &e可推送至任何槽位"
+      - "&6仅空&7: &e仅推送至空槽位"
+      - "&6仅非空&7: &e仅推送至非空槽位"
+      - "&6仅首位&7: &e仅推送至第一格"
+      - "&6仅末位&7: &e仅推送至最后一格"
+      - "&6首位阻断&7: &e仅推送至第一个可以被推送物品的槽位"
+      - "&6懒惰模式&7: &e当第一格为空时，推送至所有槽位"
+
+  NTW_EXPANSION_ADVANCED_LINE_TRANSFER_PLUS_GRABBER:
+    name: "高级链式传输Plus [抓取]"
+    lore:
+      - "&c仅支持粘液容器"
+      - "&6运输距离: 64 格"
+      - "&7默认运输模式: &6首位阻断"
+      - "&a可调整运输模式"
+      - "&7默认运输数量: &63456"
+      - "&a可调整运输数量"
+      - "&e与乱序技艺的链式传输器不同的是，此机器&c只有连续抓取的功能"
+      - "&c而不是连续转移物品！"
+      - "&7运输模式解释: "
+      - "&6无限制&7: &e可抓取任何槽位"
+      - "&6仅空&7: &e仅抓取空槽位"
+      - "&6仅非空&7: &e仅抓取非空槽位"
+      - "&6仅首位&7: &e仅抓取第一格"
+      - "&6仅末位&7: &e仅抓取最后一格"
+      - "&6首位阻断&7: &e仅抓取第一个有物品的槽位"
+      - "&6懒惰模式&7: &e当第一格存在物品时，抓取所有槽位"
+
+  NTW_EXPANSION_ADVANCED_LINE_TRANSFER_PLUS:
+    name: "高级链式传输Plus"
+    lore:
+      - "&c仅支持粘液容器"
+      - "&6运输距离: 64 格"
+      - "&7默认运输模式: &6首位阻断"
+      - "&a可调整运输模式"
+      - "&7默认运输数量: &63456"
+      - "&a可调整运输数量"
+      - "&e与乱序技艺的链式传输器不同的是，此机器&c只有连续推送和抓取的功能"
+      - "&c而不是连续转移物品！"
+      - "&7运输模式解释: "
+      - "&6无限制&7: &e可推送至任何槽位 / 可抓取任何槽位"
+      - "&6仅空&7: &e仅推送至空槽位 / 仅抓取空槽位"
+      - "&6仅非空&7: &e仅推送至非空槽位 / 仅抓取非空槽位"
+      - "&6仅首位&7: &e仅推送至第一格 / 仅抓取第一格"
+      - "&6仅末位&7: &e仅推送至最后一格 / 仅抓取最后一格"
+      - "&6首位阻断&7: &e仅推送至第一个可以被推送物品的槽位 / 仅抓取第一个有物品的槽位"
+      - "&6懒惰模式&7: &e当第一格为空时，推送至所有槽位 / 当第一格存在物品时，抓取所有槽位"
+
+  NTW_EXPANSION_TRANSFER_PUSHER:
+    name: "传输器 [推送]"
+    lore:
+      - "&c仅支持粘液容器"
+      - "&7默认运输模式: &6首位阻断"
+      - "&c不可调整运输模式"
+      - "&7默认运输数量: &664"
+      - "&c不可调整运输数量"
+      - "&7运输模式解释: "
+      - "&6首位阻断&7: &e仅推送至第一个可以被推送物品的槽位"
+
+  NTW_EXPANSION_TRANSFER_GRABBER:
+    name: "传输器 [抓取]"
+    lore:
+      - "&c仅支持粘液容器"
+      - "&7默认运输模式: &6首位阻断"
+      - "&c不可调整运输模式"
+      - "&7默认运输数量: &664"
+      - "&c不可调整运输数量"
+      - "&7运输模式解释: "
+      - "&6首位阻断&7: &e仅抓取第一个有物品的槽位"
+
+  NTW_EXPANSION_TRANSFER:
+    name: "传输器"
+    lore:
+      - "&c仅支持粘液容器"
+      - "&7默认运输模式: &6首位阻断"
+      - "&c不可调整运输模式"
+      - "&7默认运输数量: &664"
+      - "&c不可调整运输数量"
+      - "&7运输模式解释: "
+      - "&6首位阻断&7: &e仅推送至第一个可以被推送物品的槽位 / 仅抓取第一个有物品的槽位"
+
+  NTW_EXPANSION_ADVANCED_TRANSFER_PUSHER:
+    name: "高级传输器 [推送]"
+    lore:
+      - "&c仅支持粘液容器"
+      - "&7默认运输模式: &6首位阻断"
+      - "&a可调整运输模式"
+      - "&7默认运输数量: &63456"
+      - "&a可调整运输数量"
+      - "&7运输模式解释: "
+      - "&6无限制&7: &e可推送至任何槽位"
+      - "&6仅空&7: &e仅推送至空槽位"
+      - "&6仅非空&7: &e仅推送至非空槽位"
+      - "&6仅首位&7: &e仅推送至第一格"
+      - "&6仅末位&7: &e仅推送至最后一格"
+      - "&6首位阻断&7: &e仅推送至第一个可以被推送物品的槽位"
+      - "&6懒惰模式&7: &e当第一格为空时，推送至所有槽位"
+
+  NTW_EXPANSION_ADVANCED_TRANSFER_GRABBER:
+    name: "高级传输器 [抓取]"
+    lore:
+      - "&c仅支持粘液容器"
+      - "&7默认运输模式: &6首位阻断"
+      - "&a可调整运输模式"
+      - "&7默认运输数量: &63456"
+      - "&a可调整运输数量"
+      - "&7运输模式解释: "
+      - "&6无限制&7: &e可抓取任何槽位"
+      - "&6仅空&7: &e仅抓取空槽位"
+      - "&6仅非空&7: &e仅抓取非空槽位"
+      - "&6仅首位&7: &e仅抓取第一格"
+      - "&6仅末位&7: &e仅抓取最后一格"
+      - "&6首位阻断&7: &e仅抓取第一个有物品的槽位"
+      - "&6懒惰模式&7: &e当第一格存在物品时，抓取所有槽位"
+
+  NTW_EXPANSION_ADVANCED_TRANSFER:
+    name: "高级传输器"
+    lore:
+      - "&c仅支持粘液容器"
+      - "&7默认运输模式: &6首位阻断"
+      - "&a可调整运输模式"
+      - "&7默认运输数量: &63456"
+      - "&a可调整运输数量"
+      - "&7运输模式解释: "
+      - "&6无限制&7: &e可推送至任何槽位 / 可抓取任何槽位"
+      - "&6仅空&7: &e仅推送至空槽位 / 仅抓取空槽位"
+      - "&6仅非空&7: &e仅推送至非空槽位 / 仅抓取非空槽位"
+      - "&6仅首位&7: &e仅推送至第一格 / 仅抓取第一格"
+      - "&6仅末位&7: &e仅推送至最后一格 / 仅抓取最后一格"
+      - "&6首位阻断&7: &e仅推送至第一个可以被推送物品的槽位 / 仅抓取第一个有物品的槽位"
+      - "&6懒惰模式&7: &e当第一格为空时，推送至所有槽位 / 当第一格存在物品时，抓取所有槽位"
+
+  NTW_EXPANSION_SMART_GRABBER:
+    name: "智能抓取器"
+    lore:
+      - "即放即用"
+
+  NTW_EXPANSION_SMART_PUSHER:
+    name: "智能推送器"
+    lore:
+      - "即放即用"
+
+  NTW_EXPANSION_GRID_NEW_STYLE:
+    name: "高级网格"
+    lore:
+      - "高级网格允许你查看网络中所有的物品"
+      - "你也可以直接放入或取出物品"
+      - "排序方式: "
+      - "&eAZ&7: &e按字母顺序排序"
+      - "&e数量&7: &e按物品数量排序"
+      - "&e附属&7: &e按物品所属附属字母顺序排序"
+      - "支持拼音搜索"
+
+  NTW_EXPANSION_MAGIC_WORKBENCH_BLUEPRINT:
+    name: "魔法工作台蓝图"
+    lore:
+      - "一张空白的蓝图"
+      - "可以存储一个魔法工作台配方"
+
+  NTW_EXPANSION_ARMOR_FORGE_BLUEPRINT:
+    name: "盔甲锻造台蓝图"
+    lore:
+      - "一张空白的蓝图"
+      - "可以存储一个盔甲锻造台配方"
+
+  NTW_EXPANSION_SMELTERY_BLUEPRINT:
+    name: "冶炼炉蓝图"
+    lore:
+      - "一张空白的蓝图"
+      - "可以存储一个冶炼炉配方"
+
+  NTW_EXPANSION_QUANTUM_WORKBENCH_BLUEPRINT:
+    name: "量子工作台蓝图"
+    lore:
+      - "一张空白的蓝图"
+      - "可以存储一个量子工作台配方"
+
+  NTW_EXPANSION_ANCIENT_ALTAR_BLUEPRINT:
+    name: "古代祭坛蓝图"
+    lore:
+      - "一张空白的蓝图"
+      - "可以存储一个古代祭坛配方"
+
+  NTW_EXPANSION_EXPANSION_WORKBENCH_BLUEPRINT:
+    name: "网络拓展工作台蓝图"
+    lore:
+      - "一张空白的蓝图"
+      - "可以存储一个网络拓展工作台配方"
+
+  NTW_EXPANSION_COMPRESSOR_BLUEPRINT:
+    name: "压缩机蓝图"
+    lore:
+      - "一张空白的蓝图"
+      - "可以存储一个压缩机配方"
+
+  NTW_EXPANSION_GRIND_STONE_BLUEPRINT:
+    name: "磨石蓝图"
+    lore:
+      - "一张空白的蓝图"
+      - "可以存储一个磨石配方"
+
+  NTW_EXPANSION_JUICER_BLUEPRINT:
+    name: "榨汁机蓝图"
+    lore:
+      - "一张空白的蓝图"
+      - "可以存储一个榨汁机配方"
+
+  NTW_EXPANSION_ORE_CRUSHER_BLUEPRINT:
+    name: "矿石粉碎机蓝图"
+    lore:
+      - "一张空白的蓝图"
+      - "可以存储一个矿石粉碎机配方"
+
+  NTW_EXPANSION_PRESSURE_CHAMBER_BLUEPRINT:
+    name: "压力机蓝图"
+    lore:
+      - "一张空白的蓝图"
+      - "可以存储一个压力机配方"
+
+  NTW_EXPANSION_MAGIC_WORKBENCH_RECIPE_ENCODER:
+    name: "网络魔法工作台配方编码器"
+    lore:
+      - "可以根据输入的物品来制作魔法工作台蓝图"
+      - ""
+      - "<click_info>网络电力消耗: &72,000 每次编码"
+
+  NTW_EXPANSION_ARMOR_FORGE_RECIPE_ENCODER:
+    name: "网络盔甲锻造台配方编码器"
+    lore:
+      - "可以根据输入的物品来制作盔甲锻造台蓝图"
+      - ""
+      - "<click_info>网络电力消耗: &72,000 每次编码"
+
+  NTW_EXPANSION_SMELTERY_RECIPE_ENCODER:
+    name: "网络冶炼炉配方编码器"
+    lore:
+      - "可以根据输入的物品来制作冶炼炉蓝图"
+      - ""
+      - "<click_info>网络电力消耗: &72,000 每次编码"
+
+  NTW_EXPANSION_QUANTUM_WORKBENCH_RECIPE_ENCODER:
+    name: "网络量子工作台配方编码器"
+    lore:
+      - "可以根据输入的物品来制作量子工作台蓝图"
+      - ""
+      - "<click_info>网络电力消耗: &72,000 每次编码"
+
+  NTW_EXPANSION_ANCIENT_ALTAR_RECIPE_ENCODER:
+    name: "网络古代祭坛配方编码器"
+    lore:
+      - "可以根据输入的物品来制作古代祭坛蓝图"
+      - ""
+      - "<click_info>网络电力消耗: &72,000 每次编码"
+
+  NTW_EXPANSION_EXPANSION_WORKBENCH_RECIPE_ENCODER:
+    name: "网络拓展工作台配方编码器"
+    lore:
+      - "可以根据输入的物品来制作网络拓展工作台蓝图"
+      - ""
+      - "<click_info>网络电力消耗: &72,000 每次编码"
+
+  NTW_EXPANSION_COMPRESSOR_RECIPE_ENCODER:
+    name: "网络压缩机配方编码器"
+    lore:
+      - "可以根据输入的物品来制作压缩机蓝图"
+      - ""
+      - "<click_info>网络电力消耗: &72,000 每次编码"
+
+  NTW_EXPANSION_GRIND_STONE_RECIPE_ENCODER:
+    name: "网络磨石配方编码器"
+    lore:
+      - "可以根据输入的物品来制作磨石蓝图"
+      - ""
+      - "<click_info>网络电力消耗: &72,000 每次编码"
+
+  NTW_EXPANSION_JUICER_RECIPE_ENCODER:
+    name: "网络榨汁机配方编码器"
+    lore:
+      - "可以根据输入的物品来制作榨汁机蓝图"
+      - ""
+      - "<click_info>网络电力消耗: &72,000 每次编码"
+
+  NTW_EXPANSION_ORE_CRUSHER_RECIPE_ENCODER:
+    name: "网络矿石粉碎机配方编码器"
+    lore:
+      - "可以根据输入的物品来制作矿石粉碎机蓝图"
+      - ""
+      - "<click_info>网络电力消耗: &72,000 每次编码"
+
+  NTW_EXPANSION_PRESSURE_CHAMBER_RECIPE_ENCODER:
+    name: "网络压力机配方编码器"
+    lore:
+      - "可以根据输入的物品来制作压力机蓝图"
+      - ""
+      - "<click_info>网络电力消耗: &72,000 每次编码"
+
+  NTW_EXPANSION_AUTO_MAGIC_WORKBENCH:
+    name: "网络自动魔法工作台"
+    lore:
+      - "网络自动魔法工作台需要魔法工作台蓝图才能工作。"
+      - "当网络中没有蓝图的目标物品时，"
+      - "机器会自动从网络中选取材料进行合成"
+      - "(需要网络中有足够的原材料)"
+      - ""
+      - "<click_info>网络电力消耗: &764 每次合成"
+
+  NTW_EXPANSION_AUTO_MAGIC_WORKBENCH_WITHHOLDING:
+    name: "网络自动魔法工作台 (预留版)"
+    lore:
+      - "网络自动魔法工作台需要魔法工作台蓝图才能工作。"
+      - "当网络中没有蓝图的目标物品时，"
+      - "机器会自动从网络中选取材料进行合成"
+      - "(需要网络中有足够的原材料)"
+      - ""
+      - "预留版的自动合成机会不断进行合成"
+      - "直到输出栏拥有1组物品"
+      - "这一组物品可以在网络中访问"
+      - "也可以通过货运系统取出"
+      - ""
+      - "<click_info>网络电力消耗: &7128 每次合成"
+
+  NTW_EXPANSION_AUTO_ARMOR_FORGE:
+    name: "网络自动盔甲锻造台"
+    lore:
+      - "网络自动盔甲锻造台需要盔甲锻造台蓝图才能工作。"
+      - "当网络中没有蓝图的目标物品时，"
+      - "机器会自动从网络中选取材料进行合成"
+      - "(需要网络中有足够的原材料)"
+      - ""
+      - "<click_info>网络电力消耗: &764 每次合成"
+
+  NTW_EXPANSION_AUTO_ARMOR_FORGE_WITHHOLDING:
+    name: "网络自动盔甲锻造台 (预留版)"
+    lore:
+      - "网络自动盔甲锻造台需要盔甲锻造台蓝图才能工作。"
+      - "当网络中没有蓝图的目标物品时，"
+      - "机器会自动从网络中选取材料进行合成"
+      - "(需要网络中有足够的原材料)"
+      - ""
+      - "预留版的自动合成机会不断进行合成"
+      - "直到输出栏拥有1组物品"
+      - "这一组物品可以在网络中访问"
+      - "也可以通过货运系统取出"
+      - ""
+      - "<click_info>网络电力消耗: &7128 每次合成"
+
+  NTW_EXPANSION_AUTO_SMELTERY:
+    name: "网络自动冶炼炉"
+    lore:
+      - "网络自动冶炼炉需要冶炼炉蓝图才能工作。"
+      - "当网络中没有蓝图的目标物品时，"
+      - "机器会自动从网络中选取材料进行合成"
+      - "(需要网络中有足够的原材料)"
+      - ""
+      - "<click_info>网络电力消耗: &764 每次合成"
+
+  NTW_EXPANSION_AUTO_SMELTERY_WITHHOLDING:
+    name: "网络自动冶炼炉 (预留版)"
+    lore:
+      - "网络自动冶炼炉需要冶炼炉蓝图才能工作。"
+      - "当网络中没有蓝图的目标物品时，"
+      - "机器会自动从网络中选取材料进行合成"
+      - "(需要网络中有足够的原材料)"
+      - ""
+      - "预留版的自动合成机会不断进行合成"
+      - "直到输出栏拥有1组物品"
+      - "这一组物品可以在网络中访问"
+      - "也可以通过货运系统取出"
+      - ""
+      - "<click_info>网络电力消耗: &7128 每次合成"
+
+  NTW_EXPANSION_AUTO_QUANTUM_WORKBENCH:
+    name: "网络自动量子工作台"
+    lore:
+      - "网络自动量子工作台需要量子工作台蓝图才能工作。"
+      - "当网络中没有蓝图的目标物品时，"
+      - "机器会自动从网络中选取材料进行合成"
+      - "(需要网络中有足够的原材料)"
+      - ""
+      - "<click_info>网络电力消耗: &764 每次合成"
+
+  NTW_EXPANSION_AUTO_QUANTUM_WORKBENCH_WITHHOLDING:
+    name: "网络自动量子工作台 (预留版)"
+    lore:
+      - "网络自动量子工作台需要量子工作台蓝图才能工作。"
+      - "当网络中没有蓝图的目标物品时，"
+      - "机器会自动从网络中选取材料进行合成"
+      - "(需要网络中有足够的原材料)"
+      - ""
+      - "预留版的自动合成机会不断进行合成"
+      - "直到输出栏拥有1组物品"
+      - "这一组物品可以在网络中访问"
+      - "也可以通过货运系统取出"
+      - ""
+      - "<click_info>网络电力消耗: &7128 每次合成"
+
+  NTW_EXPANSION_AUTO_ANCIENT_ALTAR:
+    name: "网络自动古代祭坛"
+    lore:
+      - "网络自动古代祭坛需要古代祭坛蓝图才能工作。"
+      - "当网络中没有蓝图的目标物品时，"
+      - "机器会自动从网络中选取材料进行合成"
+      - "(需要网络中有足够的原材料)"
+      - ""
+      - "<click_info>网络电力消耗: &764 每次合成"
+
+  NTW_EXPANSION_AUTO_ANCIENT_ALTAR_WITHHOLDING:
+    name: "网络自动古代祭坛 (预留版)"
+    lore:
+      - "网络自动古代祭坛需要古代祭坛蓝图才能工作。"
+      - "当网络中没有蓝图的目标物品时，"
+      - "机器会自动从网络中选取材料进行合成"
+      - "(需要网络中有足够的原材料)"
+      - ""
+      - "预留版的自动合成机会不断进行合成"
+      - "直到输出栏拥有1组物品"
+      - "这一组物品可以在网络中访问"
+      - "也可以通过货运系统取出"
+      - ""
+      - "<click_info>网络电力消耗: &7128 每次合成"
+
+  NTW_EXPANSION_AUTO_EXPANSION_WORKBENCH:
+    name: "网络自动网络拓展工作台"
+    lore:
+      - "网络自动网络拓展工作台需要网络拓展工作台蓝图才能工作。"
+      - "当网络中没有蓝图的目标物品时，"
+      - "机器会自动从网络中选取材料进行合成"
+      - "(需要网络中有足够的原材料)"
+      - ""
+      - "<click_info>网络电力消耗: &764 每次合成"
+
+  NTW_EXPANSION_AUTO_EXPANSION_WORKBENCH_WITHHOLDING:
+    name: "网络自动网络拓展工作台 (预留版)"
+    lore:
+      - "网络自动网络拓展工作台需要网络拓展工作台蓝图才能工作。"
+      - "当网络中没有蓝图的目标物品时，"
+      - "机器会自动从网络中选取材料进行合成"
+      - "(需要网络中有足够的原材料)"
+      - ""
+      - "预留版的自动合成机会不断进行合成"
+      - "直到输出栏拥有1组物品"
+      - "这一组物品可以在网络中访问"
+      - "也可以通过货运系统取出"
+      - ""
+      - "<click_info>网络电力消耗: &7128 每次合成"
+
+  NTW_EXPANSION_AUTO_COMPRESSOR:
+    name: "网络自动压缩机"
+    lore:
+      - "网络自动压缩机需要压缩机蓝图才能工作。"
+      - "当网络中没有蓝图的目标物品时，"
+      - "机器会自动从网络中选取材料进行合成"
+      - "(需要网络中有足够的原材料)"
+      - ""
+      - "<click_info>网络电力消耗: &764 每次合成"
+
+  NTW_EXPANSION_AUTO_COMPRESSOR_WITHHOLDING:
+    name: "网络自动压缩机 (预留版)"
+    lore:
+      - "网络自动压缩机需要压缩机蓝图才能工作。"
+      - "当网络中没有蓝图的目标物品时，"
+      - "机器会自动从网络中选取材料进行合成"
+      - "(需要网络中有足够的原材料)"
+      - ""
+      - "预留版的自动合成机会不断进行合成"
+      - "直到输出栏拥有1组物品"
+      - "这一组物品可以在网络中访问"
+      - "也可以通过货运系统取出"
+      - ""
+      - "<click_info>网络电力消耗: &7128 每次合成"
+
+  NTW_EXPANSION_AUTO_GRIND_STONE:
+    name: "网络自动磨石"
+    lore:
+      - "网络自动磨石需要磨石蓝图才能工作。"
+      - "当网络中没有蓝图的目标物品时，"
+      - "机器会自动从网络中选取材料进行合成"
+      - "(需要网络中有足够的原材料)"
+      - ""
+      - "<click_info>网络电力消耗: &764 每次合成"
+
+  NTW_EXPANSION_AUTO_GRIND_STONE_WITHHOLDING:
+    name: "网络自动磨石 (预留版)"
+    lore:
+      - "网络自动磨石需要磨石蓝图才能工作。"
+      - "当网络中没有蓝图的目标物品时，"
+      - "机器会自动从网络中选取材料进行合成"
+      - "(需要网络中有足够的原材料)"
+      - ""
+      - "预留版的自动合成机会不断进行合成"
+      - "直到输出栏拥有1组物品"
+      - "这一组物品可以在网络中访问"
+      - "也可以通过货运系统取出"
+      - ""
+      - "<click_info>网络电力消耗: &7128 每次合成"
+
+  NTW_EXPANSION_AUTO_JUICER:
+    name: "网络自动榨汁机"
+    lore:
+      - "网络自动榨汁机需要榨汁机蓝图才能工作。"
+      - "当网络中没有蓝图的目标物品时，"
+      - "机器会自动从网络中选取材料进行合成"
+      - "(需要网络中有足够的原材料)"
+      - ""
+      - "<click_info>网络电力消耗: &764 每次合成"
+
+  NTW_EXPANSION_AUTO_JUICER_WITHHOLDING:
+    name: "网络自动榨汁机 (预留版)"
+    lore:
+      - "网络自动榨汁机需要榨汁机蓝图才能工作。"
+      - "当网络中没有蓝图的目标物品时，"
+      - "机器会自动从网络中选取材料进行合成"
+      - "(需要网络中有足够的原材料)"
+      - ""
+      - "预留版的自动合成机会不断进行合成"
+      - "直到输出栏拥有1组物品"
+      - "这一组物品可以在网络中访问"
+      - "也可以通过货运系统取出"
+      - ""
+      - "<click_info>网络电力消耗: &7128 每次合成"
+
+  NTW_EXPANSION_AUTO_ORE_CRUSHER:
+    name: "网络自动矿石粉碎机"
+    lore:
+      - "网络自动矿石粉碎机需要矿石粉碎机蓝图才能工作。"
+      - "当网络中没有蓝图的目标物品时，"
+      - "机器会自动从网络中选取材料进行合成"
+      - "(需要网络中有足够的原材料)"
+      - ""
+      - "<click_info>网络电力消耗: &764 每次合成"
+
+  NTW_EXPANSION_AUTO_ORE_CRUSHER_WITHHOLDING:
+    name: "网络自动矿石粉碎机 (预留版)"
+    lore:
+      - "网络自动矿石粉碎机需要矿石粉碎机蓝图才能工作。"
+      - "当网络中没有蓝图的目标物品时，"
+      - "机器会自动从网络中选取材料进行合成"
+      - "(需要网络中有足够的原材料)"
+      - ""
+      - "预留版的自动合成机会不断进行合成"
+      - "直到输出栏拥有1组物品"
+      - "这一组物品可以在网络中访问"
+      - "也可以通过货运系统取出"
+      - ""
+      - "<click_info>网络电力消耗: &7128 每次合成"
+
+  NTW_EXPANSION_AUTO_PRESSURE_CHAMBER:
+    name: "网络自动压力机"
+    lore:
+      - "网络自动压力机需要压力机蓝图才能工作。"
+      - "当网络中没有蓝图的目标物品时，"
+      - "机器会自动从网络中选取材料进行合成"
+      - "(需要网络中有足够的原材料)"
+      - ""
+      - "<click_info>网络电力消耗: &764 每次合成"
+
+  NTW_EXPANSION_AUTO_PRESSURE_CHAMBER_WITHHOLDING:
+    name: "网络自动压力机 (预留版)"
+    lore:
+      - "网络自动压力机需要压力机蓝图才能工作。"
+      - "当网络中没有蓝图的目标物品时，"
+      - "机器会自动从网络中选取材料进行合成"
+      - "(需要网络中有足够的原材料)"
+      - ""
+      - "预留版的自动合成机会不断进行合成"
+      - "直到输出栏拥有1组物品"
+      - "这一组物品可以在网络中访问"
+      - "也可以通过货运系统取出"
+      - ""
+      - "<click_info>网络电力消耗: &7128 每次合成"
+
+  NTW_EXPANSION_ADVANCED_AUTO_MAGIC_WORKBENCH:
+    name: "高级网络自动魔法工作台"
+    lore:
+      - "高级网络自动魔法工作台需要魔法工作台蓝图才能工作。"
+      - "当网络中没有蓝图的目标物品时，"
+      - "机器会自动从网络中选取材料进行合成"
+      - "允许堆叠蓝图 (不向下兼容)"
+      - "(需要网络中有足够的原材料)"
+      - ""
+      - "<click_info>网络电力消耗: &7640 每次合成"
+
+  NTW_EXPANSION_ADVANCED_AUTO_MAGIC_WORKBENCH_WITHHOLDING:
+    name: "高级网络自动魔法工作台 (预留版)"
+    lore:
+      - "高级网络自动魔法工作台需要魔法工作台蓝图才能工作。"
+      - "当网络中没有蓝图的目标物品时，"
+      - "机器会自动从网络中选取材料进行合成"
+      - "允许堆叠蓝图 (不向下兼容)"
+      - "(需要网络中有足够的原材料)"
+      - ""
+      - "预留版的自动合成机会不断进行合成"
+      - "直到输出栏拥有1组物品"
+      - "这一组物品可以在网络中访问"
+      - "也可以通过货运系统取出"
+      - ""
+      - "<click_info>网络电力消耗: &71,280 每次合成"
+
+  NTW_EXPANSION_ADVANCED_AUTO_ARMOR_FORGE:
+    name: "高级网络自动盔甲锻造台"
+    lore:
+      - "高级网络自动盔甲锻造台需要盔甲锻造台蓝图才能工作。"
+      - "当网络中没有蓝图的目标物品时，"
+      - "机器会自动从网络中选取材料进行合成"
+      - "允许堆叠蓝图 (不向下兼容)"
+      - "(需要网络中有足够的原材料)"
+      - ""
+      - "<click_info>网络电力消耗: &7640 每次合成"
+
+  NTW_EXPANSION_ADVANCED_AUTO_ARMOR_FORGE_WITHHOLDING:
+    name: "高级网络自动盔甲锻造台 (预留版)"
+    lore:
+      - "高级网络自动盔甲锻造台需要盔甲锻造台蓝图才能工作。"
+      - "当网络中没有蓝图的目标物品时，"
+      - "机器会自动从网络中选取材料进行合成"
+      - "允许堆叠蓝图 (不向下兼容)"
+      - "(需要网络中有足够的原材料)"
+      - ""
+      - "预留版的自动合成机会不断进行合成"
+      - "直到输出栏拥有1组物品"
+      - "这一组物品可以在网络中访问"
+      - "也可以通过货运系统取出"
+      - ""
+      - "<click_info>网络电力消耗: &71,280 每次合成"
+
+  NTW_EXPANSION_ADVANCED_AUTO_SMELTERY:
+    name: "高级网络自动冶炼炉"
+    lore:
+      - "高级网络自动冶炼炉需要冶炼炉蓝图才能工作。"
+      - "当网络中没有蓝图的目标物品时，"
+      - "机器会自动从网络中选取材料进行合成"
+      - "允许堆叠蓝图 (不向下兼容)"
+      - "(需要网络中有足够的原材料)"
+      - ""
+      - "<click_info>网络电力消耗: &7640 每次合成"
+
+  NTW_EXPANSION_ADVANCED_AUTO_SMELTERY_WITHHOLDING:
+    name: "高级网络自动冶炼炉 (预留版)"
+    lore:
+      - "高级网络自动冶炼炉需要冶炼炉蓝图才能工作。"
+      - "当网络中没有蓝图的目标物品时，"
+      - "机器会自动从网络中选取材料进行合成"
+      - "允许堆叠蓝图 (不向下兼容)"
+      - "(需要网络中有足够的原材料)"
+      - ""
+      - "预留版的自动合成机会不断进行合成"
+      - "直到输出栏拥有1组物品"
+      - "这一组物品可以在网络中访问"
+      - "也可以通过货运系统取出"
+      - ""
+      - "<click_info>网络电力消耗: &71,280 每次合成"
+
+  NTW_EXPANSION_ADVANCED_AUTO_QUANTUM_WORKBENCH:
+    name: "高级网络自动量子工作台"
+    lore:
+      - "高级网络自动量子工作台需要量子工作台蓝图才能工作。"
+      - "当网络中没有蓝图的目标物品时，"
+      - "机器会自动从网络中选取材料进行合成"
+      - "允许堆叠蓝图 (不向下兼容)"
+      - "(需要网络中有足够的原材料)"
+      - ""
+      - "<click_info>网络电力消耗: &7640 每次合成"
+
+  NTW_EXPANSION_ADVANCED_AUTO_QUANTUM_WORKBENCH_WITHHOLDING:
+    name: "高级网络自动量子工作台 (预留版)"
+    lore:
+      - "高级网络自动量子工作台需要量子工作台蓝图才能工作。"
+      - "当网络中没有蓝图的目标物品时，"
+      - "机器会自动从网络中选取材料进行合成"
+      - "允许堆叠蓝图 (不向下兼容)"
+      - "(需要网络中有足够的原材料)"
+      - ""
+      - "预留版的自动合成机会不断进行合成"
+      - "直到输出栏拥有1组物品"
+      - "这一组物品可以在网络中访问"
+      - "也可以通过货运系统取出"
+      - ""
+      - "<click_info>网络电力消耗: &71,280 每次合成"
+
+  NTW_EXPANSION_ADVANCED_AUTO_ANCIENT_ALTAR:
+    name: "高级网络自动古代祭坛"
+    lore:
+      - "高级网络自动古代祭坛需要古代祭坛蓝图才能工作。"
+      - "当网络中没有蓝图的目标物品时，"
+      - "机器会自动从网络中选取材料进行合成"
+      - "允许堆叠蓝图 (不向下兼容)"
+      - "(需要网络中有足够的原材料)"
+      - ""
+      - "<click_info>网络电力消耗: &7640 每次合成"
+
+  NTW_EXPANSION_ADVANCED_AUTO_ANCIENT_ALTAR_WITHHOLDING:
+    name: "高级网络自动古代祭坛 (预留版)"
+    lore:
+      - "高级网络自动古代祭坛需要古代祭坛蓝图才能工作。"
+      - "当网络中没有蓝图的目标物品时，"
+      - "机器会自动从网络中选取材料进行合成"
+      - "允许堆叠蓝图 (不向下兼容)"
+      - "(需要网络中有足够的原材料)"
+      - ""
+      - "预留版的自动合成机会不断进行合成"
+      - "直到输出栏拥有1组物品"
+      - "这一组物品可以在网络中访问"
+      - "也可以通过货运系统取出"
+      - ""
+      - "<click_info>网络电力消耗: &71,280 每次合成"
+
+  NTW_EXPANSION_ADVANCED_AUTO_EXPANSION_WORKBENCH:
+    name: "高级网络自动网络拓展工作台"
+    lore:
+      - "高级网络自动网络拓展工作台需要网络拓展工作台蓝图才能工作。"
+      - "当网络中没有蓝图的目标物品时，"
+      - "机器会自动从网络中选取材料进行合成"
+      - "允许堆叠蓝图 (不向下兼容)"
+      - "(需要网络中有足够的原材料)"
+      - ""
+      - "<click_info>网络电力消耗: &7640 每次合成"
+
+  NTW_EXPANSION_ADVANCED_AUTO_EXPANSION_WORKBENCH_WITHHOLDING:
+    name: "高级网络自动网络拓展工作台 (预留版)"
+    lore:
+      - "高级网络自动网络拓展工作台需要网络拓展工作台蓝图才能工作。"
+      - "当网络中没有蓝图的目标物品时，"
+      - "机器会自动从网络中选取材料进行合成"
+      - "允许堆叠蓝图 (不向下兼容)"
+      - "(需要网络中有足够的原材料)"
+      - ""
+      - "预留版的自动合成机会不断进行合成"
+      - "直到输出栏拥有1组物品"
+      - "这一组物品可以在网络中访问"
+      - "也可以通过货运系统取出"
+      - ""
+      - "<click_info>网络电力消耗: &71,280 每次合成"
+
+  NTW_EXPANSION_ADVANCED_AUTO_COMPRESSOR:
+    name: "高级网络自动压缩机"
+    lore:
+      - "高级网络自动压缩机需要压缩机蓝图才能工作。"
+      - "当网络中没有蓝图的目标物品时，"
+      - "机器会自动从网络中选取材料进行合成"
+      - "允许堆叠蓝图 (不向下兼容)"
+      - "(需要网络中有足够的原材料)"
+      - ""
+      - "<click_info>网络电力消耗: &7640 每次合成"
+
+  NTW_EXPANSION_ADVANCED_AUTO_COMPRESSOR_WITHHOLDING:
+    name: "高级网络自动压缩机 (预留版)"
+    lore:
+      - "高级网络自动压缩机需要压缩机蓝图才能工作。"
+      - "当网络中没有蓝图的目标物品时，"
+      - "机器会自动从网络中选取材料进行合成"
+      - "允许堆叠蓝图 (不向下兼容)"
+      - "(需要网络中有足够的原材料)"
+      - ""
+      - "预留版的自动合成机会不断进行合成"
+      - "直到输出栏拥有1组物品"
+      - "这一组物品可以在网络中访问"
+      - "也可以通过货运系统取出"
+      - ""
+      - "<click_info>网络电力消耗: &71,280 每次合成"
+
+  NTW_EXPANSION_ADVANCED_AUTO_GRIND_STONE:
+    name: "高级网络自动磨石"
+    lore:
+      - "高级网络自动磨石需要磨石蓝图才能工作。"
+      - "当网络中没有蓝图的目标物品时，"
+      - "机器会自动从网络中选取材料进行合成"
+      - "允许堆叠蓝图 (不向下兼容)"
+      - "(需要网络中有足够的原材料)"
+      - ""
+      - "<click_info>网络电力消耗: &7640 每次合成"
+
+  NTW_EXPANSION_ADVANCED_AUTO_GRIND_STONE_WITHHOLDING:
+    name: "高级网络自动磨石 (预留版)"
+    lore:
+      - "高级网络自动磨石需要磨石蓝图才能工作。"
+      - "当网络中没有蓝图的目标物品时，"
+      - "机器会自动从网络中选取材料进行合成"
+      - "允许堆叠蓝图 (不向下兼容)"
+      - "(需要网络中有足够的原材料)"
+      - ""
+      - "预留版的自动合成机会不断进行合成"
+      - "直到输出栏拥有1组物品"
+      - "这一组物品可以在网络中访问"
+      - "也可以通过货运系统取出"
+      - ""
+      - "<click_info>网络电力消耗: &71,280 每次合成"
+
+  NTW_EXPANSION_ADVANCED_AUTO_JUICER:
+    name: "高级网络自动榨汁机"
+    lore:
+      - "高级网络自动榨汁机需要榨汁机蓝图才能工作。"
+      - "当网络中没有蓝图的目标物品时，"
+      - "机器会自动从网络中选取材料进行合成"
+      - "允许堆叠蓝图 (不向下兼容)"
+      - "(需要网络中有足够的原材料)"
+      - ""
+      - "<click_info>网络电力消耗: &7640 每次合成"
+
+  NTW_EXPANSION_ADVANCED_AUTO_JUICER_WITHHOLDING:
+    name: "高级网络自动榨汁机 (预留版)"
+    lore:
+      - "高级网络自动榨汁机需要榨汁机蓝图才能工作。"
+      - "当网络中没有蓝图的目标物品时，"
+      - "机器会自动从网络中选取材料进行合成"
+      - "允许堆叠蓝图 (不向下兼容)"
+      - "(需要网络中有足够的原材料)"
+      - ""
+      - "预留版的自动合成机会不断进行合成"
+      - "直到输出栏拥有1组物品"
+      - "这一组物品可以在网络中访问"
+      - "也可以通过货运系统取出"
+      - ""
+      - "<click_info>网络电力消耗: &71,280 每次合成"
+
+  NTW_EXPANSION_ADVANCED_AUTO_ORE_CRUSHER:
+    name: "高级网络自动矿石粉碎机"
+    lore:
+      - "高级网络自动矿石粉碎机需要矿石粉碎机蓝图才能工作。"
+      - "当网络中没有蓝图的目标物品时，"
+      - "机器会自动从网络中选取材料进行合成"
+      - "允许堆叠蓝图 (不向下兼容)"
+      - "(需要网络中有足够的原材料)"
+      - ""
+      - "<click_info>网络电力消耗: &7640 每次合成"
+
+  NTW_EXPANSION_ADVANCED_AUTO_ORE_CRUSHER_WITHHOLDING:
+    name: "高级网络自动矿石粉碎机 (预留版)"
+    lore:
+      - "高级网络自动矿石粉碎机需要矿石粉碎机蓝图才能工作。"
+      - "当网络中没有蓝图的目标物品时，"
+      - "机器会自动从网络中选取材料进行合成"
+      - "允许堆叠蓝图 (不向下兼容)"
+      - "(需要网络中有足够的原材料)"
+      - ""
+      - "预留版的自动合成机会不断进行合成"
+      - "直到输出栏拥有1组物品"
+      - "这一组物品可以在网络中访问"
+      - "也可以通过货运系统取出"
+      - ""
+      - "<click_info>网络电力消耗: &71,280 每次合成"
+
+  NTW_EXPANSION_ADVANCED_AUTO_PRESSURE_CHAMBER:
+    name: "高级网络自动压力机"
+    lore:
+      - "高级网络自动压力机需要压力机蓝图才能工作。"
+      - "当网络中没有蓝图的目标物品时，"
+      - "机器会自动从网络中选取材料进行合成"
+      - "允许堆叠蓝图 (不向下兼容)"
+      - "(需要网络中有足够的原材料)"
+      - ""
+      - "<click_info>网络电力消耗: &7640 每次合成"
+
+  NTW_EXPANSION_ADVANCED_AUTO_PRESSURE_CHAMBER_WITHHOLDING:
+    name: "高级网络自动压力机 (预留版)"
+    lore:
+      - "高级网络自动压力机需要压力机蓝图才能工作。"
+      - "当网络中没有蓝图的目标物品时，"
+      - "机器会自动从网络中选取材料进行合成"
+      - "允许堆叠蓝图 (不向下兼容)"
+      - "(需要网络中有足够的原材料)"
+      - ""
+      - "预留版的自动合成机会不断进行合成"
+      - "直到输出栏拥有1组物品"
+      - "这一组物品可以在网络中访问"
+      - "也可以通过货运系统取出"
+      - ""
+      - "<click_info>网络电力消耗: &71,280 每次合成"
+
+  NTW_EXPANSION_ADVANCED_AUTO_CRAFTING:
+    name: "高级网络自动合成机"
+    lore:
+      - "高级网络自动合成机需要合成蓝图才能工作。"
+      - "当网络中没有蓝图的目标物品时，"
+      - "机器会自动从网络中选取材料进行合成"
+      - "允许堆叠蓝图 (不向下兼容)"
+      - "(需要网络中有足够的原材料)"
+      - ""
+      - "<click_info>网络电力消耗: &7640 每次合成"
+
+  NTW_EXPANSION_ADVANCED_AUTO_CRAFTING_WITHHOLDING:
+    name: "高级网络自动合成机 (预留版)"
+    lore:
+      - "高级网络自动合成机需要合成蓝图才能工作。"
+      - "当网络中没有蓝图的目标物品时，"
+      - "机器会自动从网络中选取材料进行合成"
+      - "允许堆叠蓝图 (不向下兼容)"
+      - "(需要网络中有足够的原材料)"
+      - ""
+      - "预留版的自动合成机会不断进行合成"
+      - "直到输出栏拥有1组物品"
+      - "这一组物品可以在网络中访问"
+      - "也可以通过货运系统取出"
+      - ""
+      - "<click_info>网络电力消耗: &71,280 每次合成"
+
+  NTW_EXPANSION_BRIDGE_WHITE:
+    name: "网桥(白色)"
+    lore:
+      - "网桥用于连接不同的网络物品"
+      - "来形成一个完整的网络"
+      - "更加清晰的布局网络"
+
+  NTW_EXPANSION_BRIDGE_LIGHT_GRAY:
+    name: "网桥(淡灰色)"
+    lore:
+      - "网桥用于连接不同的网络物品"
+      - "来形成一个完整的网络"
+      - "更加清晰的布局网络"
+
+  NTW_EXPANSION_BRIDGE_GRAY:
+    name: "网桥(灰色)"
+    lore:
+      - "网桥用于连接不同的网络物品"
+      - "来形成一个完整的网络"
+      - "更加清晰的布局网络"
+
+  NTW_EXPANSION_BRIDGE_BLACK:
+    name: "网桥(黑色)"
+    lore:
+      - "网桥用于连接不同的网络物品"
+      - "来形成一个完整的网络"
+      - "更加清晰的布局网络"
+
+  NTW_EXPANSION_BRIDGE_BROWN:
+    name: "网桥(棕色)"
+    lore:
+      - "网桥用于连接不同的网络物品"
+      - "来形成一个完整的网络"
+      - "更加清晰的布局网络"
+
+  NTW_EXPANSION_BRIDGE_RED:
+    name: "网桥(红色)"
+    lore:
+      - "网桥用于连接不同的网络物品"
+      - "来形成一个完整的网络"
+      - "更加清晰的布局网络"
+
+  NTW_EXPANSION_BRIDGE_ORANGE:
+    name: "网桥(橙色)"
+    lore:
+      - "网桥用于连接不同的网络物品"
+      - "来形成一个完整的网络"
+      - "更加清晰的布局网络"
+
+  NTW_EXPANSION_BRIDGE_YELLOW:
+    name: "网桥(黄色)"
+    lore:
+      - "网桥用于连接不同的网络物品"
+      - "来形成一个完整的网络"
+      - "更加清晰的布局网络"
+
+  NTW_EXPANSION_BRIDGE_LIME:
+    name: "网桥(黄绿色)"
+    lore:
+      - "网桥用于连接不同的网络物品"
+      - "来形成一个完整的网络"
+      - "更加清晰的布局网络"
+
+  NTW_EXPANSION_BRIDGE_GREEN:
+    name: "网桥(绿色)"
+    lore:
+      - "网桥用于连接不同的网络物品"
+      - "来形成一个完整的网络"
+      - "更加清晰的布局网络"
+
+  NTW_EXPANSION_BRIDGE_CYAN:
+    name: "网桥(青色)"
+    lore:
+      - "网桥用于连接不同的网络物品"
+      - "来形成一个完整的网络"
+      - "更加清晰的布局网络"
+
+  NTW_EXPANSION_BRIDGE_LIGHT_BLUE:
+    name: "网桥(淡蓝色)"
+    lore:
+      - "网桥用于连接不同的网络物品"
+      - "来形成一个完整的网络"
+      - "更加清晰的布局网络"
+
+  NTW_EXPANSION_BRIDGE_BLUE:
+    name: "网桥(蓝色)"
+    lore:
+      - "网桥用于连接不同的网络物品"
+      - "来形成一个完整的网络"
+      - "更加清晰的布局网络"
+
+  NTW_EXPANSION_BRIDGE_PURPLE:
+    name: "网桥(紫色)"
+    lore:
+      - "网桥用于连接不同的网络物品"
+      - "来形成一个完整的网络"
+      - "更加清晰的布局网络"
+
+  NTW_EXPANSION_BRIDGE_MAGENTA:
+    name: "网桥(品红色)"
+    lore:
+      - "网桥用于连接不同的网络物品"
+      - "来形成一个完整的网络"
+      - "更加清晰的布局网络"
+
+  NTW_EXPANSION_BRIDGE_PINK:
+    name: "网桥(粉红色)"
+    lore:
+      - "网桥用于连接不同的网络物品"
+      - "来形成一个完整的网络"
+      - "更加清晰的布局网络"
+
+  NTW_EXPANSION_ADVANCED_QUANTUM_STORAGE:
+    name: "高级量子存储"
+    lore:
+      - "可自定义的最大存储容量"
+      - "请注意设置数量之后不能在设置小于之前设置的数量"
+      - "否则清空到当前最大容量"
+
+  NTW_EXPANSION_LINE_POWER_OUTLET_1:
+    name: "链式网络插口 (1)"
+    lore:
+      - "链式网络插口可以将网络中存储的电力"
+      - "传输至指定的机器中."
+      - ""
+      - "<click_info>可存储: &764J"
+
+  NTW_EXPANSION_LINE_POWER_OUTLET_2:
+    name: "链式网络插口 (2)"
+    lore:
+      - "链式网络插口可以将网络中存储的电力"
+      - "传输至指定的机器中."
+      - ""
+      - "<click_info>可存储: &7256J"
+
+  NTW_EXPANSION_LINE_POWER_OUTLET_3:
+    name: "链式网络插口 (3)"
+    lore:
+      - "链式网络插口可以将网络中存储的电力"
+      - "传输至指定的机器中."
+      - ""
+      - "<click_info>可存储: &71,024J"
+
+  NTW_EXPANSION_LINE_POWER_OUTLET_4:
+    name: "链式网络插口 (4)"
+    lore:
+      - "链式网络插口可以将网络中存储的电力"
+      - "传输至指定的机器中."
+      - ""
+      - "<click_info>可存储: &74,096J"
+
+  NTW_EXPANSION_LINE_POWER_OUTLET_5:
+    name: "链式网络插口 (5)"
+    lore:
+      - "链式网络插口可以将网络中存储的电力"
+      - "传输至指定的机器中."
+      - ""
+      - "<click_info>可存储: &732,768J"
+
+  NTW_EXPANSION_LINE_POWER_OUTLET_6:
+    name: "链式网络插口 (6)"
+    lore:
+      - "链式网络插口可以将网络中存储的电力"
+      - "传输至指定的机器中."
+      - ""
+      - "<click_info>可存储: &7262,144J"
+
+  NTW_EXPANSION_LINE_POWER_OUTLET_7:
+    name: "链式网络插口 (7)"
+    lore:
+      - "链式网络插口可以将网络中存储的电力"
+      - "传输至指定的机器中."
+      - ""
+      - "<click_info>可存储: &72,097,152J"
+
+  NTW_EXPANSION_LINE_POWER_OUTLET_8:
+    name: "链式网络插口 (8)"
+    lore:
+      - "链式网络插口可以将网络中存储的电力"
+      - "传输至指定的机器中."
+      - ""
+      - "<click_info>可存储: &716,777,216J"
+
+  NTW_EXPANSION_LINE_POWER_OUTLET_9:
+    name: "链式网络插口 (9)"
+    lore:
+      - "链式网络插口可以将网络中存储的电力"
+      - "传输至指定的机器中."
+      - ""
+      - "<click_info>可存储: &7134,217,728J"
+
+  NTW_EXPANSION_LINE_POWER_OUTLET_10:
+    name: "链式网络插口 (10)"
+    lore:
+      - "链式网络插口可以将网络中存储的电力"
+      - "传输至指定的机器中."
+      - ""
+      - "<click_info>可存储: &71,073,741,824J"
+
+  NTW_EXPANSION_LINE_POWER_OUTLET_11:
+    name: "链式网络插口 (11)"
+    lore:
+      - "链式网络插口可以将网络中存储的电力"
+      - "传输至指定的机器中."
+      - ""
+      - "<click_info>可存储: &72,147,483,647J"
+  
+  NTW_EXPANSION_AUTHOR_SEFIRAAT:
+    name: "Sefiraat"
+    lore:
+      - "网络开发者"
+
+  NTW_EXPANSION_AUTHOR_YBW0014:
+    name: "ybw0014"
+    lore:
+      - "汉化版网络开发者"
+
+  NTW_EXPANSION_AUTHOR_YITOUDAIDAI:
+    name: "yitoudaidai"
+    lore:
+      - "网络拓展开发者"
+
+  NTW_EXPANSION_AUTHOR_TINALNESS:
+    name: "tinalness"
+    lore:
+      - "网络拓展开发者"
+  
+  NTW_EXPANSION_CARGO_NODE_QUICK_TOOL:
+    name: "货运节点快配工具"
+    lore:
+      - "&a右键: 设置指向货运节点的配置"
+      - "&e下蹲+右键: 从指向的货运节点加载配置"
+      - ""
+      - "&x&c&c&8&c&f&4&l魔&x&c&b&9&7&f&5&l芋&x&c&a&a&3&f&6&l粘&x&c&9&a&e&f&7&l液&x&c&8&b&9&f&8&l科&x&c&7&c&5&f&9&l技&x&c&5&d&0&f&9&l服&x&c&4&d&b&f&a&l务&x&c&3&e&6&f&b&l器&x&c&2&f&2&f&c&l提&x&c&1&f&d&f&d&l供"
+      - ""
+  
+  NTW_EXPANSION_STORAGE_UPGRADE_TABLE:
+    name: "网络抽屉升级台"
+    lore:
+      - "&e用于升级网络抽屉"
+      - ""
+      - "&x&c&c&8&c&f&4&l魔&x&c&b&9&7&f&5&l芋&x&c&a&a&3&f&6&l粘&x&c&9&a&e&f&7&l液&x&c&8&b&9&f&8&l科&x&c&7&c&5&f&9&l技&x&c&5&d&0&f&9&l服&x&c&4&d&b&f&a&l务&x&c&3&e&6&f&b&l器&x&c&2&f&2&f&c&l提&x&c&1&f&d&f&d&l供"
+      - ""
+  
+  NTW_EXPANSION_CARGO_STORAGE_UNIT_1:
+    name: "网络抽屉 I"
+    lore:
+      - "&6支持网络快速输入/输出"
+      - ""
+      - "&7⇨ &e可储存 32 种物品"
+      - "&7⇨ &e每种物品可容纳 256 个"
+      - ""
+      - "&x&c&c&8&c&f&4&l魔&x&c&b&9&7&f&5&l芋&x&c&a&a&3&f&6&l粘&x&c&9&a&e&f&7&l液&x&c&8&b&9&f&8&l科&x&c&7&c&5&f&9&l技&x&c&5&d&0&f&9&l服&x&c&4&d&b&f&a&l务&x&c&3&e&6&f&b&l器&x&c&2&f&2&f&c&l提&x&c&1&f&d&f&d&l供"
+      - ""
+  
+  NTW_EXPANSION_CARGO_STORAGE_UNIT_2:
+    name: "网络抽屉 II"
+    lore:
+      - "&6支持网络快速输入/输出"
+      - ""
+      - "&7⇨ &e可储存 32 种物品"
+      - "&7⇨ &e每种物品可容纳 1024 个"
+      - ""
+      - "&x&c&c&8&c&f&4&l魔&x&c&b&9&7&f&5&l芋&x&c&a&a&3&f&6&l粘&x&c&9&a&e&f&7&l液&x&c&8&b&9&f&8&l科&x&c&7&c&5&f&9&l技&x&c&5&d&0&f&9&l服&x&c&4&d&b&f&a&l务&x&c&3&e&6&f&b&l器&x&c&2&f&2&f&c&l提&x&c&1&f&d&f&d&l供"
+      - ""
+  
+  NTW_EXPANSION_CARGO_STORAGE_UNIT_3:
+    name: "网络抽屉 III"
+    lore:
+      - "&6支持网络快速输入/输出"
+      - ""
+      - "&7⇨ &e可储存 32 种物品"
+      - "&7⇨ &e每种物品可容纳 4096 个"
+      - ""
+      - "&x&c&c&8&c&f&4&l魔&x&c&b&9&7&f&5&l芋&x&c&a&a&3&f&6&l粘&x&c&9&a&e&f&7&l液&x&c&8&b&9&f&8&l科&x&c&7&c&5&f&9&l技&x&c&5&d&0&f&9&l服&x&c&4&d&b&f&a&l务&x&c&3&e&6&f&b&l器&x&c&2&f&2&f&c&l提&x&c&1&f&d&f&d&l供"
+      - ""
+  
+  NTW_EXPANSION_CARGO_STORAGE_UNIT_4:
+    name: "网络抽屉 IV"
+    lore:
+      - "&6支持网络快速输入/输出"
+      - ""
+      - "&7⇨ &e可储存 32 种物品"
+      - "&7⇨ &e每种物品可容纳 32768 个"
+      - ""
+      - "&x&c&c&8&c&f&4&l魔&x&c&b&9&7&f&5&l芋&x&c&a&a&3&f&6&l粘&x&c&9&a&e&f&7&l液&x&c&8&b&9&f&8&l科&x&c&7&c&5&f&9&l技&x&c&5&d&0&f&9&l服&x&c&4&d&b&f&a&l务&x&c&3&e&6&f&b&l器&x&c&2&f&2&f&c&l提&x&c&1&f&d&f&d&l供"
+      - ""
+  
+  NTW_EXPANSION_CARGO_STORAGE_UNIT_5:
+    name: "网络抽屉 V"
+    lore:
+      - "&6支持网络快速输入/输出"
+      - ""
+      - "&7⇨ &e可储存 32 种物品"
+      - "&7⇨ &e每种物品可容纳 262144 个"
+      - ""
+      - "&x&c&c&8&c&f&4&l魔&x&c&b&9&7&f&5&l芋&x&c&a&a&3&f&6&l粘&x&c&9&a&e&f&7&l液&x&c&8&b&9&f&8&l科&x&c&7&c&5&f&9&l技&x&c&5&d&0&f&9&l服&x&c&4&d&b&f&a&l务&x&c&3&e&6&f&b&l器&x&c&2&f&2&f&c&l提&x&c&1&f&d&f&d&l供"
+      - ""
+  
+  NTW_EXPANSION_CARGO_STORAGE_UNIT_6:
+    name: "网络抽屉 VI"
+    lore:
+      - "&6支持网络快速输入/输出"
+      - ""
+      - "&7⇨ &e可储存 32 种物品"
+      - "&7⇨ &e每种物品可容纳 2097152 个"
+      - ""
+      - "&x&c&c&8&c&f&4&l魔&x&c&b&9&7&f&5&l芋&x&c&a&a&3&f&6&l粘&x&c&9&a&e&f&7&l液&x&c&8&b&9&f&8&l科&x&c&7&c&5&f&9&l技&x&c&5&d&0&f&9&l服&x&c&4&d&b&f&a&l务&x&c&3&e&6&f&b&l器&x&c&2&f&2&f&c&l提&x&c&1&f&d&f&d&l供"
+      - ""
+  
+  NTW_EXPANSION_CARGO_STORAGE_UNIT_7:
+    name: "网络抽屉 VII"
+    lore:
+      - "&6支持网络快速输入/输出"
+      - ""
+      - "&7⇨ &e可储存 32 种物品"
+      - "&7⇨ &e每种物品可容纳 4194304 个"
+      - ""
+      - "&x&c&c&8&c&f&4&l魔&x&c&b&9&7&f&5&l芋&x&c&a&a&3&f&6&l粘&x&c&9&a&e&f&7&l液&x&c&8&b&9&f&8&l科&x&c&7&c&5&f&9&l技&x&c&5&d&0&f&9&l服&x&c&4&d&b&f&a&l务&x&c&3&e&6&f&b&l器&x&c&2&f&2&f&c&l提&x&c&1&f&d&f&d&l供"
+      - ""
+  
+  NTW_EXPANSION_CARGO_STORAGE_UNIT_8:
+    name: "网络抽屉 VIII"
+    lore:
+      - "&6支持网络快速输入/输出"
+      - ""
+      - "&7⇨ &e可储存 32 种物品"
+      - "&7⇨ &e每种物品可容纳 8388608 个"
+      - ""
+      - "&x&c&c&8&c&f&4&l魔&x&c&b&9&7&f&5&l芋&x&c&a&a&3&f&6&l粘&x&c&9&a&e&f&7&l液&x&c&8&b&9&f&8&l科&x&c&7&c&5&f&9&l技&x&c&5&d&0&f&9&l服&x&c&4&d&b&f&a&l务&x&c&3&e&6&f&b&l器&x&c&2&f&2&f&c&l提&x&c&1&f&d&f&d&l供"
+      - ""
+  
+  NTW_EXPANSION_CARGO_STORAGE_UNIT_9:
+    name: "网络抽屉 IX"
+    lore:
+      - "&6支持网络快速输入/输出"
+      - ""
+      - "&7⇨ &e可储存 32 种物品"
+      - "&7⇨ &e每种物品可容纳 16777216 个"
+      - ""
+      - "&x&c&c&8&c&f&4&l魔&x&c&b&9&7&f&5&l芋&x&c&a&a&3&f&6&l粘&x&c&9&a&e&f&7&l液&x&c&8&b&9&f&8&l科&x&c&7&c&5&f&9&l技&x&c&5&d&0&f&9&l服&x&c&4&d&b&f&a&l务&x&c&3&e&6&f&b&l器&x&c&2&f&2&f&c&l提&x&c&1&f&d&f&d&l供"
+      - ""
+  
+  NTW_EXPANSION_CARGO_STORAGE_UNIT_10:
+    name: "网络抽屉 X"
+    lore:
+      - "&6支持网络快速输入/输出"
+      - ""
+      - "&7⇨ &e可储存 32 种物品"
+      - "&7⇨ &e每种物品可容纳 33554432 个"
+      - ""
+      - "&x&c&c&8&c&f&4&l魔&x&c&b&9&7&f&5&l芋&x&c&a&a&3&f&6&l粘&x&c&9&a&e&f&7&l液&x&c&8&b&9&f&8&l科&x&c&7&c&5&f&9&l技&x&c&5&d&0&f&9&l服&x&c&4&d&b&f&a&l务&x&c&3&e&6&f&b&l器&x&c&2&f&2&f&c&l提&x&c&1&f&d&f&d&l供"
+      - ""
+  
+  NTW_EXPANSION_CARGO_STORAGE_UNIT_11:
+    name: "网络抽屉 XI"
+    lore:
+      - "&6支持网络快速输入/输出"
+      - ""
+      - "&7⇨ &e可储存 32 种物品"
+      - "&7⇨ &e每种物品可容纳 134217728 个"
+      - ""
+      - "&x&c&c&8&c&f&4&l魔&x&c&b&9&7&f&5&l芋&x&c&a&a&3&f&6&l粘&x&c&9&a&e&f&7&l液&x&c&8&b&9&f&8&l科&x&c&7&c&5&f&9&l技&x&c&5&d&0&f&9&l服&x&c&4&d&b&f&a&l务&x&c&3&e&6&f&b&l器&x&c&2&f&2&f&c&l提&x&c&1&f&d&f&d&l供"
+      - ""
+  
+  NTW_EXPANSION_CARGO_STORAGE_UNIT_12:
+    name: "网络抽屉 XII"
+    lore:
+      - "&6支持网络快速输入/输出"
+      - ""
+      - "&7⇨ &e可储存 35 种物品"
+      - "&7⇨ &e每种物品可容纳 1073741824 个"
+      - ""
+      - "&x&c&c&8&c&f&4&l魔&x&c&b&9&7&f&5&l芋&x&c&a&a&3&f&6&l粘&x&c&9&a&e&f&7&l液&x&c&8&b&9&f&8&l科&x&c&7&c&5&f&9&l技&x&c&5&d&0&f&9&l服&x&c&4&d&b&f&a&l务&x&c&3&e&6&f&b&l器&x&c&2&f&2&f&c&l提&x&c&1&f&d&f&d&l供"
+      - ""
+  
+  NTW_EXPANSION_CARGO_STORAGE_UNIT_13:
+    name: "网络抽屉 XIII"
+    lore:
+      - "&6支持网络快速输入/输出"
+      - ""
+      - "&7⇨ &e可储存 35 种物品"
+      - "&7⇨ &e每种物品可容纳 2147483647 个"
+      - ""
+      - "&x&c&c&8&c&f&4&l魔&x&c&b&9&7&f&5&l芋&x&c&a&a&3&f&6&l粘&x&c&9&a&e&f&7&l液&x&c&8&b&9&f&8&l科&x&c&7&c&5&f&9&l技&x&c&5&d&0&f&9&l服&x&c&4&d&b&f&a&l务&x&c&3&e&6&f&b&l器&x&c&2&f&2&f&c&l提&x&c&1&f&d&f&d&l供"
+      - ""
+
+  NTW_EXPANSION_CARGO_STORAGE_UNIT_1_MODEL:
+    name: "网络抽屉 I"
+    lore:
+      - "&6支持网络快速输入/输出"
+      - ""
+      - "&7⇨ &e可储存 32 种物品"
+      - "&7⇨ &e每种物品可容纳 256 个"
+      - ""
+      - "&7⇨ &e需要网络扳手才能拆除模型方块"
+      - ""
+      - "&x&c&c&8&c&f&4&l魔&x&c&b&9&7&f&5&l芋&x&c&a&a&3&f&6&l粘&x&c&9&a&e&f&7&l液&x&c&8&b&9&f&8&l科&x&c&7&c&5&f&9&l技&x&c&5&d&0&f&9&l服&x&c&4&d&b&f&a&l务&x&c&3&e&6&f&b&l器&x&c&2&f&2&f&c&l提&x&c&1&f&d&f&d&l供"
+      - ""
+  
+  NTW_EXPANSION_CARGO_STORAGE_UNIT_2_MODEL:
+    name: "网络抽屉 II"
+    lore:
+      - "&6支持网络快速输入/输出"
+      - ""
+      - "&7⇨ &e可储存 32 种物品"
+      - "&7⇨ &e每种物品可容纳 1024 个"
+      - ""
+      - "&7⇨ &e需要网络扳手才能拆除模型方块"
+      - ""
+      - "&x&c&c&8&c&f&4&l魔&x&c&b&9&7&f&5&l芋&x&c&a&a&3&f&6&l粘&x&c&9&a&e&f&7&l液&x&c&8&b&9&f&8&l科&x&c&7&c&5&f&9&l技&x&c&5&d&0&f&9&l服&x&c&4&d&b&f&a&l务&x&c&3&e&6&f&b&l器&x&c&2&f&2&f&c&l提&x&c&1&f&d&f&d&l供"
+      - ""
+  
+  NTW_EXPANSION_CARGO_STORAGE_UNIT_3_MODEL:
+    name: "网络抽屉 III"
+    lore:
+      - "&6支持网络快速输入/输出"
+      - ""
+      - "&7⇨ &e可储存 32 种物品"
+      - "&7⇨ &e每种物品可容纳 4096 个"
+      - ""
+      - "&7⇨ &e需要网络扳手才能拆除模型方块"
+      - ""
+      - "&x&c&c&8&c&f&4&l魔&x&c&b&9&7&f&5&l芋&x&c&a&a&3&f&6&l粘&x&c&9&a&e&f&7&l液&x&c&8&b&9&f&8&l科&x&c&7&c&5&f&9&l技&x&c&5&d&0&f&9&l服&x&c&4&d&b&f&a&l务&x&c&3&e&6&f&b&l器&x&c&2&f&2&f&c&l提&x&c&1&f&d&f&d&l供"
+      - ""
+  
+  NTW_EXPANSION_CARGO_STORAGE_UNIT_4_MODEL:
+    name: "网络抽屉 IV"
+    lore:
+      - "&6支持网络快速输入/输出"
+      - ""
+      - "&7⇨ &e可储存 32 种物品"
+      - "&7⇨ &e每种物品可容纳 32768 个"
+      - ""
+      - "&7⇨ &e需要网络扳手才能拆除模型方块"
+      - ""
+      - "&x&c&c&8&c&f&4&l魔&x&c&b&9&7&f&5&l芋&x&c&a&a&3&f&6&l粘&x&c&9&a&e&f&7&l液&x&c&8&b&9&f&8&l科&x&c&7&c&5&f&9&l技&x&c&5&d&0&f&9&l服&x&c&4&d&b&f&a&l务&x&c&3&e&6&f&b&l器&x&c&2&f&2&f&c&l提&x&c&1&f&d&f&d&l供"
+      - ""
+  
+  NTW_EXPANSION_CARGO_STORAGE_UNIT_5_MODEL:
+    name: "网络抽屉 V"
+    lore:
+      - "&6支持网络快速输入/输出"
+      - ""
+      - "&7⇨ &e可储存 32 种物品"
+      - "&7⇨ &e每种物品可容纳 262144 个"
+      - ""
+      - "&7⇨ &e需要网络扳手才能拆除模型方块"
+      - ""
+      - "&x&c&c&8&c&f&4&l魔&x&c&b&9&7&f&5&l芋&x&c&a&a&3&f&6&l粘&x&c&9&a&e&f&7&l液&x&c&8&b&9&f&8&l科&x&c&7&c&5&f&9&l技&x&c&5&d&0&f&9&l服&x&c&4&d&b&f&a&l务&x&c&3&e&6&f&b&l器&x&c&2&f&2&f&c&l提&x&c&1&f&d&f&d&l供"
+      - ""
+  
+  NTW_EXPANSION_CARGO_STORAGE_UNIT_6_MODEL:
+    name: "网络抽屉 VI"
+    lore:
+      - "&6支持网络快速输入/输出"
+      - ""
+      - "&7⇨ &e可储存 32 种物品"
+      - "&7⇨ &e每种物品可容纳 2097152 个"
+      - ""
+      - "&7⇨ &e需要网络扳手才能拆除模型方块"
+      - ""
+      - "&x&c&c&8&c&f&4&l魔&x&c&b&9&7&f&5&l芋&x&c&a&a&3&f&6&l粘&x&c&9&a&e&f&7&l液&x&c&8&b&9&f&8&l科&x&c&7&c&5&f&9&l技&x&c&5&d&0&f&9&l服&x&c&4&d&b&f&a&l务&x&c&3&e&6&f&b&l器&x&c&2&f&2&f&c&l提&x&c&1&f&d&f&d&l供"
+      - ""
+  
+  NTW_EXPANSION_CARGO_STORAGE_UNIT_7_MODEL:
+    name: "网络抽屉 VII"
+    lore:
+      - "&6支持网络快速输入/输出"
+      - ""
+      - "&7⇨ &e可储存 32 种物品"
+      - "&7⇨ &e每种物品可容纳 4194304 个"
+      - ""
+      - "&7⇨ &e需要网络扳手才能拆除模型方块"
+      - ""
+      - "&x&c&c&8&c&f&4&l魔&x&c&b&9&7&f&5&l芋&x&c&a&a&3&f&6&l粘&x&c&9&a&e&f&7&l液&x&c&8&b&9&f&8&l科&x&c&7&c&5&f&9&l技&x&c&5&d&0&f&9&l服&x&c&4&d&b&f&a&l务&x&c&3&e&6&f&b&l器&x&c&2&f&2&f&c&l提&x&c&1&f&d&f&d&l供"
+      - ""
+  
+  NTW_EXPANSION_CARGO_STORAGE_UNIT_8_MODEL:
+    name: "网络抽屉 VIII"
+    lore:
+      - "&6支持网络快速输入/输出"
+      - ""
+      - "&7⇨ &e可储存 32 种物品"
+      - "&7⇨ &e每种物品可容纳 8388608 个"
+      - ""
+      - "&7⇨ &e需要网络扳手才能拆除模型方块"
+      - ""
+      - "&x&c&c&8&c&f&4&l魔&x&c&b&9&7&f&5&l芋&x&c&a&a&3&f&6&l粘&x&c&9&a&e&f&7&l液&x&c&8&b&9&f&8&l科&x&c&7&c&5&f&9&l技&x&c&5&d&0&f&9&l服&x&c&4&d&b&f&a&l务&x&c&3&e&6&f&b&l器&x&c&2&f&2&f&c&l提&x&c&1&f&d&f&d&l供"
+      - ""
+  
+  NTW_EXPANSION_CARGO_STORAGE_UNIT_9_MODEL:
+    name: "网络抽屉 IX"
+    lore:
+      - "&6支持网络快速输入/输出"
+      - ""
+      - "&7⇨ &e可储存 32 种物品"
+      - "&7⇨ &e每种物品可容纳 16777216 个"
+      - ""
+      - "&7⇨ &e需要网络扳手才能拆除模型方块"
+      - ""
+      - "&x&c&c&8&c&f&4&l魔&x&c&b&9&7&f&5&l芋&x&c&a&a&3&f&6&l粘&x&c&9&a&e&f&7&l液&x&c&8&b&9&f&8&l科&x&c&7&c&5&f&9&l技&x&c&5&d&0&f&9&l服&x&c&4&d&b&f&a&l务&x&c&3&e&6&f&b&l器&x&c&2&f&2&f&c&l提&x&c&1&f&d&f&d&l供"
+      - ""
+  
+  NTW_EXPANSION_CARGO_STORAGE_UNIT_10_MODEL:
+    name: "网络抽屉 X"
+    lore:
+      - "&6支持网络快速输入/输出"
+      - ""
+      - "&7⇨ &e可储存 32 种物品"
+      - "&7⇨ &e每种物品可容纳 33554432 个"
+      - ""
+      - "&7⇨ &e需要网络扳手才能拆除模型方块"
+      - ""
+      - "&x&c&c&8&c&f&4&l魔&x&c&b&9&7&f&5&l芋&x&c&a&a&3&f&6&l粘&x&c&9&a&e&f&7&l液&x&c&8&b&9&f&8&l科&x&c&7&c&5&f&9&l技&x&c&5&d&0&f&9&l服&x&c&4&d&b&f&a&l务&x&c&3&e&6&f&b&l器&x&c&2&f&2&f&c&l提&x&c&1&f&d&f&d&l供"
+      - ""
+  
+  NTW_EXPANSION_CARGO_STORAGE_UNIT_11_MODEL:
+    name: "网络抽屉 XI"
+    lore:
+      - "&6支持网络快速输入/输出"
+      - ""
+      - "&7⇨ &e可储存 32 种物品"
+      - "&7⇨ &e每种物品可容纳 134217728 个"
+      - ""
+      - "&7⇨ &e需要网络扳手才能拆除模型方块"
+      - ""
+      - "&x&c&c&8&c&f&4&l魔&x&c&b&9&7&f&5&l芋&x&c&a&a&3&f&6&l粘&x&c&9&a&e&f&7&l液&x&c&8&b&9&f&8&l科&x&c&7&c&5&f&9&l技&x&c&5&d&0&f&9&l服&x&c&4&d&b&f&a&l务&x&c&3&e&6&f&b&l器&x&c&2&f&2&f&c&l提&x&c&1&f&d&f&d&l供"
+      - ""
+  
+  NTW_EXPANSION_CARGO_STORAGE_UNIT_12_MODEL:
+    name: "网络抽屉 XII"
+    lore:
+      - "&6支持网络快速输入/输出"
+      - ""
+      - "&7⇨ &e可储存 35 种物品"
+      - "&7⇨ &e每种物品可容纳 1073741824 个"
+      - ""
+      - "&7⇨ &e需要网络扳手才能拆除模型方块"
+      - ""
+      - "&x&c&c&8&c&f&4&l魔&x&c&b&9&7&f&5&l芋&x&c&a&a&3&f&6&l粘&x&c&9&a&e&f&7&l液&x&c&8&b&9&f&8&l科&x&c&7&c&5&f&9&l技&x&c&5&d&0&f&9&l服&x&c&4&d&b&f&a&l务&x&c&3&e&6&f&b&l器&x&c&2&f&2&f&c&l提&x&c&1&f&d&f&d&l供"
+      - ""
+  
+  NTW_EXPANSION_CARGO_STORAGE_UNIT_13_MODEL:
+    name: "网络抽屉 XIII"
+    lore:
+      - "&6支持网络快速输入/输出"
+      - ""
+      - "&7⇨ &e可储存 35 种物品"
+      - "&7⇨ &e每种物品可容纳 2147483647 个"
+      - ""
+      - "&7⇨ &e需要网络扳手才能拆除模型方块"
+      - ""
+      - "&x&c&c&8&c&f&4&l魔&x&c&b&9&7&f&5&l芋&x&c&a&a&3&f&6&l粘&x&c&9&a&e&f&7&l液&x&c&8&b&9&f&8&l科&x&c&7&c&5&f&9&l技&x&c&5&d&0&f&9&l服&x&c&4&d&b&f&a&l务&x&c&3&e&6&f&b&l器&x&c&2&f&2&f&c&l提&x&c&1&f&d&f&d&l供"
+      - ""
+  
+  NTW_EXPANSION_ITEM_MOVER:
+    name: "&6物品转移棒"
+    lore:
+      - "&6右键以转移物品至物品转移棒"
+      - "&6Shift + 右键以转移物品至指定的存储"
+      - "&c不支持无尽存储"
+  
+  NTW_EXPANSION_BLUEPRINT_DECODER:
+    name: "&6网络蓝图解码器"
+    lore:
+      - ""
+      - "解码网络蓝图"
+  
+  NTW_EXPANSION_DUE_MACHINE:
+    name: "&6预期机"
+    lore:
+      - "匹配物品时，输出物品"
+  
+  NTW_EXPANSION_OFFSETTER:
+    name: "&a偏移机"
+    lore:
+      - "&8顾名思义"
+  
+  NTW_EXPANSION_BETTER_GRABBER:
+    name: "更好的网络抓取器"
+    lore:
+      - "更好的网络抓取器会尝试从"
+      - "指定的机器中抓取第一个物品"
+displays:
+  quantum_storage:
+    void_excess: "<click_info>满载清空输入: <passive>%s"
+    enabled_void_excess: "已启用"
+    disabled_void_excess: "已禁用"
+    stored_amount: "<click_info>数量: <passive>%s"
+    custom_max_amount: "<click_info>当前容量: <success>%s"
+groups:
+  main: "<main>网络 (Networks)"
+  materials: "<main>合成材料"
+  tools: "<main>网络管理工具"
+  network_items: "<main>网络物品"
+  network_quantums: "<main>量子存储设备"
+  disabled_items: "<main>已禁用/移除的物品"

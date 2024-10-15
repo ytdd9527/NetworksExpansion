@@ -59,8 +59,11 @@ public class ConfigManager {
     public boolean isAutoUpdate() {
         return Networks.getInstance().getConfig().getBoolean("auto-update");
     }
+    public String getLanguage() {
+        return Networks.getInstance().getConfig().getString("language");
+    }
 
     public void saveAll() {
-        Networks.getInstance().getLogger().info("正在保存网络拓展数据.");
+        Networks.getInstance().getLogger().info(Networks.getLocalizationService().getString("messages.save-all"));
     }
 }

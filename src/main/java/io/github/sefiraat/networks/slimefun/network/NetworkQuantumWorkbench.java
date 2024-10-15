@@ -1,6 +1,8 @@
 package io.github.sefiraat.networks.slimefun.network;
 
+import com.balugaq.netex.api.helpers.Icon;
 import com.xzavier0722.mc.plugin.slimefun4.storage.util.StorageCacheUtils;
+import io.github.sefiraat.networks.Networks;
 import io.github.sefiraat.networks.network.stackcaches.QuantumCache;
 import io.github.sefiraat.networks.utils.Keys;
 import io.github.sefiraat.networks.utils.Theme;
@@ -12,13 +14,11 @@ import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
 import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
 import io.github.thebusybiscuit.slimefun4.core.handlers.BlockBreakHandler;
 import io.github.thebusybiscuit.slimefun4.implementation.Slimefun;
-import io.github.thebusybiscuit.slimefun4.libraries.dough.items.CustomItemStack;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.protection.Interaction;
 import io.github.thebusybiscuit.slimefun4.utils.SlimefunUtils;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenuPreset;
 import me.mrCookieSlime.Slimefun.api.item_transport.ItemTransportFlow;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -43,21 +43,11 @@ public class NetworkQuantumWorkbench extends SlimefunItem {
     private static final int CRAFT_SLOT = 23;
     private static final int OUTPUT_SLOT = 25;
 
-    private static final CustomItemStack CRAFT_BUTTON_STACK = new CustomItemStack(
-            Material.CRAFTING_TABLE,
-            Theme.CLICK_INFO + "点击进行量子纠缠"
-    );
-
     private static final Map<ItemStack[], ItemStack> RECIPES = new HashMap<>();
 
     public static final RecipeType TYPE = new RecipeType(
             Keys.newKey("quantum-workbench"),
-            Theme.themedItemStack(
-                    Material.BRAIN_CORAL_BLOCK,
-                    Theme.MACHINE,
-                    "网络量子工作台",
-                    "在量子工作台中制作"
-            ),
+            Icon.RECIPE_TYPE_ITEMSTACK_QUANTUM_WORKBENCH,
             NetworkQuantumWorkbench::addRecipe
     );
 
@@ -81,7 +71,7 @@ public class NetworkQuantumWorkbench extends SlimefunItem {
             @Override
             public void init() {
                 drawBackground(BACKGROUND_SLOTS);
-                addItem(CRAFT_SLOT, CRAFT_BUTTON_STACK, (p, slot, item, action) -> false);
+                addItem(CRAFT_SLOT, Icon.QUANTUM_WORKBENCH_CRAFT_BUTTON_STACK, (p, slot, item, action) -> false);
             }
 
             @Override
@@ -161,7 +151,7 @@ public class NetworkQuantumWorkbench extends SlimefunItem {
                 }
                 menu.pushItem(crafted, OUTPUT_SLOT);
             } else {
-                player.sendMessage(Theme.WARNING + "需要清空输出烂");
+                player.sendMessage(Networks.getLocalizationService().getString("messages.unsupported-operation.quantum_workbench.output_slot_full"));
             }
         }
     }

@@ -1,5 +1,6 @@
 package com.ytdd9527.networksexpansion.core.items.machines;
 
+import com.balugaq.netex.api.helpers.Icon;
 import com.ytdd9527.networksexpansion.utils.itemstacks.ItemStackUtil;
 import io.github.sefiraat.networks.NetworkStorage;
 import io.github.sefiraat.networks.network.NetworkRoot;
@@ -13,7 +14,6 @@ import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
 import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
 import io.github.thebusybiscuit.slimefun4.implementation.Slimefun;
-import io.github.thebusybiscuit.slimefun4.libraries.dough.items.CustomItemStack;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.protection.Interaction;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenuPreset;
@@ -30,12 +30,6 @@ import java.util.Set;
 
 public abstract class AbstractEncoder extends NetworkObject {
 
-    public static final CustomItemStack BLUEPRINT_BACK_STACK = new CustomItemStack(
-            Material.BLUE_STAINED_GLASS_PANE, Theme.PASSIVE + "空白蓝图"
-    );
-    public static final CustomItemStack ENCODE_STACK = new CustomItemStack(
-            Material.BLUE_STAINED_GLASS_PANE, Theme.PASSIVE + "点击此处进行编码"
-    );
     private static final int[] BACKGROUND = new int[]{
             0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 15, 17, 18, 20, 24, 25, 26, 27, 28, 29, 33, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44
     };
@@ -67,9 +61,9 @@ public abstract class AbstractEncoder extends NetworkObject {
             @Override
             public void init() {
                 drawBackground(BACKGROUND);
-                drawBackground(BLUEPRINT_BACK_STACK, BLUEPRINT_BACK);
+                drawBackground(Icon.BLUEPRINT_BACK_STACK, BLUEPRINT_BACK);
 
-                addItem(ENCODE_SLOT, ENCODE_STACK, (player, i, itemStack, clickAction) -> false);
+                addItem(ENCODE_SLOT, Icon.ENCODE_STACK, (player, i, itemStack, clickAction) -> false);
             }
 
             @Override

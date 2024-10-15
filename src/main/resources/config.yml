@@ -1,8 +1,11 @@
 # 开启自动更新
 auto-update: true
 
+# 语言
+language: zh-CN
+
 # 不要修改这个内容
-config-version: 209-Alpha-38
+config-version: 209-Beta-11
 
 integrations:
   # 不推荐开启

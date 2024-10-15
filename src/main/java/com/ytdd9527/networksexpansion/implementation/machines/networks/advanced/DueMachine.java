@@ -1,10 +1,10 @@
 package com.ytdd9527.networksexpansion.implementation.machines.networks.advanced;
 
+import com.balugaq.netex.api.helpers.Icon;
 import com.xzavier0722.mc.plugin.slimefun4.storage.controller.SlimefunBlockData;
 import com.xzavier0722.mc.plugin.slimefun4.storage.util.StorageCacheUtils;
 import com.ytdd9527.networksexpansion.core.items.SpecialSlimefunItem;
 import com.balugaq.netex.utils.BlockMenuUtil;
-import com.ytdd9527.networksexpansion.utils.itemstacks.ItemStackUtil;
 import io.github.sefiraat.networks.slimefun.network.AdminDebuggable;
 import io.github.sefiraat.networks.utils.StackUtils;
 import io.github.thebusybiscuit.slimefun4.api.items.ItemGroup;
@@ -14,7 +14,6 @@ import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
 import io.github.thebusybiscuit.slimefun4.core.handlers.BlockBreakHandler;
 import io.github.thebusybiscuit.slimefun4.core.handlers.BlockPlaceHandler;
 import io.github.thebusybiscuit.slimefun4.implementation.Slimefun;
-import io.github.thebusybiscuit.slimefun4.libraries.dough.items.CustomItemStack;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.protection.Interaction;
 import io.github.thebusybiscuit.slimefun4.utils.ChestMenuUtils;
 import me.mrCookieSlime.Slimefun.Objects.handlers.BlockTicker;
@@ -22,7 +21,6 @@ import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenuPreset;
 import me.mrCookieSlime.Slimefun.api.inventory.DirtyChestMenu;
 import me.mrCookieSlime.Slimefun.api.item_transport.ItemTransportFlow;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -71,27 +69,6 @@ public class DueMachine extends SpecialSlimefunItem implements AdminDebuggable {
     private static final int[] OUTPUT_BORDERS = new int[]{
             44
     };
-
-    private static final ItemStack DUE_BORDER_ICON = ItemStackUtil.getCleanItem(
-            new CustomItemStack(
-                    Material.LIGHT_BLUE_STAINED_GLASS_PANE,
-                    ChatColor.GREEN + "← 在此放置预期物品"
-            )
-    );
-
-    private static final ItemStack DUE_INPUT_SPLIT_ICON = ItemStackUtil.getCleanItem(
-            new CustomItemStack(
-                    Material.YELLOW_STAINED_GLASS_PANE,
-                    ChatColor.GREEN + "↑ 预期物品 & 输入物品 ↓"
-            )
-    );
-
-    private static final ItemStack INPUT_OUTPUT_SPLIT_ICON = ItemStackUtil.getCleanItem(
-            new CustomItemStack(
-                    Material.ORANGE_STAINED_GLASS_PANE,
-                    ChatColor.GREEN + "↑ 输入物品 & 输出物品 ↓"
-            )
-    );
 
     public DueMachine(@Nonnull ItemGroup itemGroup, @Nonnull SlimefunItemStack item, @Nonnull RecipeType recipeType, @Nonnull ItemStack[] recipe) {
         super(itemGroup, item, recipeType, recipe);
@@ -161,15 +138,15 @@ public class DueMachine extends SpecialSlimefunItem implements AdminDebuggable {
             public void init() {
                 setSize(45);
                 for (int slot : DUE_BORDERS) {
-                    addItem(slot, DUE_BORDER_ICON, ChestMenuUtils.getEmptyClickHandler());
+                    addItem(slot, Icon.DUE_BORDER_ICON, ChestMenuUtils.getEmptyClickHandler());
                 }
 
                 for (int slot : DUE_INPUT_SPLIT) {
-                    addItem(slot, DUE_INPUT_SPLIT_ICON, ChestMenuUtils.getEmptyClickHandler());
+                    addItem(slot, Icon.DUE_INPUT_SPLIT_ICON, ChestMenuUtils.getEmptyClickHandler());
                 }
 
                 for (int slot : INPUT_OUTPUT_SPLIT) {
-                    addItem(slot, INPUT_OUTPUT_SPLIT_ICON, ChestMenuUtils.getEmptyClickHandler());
+                    addItem(slot, Icon.INPUT_OUTPUT_SPLIT_ICON, ChestMenuUtils.getEmptyClickHandler());
                 }
 
                 for (int slot : BACKGROUND_BORDERS) {

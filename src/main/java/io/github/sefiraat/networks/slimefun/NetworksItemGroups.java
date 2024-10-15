@@ -23,7 +23,7 @@ public final class NetworksItemGroups {
             Keys.newKey("main"),
             new CustomItemStack(
                     new ItemStack(Material.BLACK_STAINED_GLASS),
-                    Theme.MAIN.getColor() + "网络 (Networks)"
+                    Networks.getLocalizationService().getString("groups.main")
             ), 0
     );
 
@@ -31,7 +31,7 @@ public final class NetworksItemGroups {
             Keys.newKey("materials"),
             new CustomItemStack(
                     new ItemStack(Material.WHITE_STAINED_GLASS),
-                    Theme.MAIN.getColor() + "合成材料"
+                    Networks.getLocalizationService().getString("groups.materials")
             ), 0
     );
 
@@ -39,7 +39,7 @@ public final class NetworksItemGroups {
             Keys.newKey("tools"),
             new CustomItemStack(
                     new ItemStack(Material.PAINTING),
-                    Theme.MAIN.getColor() + "网络管理工具"
+                    Networks.getLocalizationService().getString("groups.tools")
             ), 0
     );
 
@@ -47,7 +47,7 @@ public final class NetworksItemGroups {
             Keys.newKey("network_items"),
             new CustomItemStack(
                     new ItemStack(Material.BLACK_STAINED_GLASS),
-                    Theme.MAIN.getColor() + "网络物品"
+                    Networks.getLocalizationService().getString("groups.network_items")
             ), 0
     );
 
@@ -55,7 +55,7 @@ public final class NetworksItemGroups {
             Keys.newKey("network_quantums"),
             new CustomItemStack(
                     new ItemStack(Material.WHITE_TERRACOTTA),
-                    Theme.MAIN.getColor() + "量子存储设备"
+                    Networks.getLocalizationService().getString("groups.network_quantums")
             ), 0
     );
 
@@ -63,7 +63,7 @@ public final class NetworksItemGroups {
             Keys.newKey("disabled_items"),
             new CustomItemStack(
                     new ItemStack(Material.BARRIER),
-                    Theme.MAIN.getColor() + "已禁用/移除的物品"
+                    Networks.getLocalizationService().getString("groups.disabled_items")
             )
     );
 

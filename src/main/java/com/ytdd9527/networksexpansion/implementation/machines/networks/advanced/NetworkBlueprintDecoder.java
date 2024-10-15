@@ -1,9 +1,9 @@
 package com.ytdd9527.networksexpansion.implementation.machines.networks.advanced;
 
+import com.balugaq.netex.api.helpers.Icon;
 import com.ytdd9527.networksexpansion.core.items.unusable.AbstractBlueprint;
 import com.ytdd9527.networksexpansion.implementation.ExpansionItems;
 import com.balugaq.netex.utils.BlockMenuUtil;
-import com.ytdd9527.networksexpansion.utils.itemstacks.ItemStackUtil;
 import io.github.sefiraat.networks.network.NodeType;
 import io.github.sefiraat.networks.network.stackcaches.BlueprintInstance;
 import io.github.sefiraat.networks.slimefun.network.NetworkObject;
@@ -15,7 +15,6 @@ import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
 import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
 import io.github.thebusybiscuit.slimefun4.implementation.Slimefun;
-import io.github.thebusybiscuit.slimefun4.libraries.dough.items.CustomItemStack;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.protection.Interaction;
 import io.github.thebusybiscuit.slimefun4.utils.ChestMenuUtils;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
@@ -36,13 +35,6 @@ public class NetworkBlueprintDecoder extends NetworkObject {
     private static final int[] OUTPUT_SLOTS = {6, 7, 8, 15, 16, 17, 24, 25, 26};
     private static final int INPUT_SLOT = 10;
     private static final int DECODE_SLOT = 13;
-    private static final ItemStack DECODE_ITEM = ItemStackUtil.getCleanItem(
-            new CustomItemStack(
-                    Material.KNOWLEDGE_BOOK,
-                    "&6网络解码器",
-                    "&7点击解码网络蓝图"
-            )
-    );
 
     public NetworkBlueprintDecoder(ItemGroup itemGroup, SlimefunItemStack item, RecipeType recipeType, ItemStack[] recipe) {
         super(itemGroup, item, recipeType, recipe, NodeType.DECODER);
@@ -74,7 +66,7 @@ public class NetworkBlueprintDecoder extends NetworkObject {
                 for (int slot : BACKGROUND_SLOTS) {
                     addItem(slot, ChestMenuUtils.getBackground(), ChestMenuUtils.getEmptyClickHandler());
                 }
-                addItem(DECODE_SLOT, DECODE_ITEM, ChestMenuUtils.getEmptyClickHandler());
+                addItem(DECODE_SLOT, Icon.DECODE_ITEM, ChestMenuUtils.getEmptyClickHandler());
             }
 
             @Override

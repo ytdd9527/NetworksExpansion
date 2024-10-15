@@ -1,5 +1,6 @@
 package com.ytdd9527.networksexpansion.core.items.machines;
 
+import com.balugaq.netex.api.helpers.Icon;
 import com.github.houbb.pinyin.constant.enums.PinyinStyleEnum;
 import com.github.houbb.pinyin.util.PinyinHelper;
 import com.xzavier0722.mc.plugin.slimefun4.storage.controller.SlimefunBlockData;
@@ -51,48 +52,6 @@ import java.util.Map.Entry;
 
 @SuppressWarnings("deprecation")
 public abstract class AbstractGridNewStyle extends NetworkObject {
-
-    private static final CustomItemStack BLANK_SLOT_STACK = new CustomItemStack(
-            Material.LIGHT_GRAY_STAINED_GLASS_PANE,
-            " "
-    );
-
-    private static final CustomItemStack PAGE_PREVIOUS_STACK = new CustomItemStack(
-            Material.RED_STAINED_GLASS_PANE,
-            Theme.CLICK_INFO.getColor() + "上一页"
-    );
-
-    private static final CustomItemStack PAGE_NEXT_STACK = new CustomItemStack(
-            Material.GREEN_STAINED_GLASS_PANE,
-            Theme.CLICK_INFO.getColor() + "下一页"
-    );
-
-    private static final CustomItemStack CHANGE_SORT_STACK = new CustomItemStack(
-            Material.BLUE_STAINED_GLASS_PANE,
-            Theme.CLICK_INFO.getColor() + "更改排序方式"
-    );
-
-    private static final CustomItemStack FILTER_STACK = new CustomItemStack(
-            Material.NAME_TAG,
-            Theme.CLICK_INFO.getColor() + "左键设置过滤器 (右键点击以清除)"
-    );
-
-    private static final CustomItemStack DISPLAY_MODE_STACK = new CustomItemStack(
-            Material.KNOWLEDGE_BOOK,
-            Theme.CLICK_INFO.getColor() + "点击切换&2显示模式",
-            Theme.CLICK_INFO.getColor() + "当前&2显示模式&7: &6显示网络所有物品",
-            Theme.CLICK_INFO.getColor() + "&e↑ &7在上方放入物品以&e自动搜索物品",
-            Theme.CLICK_INFO.getColor() + "&6Shift+左键&7以切换&2显示模式"
-    );
-
-    private static final CustomItemStack HISTORY_MODE_STACK = new CustomItemStack(
-            Material.BOOK,
-            Theme.CLICK_INFO.getColor() + "点击切换&2显示模式",
-            Theme.CLICK_INFO.getColor() + "当前&2显示模式&7: &6显示取出物品历史",
-            Theme.CLICK_INFO.getColor() + "&e↑ &7在上方放入物品以&e自动搜索物品",
-            Theme.CLICK_INFO.getColor() + "&6Shift+左键&7以切换&2显示模式",
-            Theme.CLICK_INFO.getColor() + "&c当前模式不可使用搜索！"
-    );
 
     private static final Comparator<? super Entry<ItemStack, Long>> ALPHABETICAL_SORT = Comparator.comparing(
             itemStackIntegerEntry -> {
@@ -347,14 +306,14 @@ public abstract class AbstractGridNewStyle extends NetworkObject {
             gridCache.setFilter(null);
         } else {
             player.closeInventory();
-            player.sendMessage(Theme.WARNING + "请输入你想要过滤的物品名称(显示名)或类型");
+            player.sendMessage(Networks.getLocalizationService().getString("messages.normal-operation.grid.waiting_for_filter"));
             ChatUtils.awaitInput(player, s -> {
                 if (s.isBlank()) {
                     return;
                 }
                 s = s.toLowerCase(Locale.ROOT);
                 gridCache.setFilter(s);
-                player.sendMessage(Theme.SUCCESS + "已启用过滤器");
+                player.sendMessage(Networks.getLocalizationService().getString("messages.completed-operation.grid.filter_set"));
 
                 SlimefunBlockData data = StorageCacheUtils.getBlock(blockMenu.getLocation());
                 if (data == null) {
@@ -392,7 +351,7 @@ public abstract class AbstractGridNewStyle extends NetworkObject {
         if (definition == null || definition.getNode() == null) {
             clearDisplay(blockMenu);
             blockMenu.close();
-            Networks.getInstance().getLogger().warning("Player \"%s\" attempted to use network grid from a invalid node at %s, the player may trying to cheat or duplicate items.".formatted(player.getName(), blockMenu.getLocation()));
+            Networks.getInstance().getLogger().warning(String.format(Networks.getLocalizationService().getString("messages.unsupported-operation.grid.may_duping"), player.getName(), blockMenu.getLocation()));
             return;
         }
 
@@ -515,35 +474,35 @@ public abstract class AbstractGridNewStyle extends NetworkObject {
 
     protected abstract int getToggleModeSlot();
 
-    protected CustomItemStack getBlankSlotStack() {
-        return BLANK_SLOT_STACK;
+    protected ItemStack getBlankSlotStack() {
+        return Icon.BLANK_SLOT_STACK;
     }
 
-    protected CustomItemStack getPagePreviousStack() {
-        return PAGE_PREVIOUS_STACK;
+    protected ItemStack getPagePreviousStack() {
+        return Icon.PAGE_PREVIOUS_STACK;
     }
 
-    protected CustomItemStack getPageNextStack() {
-        return PAGE_NEXT_STACK;
+    protected ItemStack getPageNextStack() {
+        return Icon.PAGE_NEXT_STACK;
     }
 
-    protected CustomItemStack getChangeSortStack() {
-        return CHANGE_SORT_STACK;
+    protected ItemStack getChangeSortStack() {
+        return Icon.CHANGE_SORT_STACK;
     }
 
-    protected CustomItemStack getFilterStack() {
-        return FILTER_STACK;
+    protected ItemStack getFilterStack() {
+        return Icon.FILTER_STACK;
     }
 
-    public CustomItemStack getModeStack(GridCache gridCache) {
+    public ItemStack getModeStack(GridCache gridCache) {
         return getModeStack(gridCache.getDisplayMode());
     }
 
-    public CustomItemStack getModeStack(DisplayMode displayMode) {
+    public ItemStack getModeStack(DisplayMode displayMode) {
         if (displayMode == DisplayMode.DISPLAY) {
-            return DISPLAY_MODE_STACK;
+            return Icon.DISPLAY_MODE_STACK;
         } else {
-            return HISTORY_MODE_STACK;
+            return Icon.HISTORY_MODE_STACK;
         }
     }
 }

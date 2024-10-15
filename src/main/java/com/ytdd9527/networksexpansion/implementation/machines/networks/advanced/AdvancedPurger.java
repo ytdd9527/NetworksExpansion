@@ -1,5 +1,6 @@
 package com.ytdd9527.networksexpansion.implementation.machines.networks.advanced;
 
+import com.balugaq.netex.api.helpers.Icon;
 import com.xzavier0722.mc.plugin.slimefun4.storage.controller.SlimefunBlockData;
 import com.xzavier0722.mc.plugin.slimefun4.storage.util.StorageCacheUtils;
 import com.ytdd9527.networksexpansion.implementation.ExpansionItems;
@@ -12,7 +13,6 @@ import io.github.sefiraat.networks.network.NodeDefinition;
 import io.github.sefiraat.networks.network.NodeType;
 import io.github.sefiraat.networks.network.stackcaches.ItemRequest;
 import io.github.sefiraat.networks.slimefun.network.NetworkObject;
-import io.github.sefiraat.networks.utils.Theme;
 import io.github.thebusybiscuit.slimefun4.api.items.ItemGroup;
 import io.github.thebusybiscuit.slimefun4.api.items.ItemSetting;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
@@ -56,10 +56,6 @@ public class AdvancedPurger extends NetworkObject implements RecipeDisplayItem {
             45, 46, 47, 48, 49, 50, 51, 52
     };
     private static final int[] TEST_ITEM_BACKDROP = {8, 17, 26, 35, 44, 53};
-    private static final CustomItemStack TEST_BACKDROP_STACK = new CustomItemStack(
-            Material.GREEN_STAINED_GLASS_PANE,
-            Theme.SUCCESS + "指定需要清除的物品"
-    );
     private final ItemSetting<Integer> tickRate;
     private boolean useSpecialModel = false;
 
@@ -152,7 +148,7 @@ public class AdvancedPurger extends NetworkObject implements RecipeDisplayItem {
 
             @Override
             public void init() {
-                drawBackground(TEST_BACKDROP_STACK, TEST_ITEM_BACKDROP);
+                drawBackground(Icon.PURGER_TEMPLATE_BACKGROUND_STACK, TEST_ITEM_BACKDROP);
             }
 
             @Override

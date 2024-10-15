@@ -1,11 +1,12 @@
 package com.ytdd9527.networksexpansion.implementation.machines.networks.advanced;
 
+import com.balugaq.netex.api.helpers.Icon;
 import com.xzavier0722.mc.plugin.slimefun4.storage.controller.SlimefunBlockData;
 import com.xzavier0722.mc.plugin.slimefun4.storage.util.StorageCacheUtils;
 import com.balugaq.netex.api.enums.TransportFacing;
 import com.ytdd9527.networksexpansion.core.items.SpecialSlimefunItem;
 import com.balugaq.netex.utils.BlockMenuUtil;
-import com.ytdd9527.networksexpansion.utils.itemstacks.ItemStackUtil;
+import io.github.sefiraat.networks.Networks;
 import io.github.sefiraat.networks.slimefun.network.AdminDebuggable;
 import io.github.thebusybiscuit.slimefun4.api.items.ItemGroup;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
@@ -14,7 +15,6 @@ import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
 import io.github.thebusybiscuit.slimefun4.core.handlers.BlockBreakHandler;
 import io.github.thebusybiscuit.slimefun4.core.handlers.BlockPlaceHandler;
 import io.github.thebusybiscuit.slimefun4.implementation.Slimefun;
-import io.github.thebusybiscuit.slimefun4.libraries.dough.items.CustomItemStack;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.protection.Interaction;
 import io.github.thebusybiscuit.slimefun4.utils.ChestMenuUtils;
 import me.mrCookieSlime.Slimefun.Objects.handlers.BlockTicker;
@@ -48,25 +48,6 @@ public class Offsetter extends SpecialSlimefunItem implements AdminDebuggable {
     private static final int OFFSET_DECREASE_SLOT = 3;
     private static final int OFFSET_SHOW_SLOT = 4;
     private static final int OFFSET_INCREASE_SLOT = 5;
-    private static final ItemStack OFFSET_DECREASE_ICON = ItemStackUtil.getCleanItem(
-            new CustomItemStack(
-                    Material.RED_DYE,
-                    "&a偏移量 -1"
-            )
-    );
-    private static final ItemStack OFFSET_SHOW_ICON = ItemStackUtil.getCleanItem(
-            new CustomItemStack(
-                    Material.TARGET,
-                    "&a偏移量",
-                    ChatColor.GRAY + "当前偏移量: &e0"
-            )
-    );
-    private static final ItemStack OFFSET_INCREASE_ICON = ItemStackUtil.getCleanItem(
-            new CustomItemStack(
-                    Material.LIME_DYE,
-                    "&a偏移量 +1"
-            )
-    );
 
     public Offsetter(@Nonnull ItemGroup itemGroup, @Nonnull SlimefunItemStack item, @Nonnull RecipeType recipeType, @Nonnull ItemStack[] recipe) {
         super(itemGroup, item, recipeType, recipe);
@@ -195,13 +176,13 @@ public class Offsetter extends SpecialSlimefunItem implements AdminDebuggable {
     }
 
     private static void updateOffsetShowIcon(@Nonnull Location location, int offset) {
-        ItemStack newIcon = OFFSET_SHOW_ICON.clone();
+        ItemStack newIcon = Icon.OFFSET_SHOW_ICON.clone();
         ItemMeta meta = newIcon.getItemMeta();
         if (meta == null) {
             return;
         }
         List<String> newLore = new ArrayList<>();
-        newLore.add(ChatColor.GRAY + "当前偏移量: " + ChatColor.YELLOW + offset);
+        newLore.add(String.format(Networks.getLocalizationService().getString("icons.offset_show_icon.lore"), offset));
         meta.setLore(newLore);
         newIcon.setItemMeta(meta);
 
@@ -250,9 +231,9 @@ public class Offsetter extends SpecialSlimefunItem implements AdminDebuggable {
                     addItem(i, ChestMenuUtils.getBackground(), ChestMenuUtils.getEmptyClickHandler());
                 }
 
-                addItem(OFFSET_INCREASE_SLOT, OFFSET_INCREASE_ICON, ChestMenuUtils.getEmptyClickHandler());
-                addItem(OFFSET_SHOW_SLOT, OFFSET_SHOW_ICON, ChestMenuUtils.getEmptyClickHandler());
-                addItem(OFFSET_DECREASE_SLOT, OFFSET_DECREASE_ICON, ChestMenuUtils.getEmptyClickHandler());
+                addItem(OFFSET_INCREASE_SLOT, Icon.OFFSET_INCREASE_ICON, ChestMenuUtils.getEmptyClickHandler());
+                addItem(OFFSET_SHOW_SLOT, Icon.OFFSET_SHOW_ICON, ChestMenuUtils.getEmptyClickHandler());
+                addItem(OFFSET_DECREASE_SLOT, Icon.OFFSET_DECREASE_ICON, ChestMenuUtils.getEmptyClickHandler());
             }
 
             @Override
@@ -314,6 +295,7 @@ public class Offsetter extends SpecialSlimefunItem implements AdminDebuggable {
                 }
 
                 setOffset(location, 0);
+                updateOffsetShowIcon(location, getOffset(location));
 
                 // Click handler
                 blockMenu.addMenuClickHandler(OFFSET_INCREASE_SLOT, (player, slot, item, clickAction) -> {

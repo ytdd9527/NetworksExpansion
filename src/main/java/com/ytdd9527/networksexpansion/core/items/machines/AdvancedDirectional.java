@@ -1,12 +1,15 @@
 package com.ytdd9527.networksexpansion.core.items.machines;
 
+import com.balugaq.netex.api.helpers.Icon;
 import com.xzavier0722.mc.plugin.slimefun4.storage.controller.SlimefunBlockData;
 import com.xzavier0722.mc.plugin.slimefun4.storage.util.StorageCacheUtils;
 import com.balugaq.netex.api.enums.TransportMode;
 import com.balugaq.netex.utils.NetworksVersionedEnchantment;
 import com.balugaq.netex.utils.NetworksVersionedParticle;
 import com.ytdd9527.networksexpansion.utils.TextUtil;
+import com.ytdd9527.networksexpansion.utils.itemstacks.ItemStackUtil;
 import io.github.sefiraat.networks.NetworkStorage;
+import io.github.sefiraat.networks.Networks;
 import io.github.sefiraat.networks.network.NodeType;
 import io.github.sefiraat.networks.slimefun.network.NetworkDirectional;
 import io.github.sefiraat.networks.utils.NetworkUtils;
@@ -48,6 +51,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+@SuppressWarnings("unused")
 public abstract class AdvancedDirectional extends NetworkDirectional {
 
     protected static final String DIRECTION = "direction";
@@ -69,25 +73,6 @@ public abstract class AdvancedDirectional extends NetworkDirectional {
             BlockFace.WEST
     );
 
-    private static final CustomItemStack MINUS_ICON = new CustomItemStack(
-            Material.RED_CONCRETE, TextUtil.colorRandomString("减少数量")
-    );
-
-    private static final CustomItemStack SHOW_ICON = new CustomItemStack(
-            Material.GOLD_BLOCK,
-            TextUtil.colorRandomString("数量"),
-            TextUtil.colorRandomString("当前数量: 64")
-    );
-
-    private static final CustomItemStack ADD_ICON = new CustomItemStack(
-            Material.GREEN_CONCRETE, TextUtil.colorRandomString("增加数量")
-    );
-
-    private static final CustomItemStack TRANSPORT_MODE_ICON = new CustomItemStack(
-            Material.FURNACE_MINECART,
-            TextUtil.colorRandomString("运输模式"),
-            TextUtil.colorRandomString("当前模式：") + TextUtil.colorRandomString("无")
-    );
     private static final Map<Location, BlockFace> SELECTED_DIRECTION_MAP = new HashMap<>();
     private static final Map<Location, Integer> NETWORK_LIMIT_QUANTITY_MAP = new HashMap<>();
     private static final Map<Location, TransportMode> NETWORK_TRANSPORT_MODE_MAP = new HashMap<>();
@@ -98,8 +83,8 @@ public abstract class AdvancedDirectional extends NetworkDirectional {
 
     protected AdvancedDirectional(ItemGroup itemGroup, SlimefunItemStack item, RecipeType recipeType, ItemStack[] recipe, NodeType type) {
         super(itemGroup, item, recipeType, recipe, type);
-        this.showIconClone = SHOW_ICON.clone();
-        this.transportModeIconClone = TRANSPORT_MODE_ICON.clone();
+        this.showIconClone = Icon.SHOW_ICON.clone();
+        this.transportModeIconClone = Icon.TRANSPORT_MODE_ICON.clone();
 
         addItemHandler(
                 new BlockTicker() {
@@ -123,18 +108,15 @@ public abstract class AdvancedDirectional extends NetworkDirectional {
 
     @Nonnull
     public static ItemStack getDirectionalSlotPane(@Nonnull BlockFace blockFace, @Nonnull SlimefunItem slimefunItem, boolean active) {
-        final ItemStack displayStack = new CustomItemStack(
+        final ItemStack displayStack = ItemStackUtil.getCleanItem(new CustomItemStack(
                 slimefunItem.getItem(),
-                Theme.PASSIVE + "设置朝向: " + blockFace.name() + " (" + ChatColor.stripColor(slimefunItem.getItemName()) + ")"
-        );
-        final ItemMeta itemMeta = displayStack.getItemMeta();
-        itemMeta.setLore(List.of(
-                Theme.CLICK_INFO + "左键点击: " + Theme.PASSIVE + "设置朝向",
-                Theme.CLICK_INFO + "Shift+左键点击: " + Theme.PASSIVE + "打开目标方块"
+                String.format(Networks.getLocalizationService().getString("messages.normal-operation.directional.display_name"), blockFace.name(), ChatColor.stripColor(slimefunItem.getItemName()))
         ));
+        final ItemMeta itemMeta = displayStack.getItemMeta();
+        itemMeta.setLore(Networks.getLocalizationService().getStringList("messages.normal-operation.directional.display_lore"));
         if (active) {
             List<String> lore = itemMeta.getLore();
-            lore.add(Theme.SUCCESS + "已设置朝向此容器！");
+            lore.add(Networks.getLocalizationService().getString("messages.normal-operation.directional.set_facing"));
             itemMeta.setLore(lore);
             itemMeta.addEnchant(NetworksVersionedEnchantment.LUCK_OF_THE_SEA, 1, true);
             itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
@@ -148,16 +130,13 @@ public abstract class AdvancedDirectional extends NetworkDirectional {
         if (blockMaterial.isItem() && blockMaterial != Material.AIR) {
             final ItemStack displayStack = new CustomItemStack(
                     blockMaterial,
-                    Theme.PASSIVE + "设置朝向 " + blockFace.name() + " (" + MaterialHelper.getName(blockMaterial) + ")"
+                    String.format(Networks.getLocalizationService().getString("messages.normal-operation.directional.display_name"), blockFace.name(), MaterialHelper.getName(blockMaterial))
             );
             final ItemMeta itemMeta = displayStack.getItemMeta();
-            itemMeta.setLore(List.of(
-                    Theme.CLICK_INFO + "左键点击: " + Theme.PASSIVE + "设置朝向",
-                    Theme.CLICK_INFO + "Shift+左键点击: " + Theme.PASSIVE + "打开目标方块"
-            ));
+            itemMeta.setLore(Networks.getLocalizationService().getStringList("messages.normal-operation.directional.display_lore"));
             if (active) {
                 List<String> lore = itemMeta.getLore();
-                lore.add(Theme.SUCCESS + "已设置朝向此容器！");
+                lore.add(Networks.getLocalizationService().getString("messages.normal-operation.directional.set_facing"));
                 itemMeta.setLore(lore);
                 itemMeta.addEnchant(NetworksVersionedEnchantment.LUCK_OF_THE_SEA, 1, true);
                 itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
@@ -166,10 +145,10 @@ public abstract class AdvancedDirectional extends NetworkDirectional {
             return displayStack;
         } else {
             Material material = active ? Material.GREEN_STAINED_GLASS_PANE : Material.RED_STAINED_GLASS_PANE;
-            return new CustomItemStack(
+            return ItemStackUtil.getCleanItem(new CustomItemStack(
                     material,
-                    ChatColor.GRAY + "设置朝向: " + blockFace.name()
-            );
+                    Networks.getLocalizationService().getString("messages.normal-operation.directional.display_empty")
+            ));
         }
     }
 
@@ -202,7 +181,7 @@ public abstract class AdvancedDirectional extends NetworkDirectional {
                             blockMenu.replaceExistingItem(getUpSlot(), getDirectionalSlotPane(blockFace, slimefunItem, blockFace == direction));
                     case DOWN ->
                             blockMenu.replaceExistingItem(getDownSlot(), getDirectionalSlotPane(blockFace, slimefunItem, blockFace == direction));
-                    default -> throw new IllegalStateException("意外的值: " + blockFace);
+                    default -> throw new IllegalStateException(String.format(Networks.getLocalizationService().getString("messages.unsupported-operation.directional.unexcepted_value"), blockFace));
                 }
             } else {
                 final Material material = block.getType();
@@ -219,7 +198,7 @@ public abstract class AdvancedDirectional extends NetworkDirectional {
                             blockMenu.replaceExistingItem(getUpSlot(), getDirectionalSlotPane(blockFace, material, blockFace == direction));
                     case DOWN ->
                             blockMenu.replaceExistingItem(getDownSlot(), getDirectionalSlotPane(blockFace, material, blockFace == direction));
-                    default -> throw new IllegalStateException("意外的值: " + blockFace);
+                    default -> throw new IllegalStateException(String.format(Networks.getLocalizationService().getString("messages.unsupported-operation.directional.unexcepted_value"), blockFace));
                 }
             }
         }
@@ -419,7 +398,7 @@ public abstract class AdvancedDirectional extends NetworkDirectional {
     }
 
     @Nullable
-    protected CustomItemStack getOtherBackgroundStack() {
+    protected ItemStack getOtherBackgroundStack() {
         return null;
     }
 
@@ -474,16 +453,16 @@ public abstract class AdvancedDirectional extends NetworkDirectional {
         return this.showIconClone;
     }
 
-    public CustomItemStack getMinusIcon() {
-        return MINUS_ICON;
+    public ItemStack getMinusIcon() {
+        return Icon.MINUS_ICON;
     }
 
-    public CustomItemStack getAddIcon() {
-        return ADD_ICON;
+    public ItemStack getAddIcon() {
+        return Icon.ADD_ICON;
     }
 
-    public CustomItemStack getTransportModeIcon() {
-        return TRANSPORT_MODE_ICON;
+    public ItemStack getTransportModeIcon() {
+        return Icon.TRANSPORT_MODE_ICON;
     }
 
 

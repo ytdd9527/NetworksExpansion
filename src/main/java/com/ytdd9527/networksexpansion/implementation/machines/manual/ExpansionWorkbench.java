@@ -1,5 +1,6 @@
 package com.ytdd9527.networksexpansion.implementation.machines.manual;
 
+import com.balugaq.netex.api.helpers.Icon;
 import com.xzavier0722.mc.plugin.slimefun4.storage.util.StorageCacheUtils;
 import com.balugaq.netex.api.data.SuperRecipe;
 import com.ytdd9527.networksexpansion.core.items.machines.AbstractManualCrafter;
@@ -32,18 +33,9 @@ import java.util.Map;
 @SuppressWarnings("deprecation")
 public class ExpansionWorkbench extends AbstractManualCrafter {
     public static final List<SuperRecipe> RECIPES = new ArrayList<>();
-    public static final CustomItemStack BACKGROUND_STACK = new CustomItemStack(
-            Material.WHITE_STAINED_GLASS_PANE, Theme.PASSIVE + " "
-    );
-    public static final ItemStack RECIPE_TYPE_ITEMSTACK = Theme.themedItemStack(
-            Material.BAMBOO_BLOCK,
-            Theme.MACHINE,
-            "网络拓展工作台",
-            "在拓展工作台中制作"
-    );
     public static final RecipeType TYPE = new RecipeType(
             Keys.EXPANSION_WORKBENCH,
-            RECIPE_TYPE_ITEMSTACK,
+            Icon.RECIPE_TYPE_ITEMSTACK_EXPANSION_WORKBENCH_3x3,
             ExpansionWorkbench::addRecipe
     );
     public static final Map<Integer, ItemStack> BACKGROUNDS = new HashMap<>();
@@ -62,7 +54,7 @@ public class ExpansionWorkbench extends AbstractManualCrafter {
 
     static {
         for (int slot : BACKGROUND_SLOTS) {
-            BACKGROUNDS.put(slot, BACKGROUND_STACK);
+            BACKGROUNDS.put(slot, Icon.BACKGROUND_STACK_3x3);
         }
 
         BACKGROUNDS.put(CRAFT_SLOT, CRAFT_BUTTON_STACK);

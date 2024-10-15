@@ -1,5 +1,6 @@
 package com.ytdd9527.networksexpansion.implementation.machines.unit;
 
+import com.balugaq.netex.api.helpers.Icon;
 import com.xzavier0722.mc.plugin.slimefun4.storage.controller.SlimefunBlockData;
 import com.xzavier0722.mc.plugin.slimefun4.storage.util.StorageCacheUtils;
 import com.balugaq.netex.api.data.ItemContainer;
@@ -77,7 +78,6 @@ public class CargoStorageUnit extends SpecialSlimefunItem implements Distinctive
     private static final int QUANTUM_SLOT = 9;
     private static final int QUICK_TRANSFER_SLOT = 18;
     private static final int ITEM_CHOOSE_SLOT = 27;
-    private static final ItemStack ERROR_BORDER = new CustomItemStack(Material.BARRIER, " ", " ", " ", " ");
     private final StorageUnitType sizeType;
     private final int[] BORDER = {0, 1, 2, 3, 5, 6, 17, 26, 35, 36, 44, 45, 53};
     private final int VOID_MODE_SLOT = 7;
@@ -211,7 +211,7 @@ public class CargoStorageUnit extends SpecialSlimefunItem implements Distinctive
                     ItemContainer each = itemStored.get(i);
                     menu.replaceExistingItem(DISPLAY_SLOTS[i], getDisplayItem(each.getSample(), each.getAmount(), maxEach));
                 } else {
-                    menu.replaceExistingItem(DISPLAY_SLOTS[i], ERROR_BORDER);
+                    menu.replaceExistingItem(DISPLAY_SLOTS[i], Icon.ERROR_BORDER);
                 }
             }
         }
@@ -286,7 +286,7 @@ public class CargoStorageUnit extends SpecialSlimefunItem implements Distinctive
 
     private static ItemStack getDisplayItem(ItemStack item, int amount, int max) {
         if (item == null) {
-            return ERROR_BORDER;
+            return Icon.ERROR_BORDER;
         }
         try {
             return new CustomItemStack(item, (String) null, "", "&b存储数量: &e" + amount + " &7/ &6" + max);
@@ -316,7 +316,7 @@ public class CargoStorageUnit extends SpecialSlimefunItem implements Distinctive
             // 添加点击事件
             blockMenu.addMenuClickHandler(s, (player, slot, clickItem, action) -> {
                 final ItemStack itemOnCursor = player.getItemOnCursor();
-                if (StackUtils.itemsMatch(clickItem, ERROR_BORDER)) {
+                if (StackUtils.itemsMatch(clickItem, Icon.ERROR_BORDER)) {
                     if (itemOnCursor.getType() != Material.AIR) {
                         data.depositItemStack(itemOnCursor, false, true);
                     }
@@ -798,7 +798,7 @@ public class CargoStorageUnit extends SpecialSlimefunItem implements Distinctive
                 menu.replaceExistingItem(STORAGE_INFO_SLOT, getLocationErrorItem(data.getId(), data.getLastLocation()));
 
                 for (int slot : BORDER) {
-                    menu.replaceExistingItem(slot, ERROR_BORDER);
+                    menu.replaceExistingItem(slot, Icon.ERROR_BORDER);
                 }
                 return;
             }

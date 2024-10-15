@@ -1266,7 +1266,7 @@ public class ExpansionItems {
 
     public static final SpecialSlimefunItem NETWORKS_EXPANSION_CHEAT_GUIDE = new NetworksExpansionGuide(
             ExpansionItemsMenus.MENU_ITEMS,
-            ExpansionItemStacks.NETWORKS_EXPANSION_CHEAT_GUIDE
+            ExpansionItemStacks.NTW_EXPANSION_CREATIVE_GUIDE
     );
 
     public static final SpecialSlimefunItem ITEM_MOVER = new ItemMover(

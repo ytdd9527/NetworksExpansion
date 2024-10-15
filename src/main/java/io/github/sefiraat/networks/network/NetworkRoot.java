@@ -63,8 +63,6 @@ public class NetworkRoot extends NetworkNode {
     @Getter
     private final Set<Location> cells = ConcurrentHashMap.newKeySet();
     @Getter
-    private final Set<Location> wipers = ConcurrentHashMap.newKeySet();
-    @Getter
     private final Set<Location> grabbers = ConcurrentHashMap.newKeySet();
     @Getter
     private final Set<Location> pushers = ConcurrentHashMap.newKeySet();
@@ -163,7 +161,6 @@ public class NetworkRoot extends NetworkNode {
                     cells.add(location);
                 }
             }
-            case WIPER -> wipers.add(location);
             case GRABBER -> grabbers.add(location);
             case PUSHER -> pushers.add(location);
             case PURGER -> purgers.add(location);

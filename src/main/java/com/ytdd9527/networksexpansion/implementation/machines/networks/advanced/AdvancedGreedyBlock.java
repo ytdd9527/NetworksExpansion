@@ -1,18 +1,16 @@
 package com.ytdd9527.networksexpansion.implementation.machines.networks.advanced;
 
+import com.balugaq.netex.api.helpers.Icon;
 import com.ytdd9527.networksexpansion.implementation.ExpansionItems;
 import io.github.sefiraat.networks.network.NodeType;
 import io.github.sefiraat.networks.slimefun.network.NetworkObject;
-import io.github.sefiraat.networks.utils.Theme;
 import io.github.thebusybiscuit.slimefun4.api.items.ItemGroup;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
 import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
 import io.github.thebusybiscuit.slimefun4.implementation.Slimefun;
-import io.github.thebusybiscuit.slimefun4.libraries.dough.items.CustomItemStack;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.protection.Interaction;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenuPreset;
 import me.mrCookieSlime.Slimefun.api.item_transport.ItemTransportFlow;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -33,16 +31,6 @@ public class AdvancedGreedyBlock extends NetworkObject {
             5, 14, 23
     };
 
-    private static final CustomItemStack TEMPLATE_BACKGROUND_STACK = new CustomItemStack(
-            Material.GREEN_STAINED_GLASS_PANE,
-            Theme.SUCCESS + "需要阻断的物品"
-    );
-
-    private static final CustomItemStack STORAGE_BACKGROUND_STACK = new CustomItemStack(
-            Material.ORANGE_STAINED_GLASS_PANE,
-            Theme.SUCCESS + "物品存储"
-    );
-
     public AdvancedGreedyBlock(ItemGroup itemGroup, SlimefunItemStack item, RecipeType recipeType, ItemStack[] recipe) {
         super(itemGroup, item, recipeType, recipe, NodeType.ADVANCED_GREEDY_BLOCK);
         for (int slot : INPUT_SLOTS) {
@@ -58,8 +46,8 @@ public class AdvancedGreedyBlock extends NetworkObject {
             @Override
             public void init() {
                 drawBackground(BACKGROUND_SLOTS);
-                drawBackground(TEMPLATE_BACKGROUND_STACK, BACKGROUND_SLOTS_TEMPLATE);
-                drawBackground(STORAGE_BACKGROUND_STACK, BACKGROUND_SLOTS_INPUT);
+                drawBackground(Icon.GREEDY_TEMPLATE_BACKGROUND_STACK, BACKGROUND_SLOTS_TEMPLATE);
+                drawBackground(Icon.STORAGE_BACKGROUND_STACK, BACKGROUND_SLOTS_INPUT);
             }
 
             @Override

@@ -1,5 +1,6 @@
 package com.ytdd9527.networksexpansion.implementation.machines.cargo.transfer.line.basic;
 
+import com.balugaq.netex.api.helpers.Icon;
 import com.xzavier0722.mc.plugin.slimefun4.storage.util.StorageCacheUtils;
 import com.balugaq.netex.api.enums.TransportMode;
 import com.balugaq.netex.api.interfaces.Configurable;
@@ -13,7 +14,6 @@ import io.github.sefiraat.networks.network.NodeDefinition;
 import io.github.sefiraat.networks.network.NodeType;
 import io.github.sefiraat.networks.slimefun.network.NetworkDirectional;
 import io.github.sefiraat.networks.utils.StackUtils;
-import io.github.sefiraat.networks.utils.Theme;
 import io.github.thebusybiscuit.slimefun4.api.items.ItemGroup;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
 import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
@@ -44,9 +44,6 @@ public class LineTransfer extends NetworkDirectional implements RecipeDisplayIte
     public static final int DEFAULT_GRAB_ITEM_TICK = 1;
     public static final int DEFAULT_REQUIRED_POWER = 5000;
     public static final boolean DEFAULT_USE_SPECIAL_MODEL = false;
-    public static final CustomItemStack TEMPLATE_BACKGROUND_STACK = new CustomItemStack(
-            Material.BLUE_STAINED_GLASS_PANE, Theme.PASSIVE + "指定需要推送的物品"
-    );
     private static final int PARTICLE_INTERVAL = 2;
     private static final int[] BACKGROUND_SLOTS = new int[]{
             0,
@@ -256,8 +253,8 @@ public class LineTransfer extends NetworkDirectional implements RecipeDisplayIte
 
     @Nullable
     @Override
-    protected CustomItemStack getOtherBackgroundStack() {
-        return TEMPLATE_BACKGROUND_STACK;
+    protected ItemStack getOtherBackgroundStack() {
+        return Icon.PUSHER_TEMPLATE_BACKGROUND_STACK;
     }
 
     @Override

@@ -19,6 +19,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import javax.annotation.Nonnull;
 
+@Deprecated
 public class NetworkCard extends SlimefunItem implements DistinctiveItem {
 
     private static final int[] SIZES = new int[]{

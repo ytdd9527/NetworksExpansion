@@ -4,6 +4,7 @@ import com.jeff_media.morepersistentdatatypes.DataType;
 import com.xzavier0722.mc.plugin.slimefun4.storage.util.StorageCacheUtils;
 import com.balugaq.netex.api.enums.TransportMode;
 import com.ytdd9527.networksexpansion.core.items.machines.AdvancedDirectional;
+import io.github.sefiraat.networks.Networks;
 import io.github.sefiraat.networks.slimefun.network.NetworkDirectional;
 import io.github.sefiraat.networks.utils.Keys;
 import io.github.sefiraat.networks.utils.NetworkUtils;
@@ -52,10 +53,10 @@ public class NetworkConfigurator extends SlimefunItem {
                                         ItemMeta itemMeta = e.getItem().getItemMeta();
                                         int amount = advancedDirectional.getLimitQuantity(blockMenu.getLocation());
                                         DataTypeMethods.setCustom(itemMeta, Keys.AMOUNT, DataType.INTEGER, amount);
-                                        player.sendMessage(Theme.SUCCESS + "已保存传输数量为 " + amount);
+                                        player.sendMessage(String.format(Networks.getLocalizationService().getString("messages.completed-operation.configurator.copied_limit_quantity"), amount));
                                         TransportMode transportMode = advancedDirectional.getCurrentTransportMode(blockMenu.getLocation());
                                         DataTypeMethods.setCustom(itemMeta, Keys.TRANSFER_MODE, DataType.STRING, String.valueOf(transportMode));
-                                        player.sendMessage(Theme.SUCCESS + "已保存传输模式为 " + transportMode);
+                                        player.sendMessage(String.format(Networks.getLocalizationService().getString("messages.completed-operation.configurator.copied_transport_mode"), transportMode));
                                         e.getItem().setItemMeta(itemMeta);
                                     }
                                     setConfigurator(directional, e.getItem(), blockMenu, player);
@@ -65,12 +66,12 @@ public class NetworkConfigurator extends SlimefunItem {
                                         Integer amount = DataTypeMethods.getCustom(itemMeta, Keys.AMOUNT, DataType.INTEGER);
                                         if (amount != null) {
                                             advancedDirectional.setLimitQuantity(blockMenu.getLocation(), amount);
-                                            player.sendMessage(Theme.SUCCESS + "已设置传输数量为 " + amount);
+                                            player.sendMessage(Networks.getLocalizationService().getString("messages.completed-operation.configurator.pasted_limit_quantity"));
                                         }
                                         String transportMode = DataTypeMethods.getCustom(itemMeta, Keys.TRANSFER_MODE, DataType.STRING);
                                         if (transportMode != null) {
                                             advancedDirectional.setTransportMode(blockMenu.getLocation(), TransportMode.valueOf(transportMode));
-                                            player.sendMessage(Theme.SUCCESS + "已设置传输模式为 " + transportMode);
+                                            player.sendMessage(Networks.getLocalizationService().getString("messages.completed-operation.configurator.pasted_transport_mode"));
                                         }
                                         advancedDirectional.updateShowIcon(blockMenu.getLocation());
                                         advancedDirectional.updateTransportModeIcon(blockMenu.getLocation());
@@ -78,7 +79,7 @@ public class NetworkConfigurator extends SlimefunItem {
                                     NetworkUtils.applyConfig(directional, e.getItem(), blockMenu, player);
                                 }
                             } else {
-                                player.sendMessage(Theme.ERROR + "你必须指向一个带方向选择的网络方块");
+                                player.sendMessage(Networks.getLocalizationService().getString("messages.unsupported-operation.configurator.not_a_pasteable_block"));
                             }
                         }
                     }
@@ -93,7 +94,7 @@ public class NetworkConfigurator extends SlimefunItem {
             blockFace = AdvancedDirectional.getSelectedFace(blockMenu.getLocation());
         }
         if (blockFace == null) {
-            player.sendMessage(Theme.ERROR + "该方块没有指定朝向");
+            player.sendMessage(Networks.getLocalizationService().getString("messages.unsupported-operation.configurator.not_a_copyable_block"));
             return;
         }
 
@@ -117,6 +118,6 @@ public class NetworkConfigurator extends SlimefunItem {
 
         DataTypeMethods.setCustom(itemMeta, Keys.FACE, DataType.STRING, blockFace.name());
         itemStack.setItemMeta(itemMeta);
-        player.sendMessage(Theme.SUCCESS + "已复制设置");
+        player.sendMessage(Networks.getLocalizationService().getString("messages.completed-operation.configurator.copied"));
     }
 }

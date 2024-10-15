@@ -32,7 +32,7 @@ public class NetworksGuideListener implements Listener {
                 Bukkit.getPluginManager().callEvent(event);
             }
 
-            if (e.getPlayer().isOp() && Objects.equals(ItemStackHelper.getDisplayName(item), ExpansionItemStacks.NETWORKS_EXPANSION_CHEAT_GUIDE.getDisplayName())) {
+            if (e.getPlayer().isOp() && Objects.equals(ItemStackHelper.getDisplayName(item), ExpansionItemStacks.NTW_EXPANSION_CREATIVE_GUIDE.getDisplayName())) {
                 NetworksExpansionGuideOpenEvent event = new NetworksExpansionGuideOpenEvent(e.getPlayer(), SlimefunGuideMode.CHEAT_MODE);
                 Bukkit.getPluginManager().callEvent(event);
             }
