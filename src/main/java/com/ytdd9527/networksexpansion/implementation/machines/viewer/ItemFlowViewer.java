@@ -156,7 +156,6 @@ public class ItemFlowViewer extends NetworkObject {
         ParticleUtil.highlightBlock(barrelLocation);
     }
 
-    @SuppressWarnings("deprecation")
     @NotNull public static List<DisplayEntry> getRecords(@NotNull NetworkRoot root, @NotNull GridCache cache) {
         if (!root.isRecordFlow() || root.getItemFlowRecord() == null) {
             return new ArrayList<>();
@@ -189,7 +188,6 @@ public class ItemFlowViewer extends NetworkObject {
                 .toList();
     }
 
-    @SuppressWarnings("deprecation")
     @NotNull public static List<ItemFlowRecord.TransportAction> getSubMenu(
             @NotNull NetworkRoot root, @NotNull GridCache cache, @Nullable ItemStack itemStack) {
         if (!root.isRecordFlow() || root.getItemFlowRecord() == null) {
@@ -221,7 +219,6 @@ public class ItemFlowViewer extends NetworkObject {
                 .toList();
     }
 
-    @SuppressWarnings("deprecation")
     public static @NotNull List<String> getLoreAddition(@NotNull DisplayEntry entry) {
         long change = entry.actions().stream()
                 .map(ItemFlowRecord.TransportAction::amount)
@@ -239,7 +236,6 @@ public class ItemFlowViewer extends NetworkObject {
         return list;
     }
 
-    @SuppressWarnings("deprecation")
     public static @NotNull List<String> getLoreAddition(ItemFlowRecord.@NotNull TransportAction entry) {
         var loc = entry.accessor();
         long change = entry.amount();

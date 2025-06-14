@@ -6,7 +6,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.ytdd9527.networksexpansion</groupId>
     <artifactId>NetworksExpansion</artifactId>
-    <version>Special-Version-22</version>
+    <version>Special-Version-23</version>
 
     <distributionManagement>
         <repository>

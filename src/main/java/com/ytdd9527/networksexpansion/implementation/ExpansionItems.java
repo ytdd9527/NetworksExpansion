@@ -93,6 +93,7 @@ import com.ytdd9527.networksexpansion.implementation.machines.networks.advanced.
 import com.ytdd9527.networksexpansion.implementation.machines.networks.advanced.Offsetter;
 import com.ytdd9527.networksexpansion.implementation.machines.networks.advanced.SmartGrabber;
 import com.ytdd9527.networksexpansion.implementation.machines.networks.advanced.SmartPusher;
+import com.ytdd9527.networksexpansion.implementation.machines.networks.advanced.SwitchingMonitor;
 import com.ytdd9527.networksexpansion.implementation.machines.unit.NetworksDrawer;
 import com.ytdd9527.networksexpansion.implementation.machines.viewer.ItemFlowViewer;
 import com.ytdd9527.networksexpansion.implementation.tools.CargoNodeQuickTool;
@@ -1407,4 +1408,10 @@ public class ExpansionItems {
             ExpansionItemStacks.CRAFTER_MANAGER,
             ExpansionWorkbench.TYPE,
             ExpansionRecipes.CRAFTER_MANAGER);
+
+    public static final SwitchingMonitor SWITCHING_MONITOR = new SwitchingMonitor(
+            ExpansionItemsMenus.MENU_FUNCTIONAL_MACHINE,
+            ExpansionItemStacks.SWITCHING_MONITOR,
+            ExpansionWorkbench.TYPE,
+            ExpansionRecipes.SWITCHING_MONITOR);
 }

@@ -1,5 +1,6 @@
 package io.github.sefiraat.networks.managers;
 
+import com.balugaq.netex.core.listeners.HangingBlockInteractListener;
 import com.balugaq.netex.core.listeners.JEGCompatibleListener;
 import io.github.sefiraat.networks.Networks;
 import io.github.sefiraat.networks.listeners.ExplosiveToolListener;
@@ -19,6 +20,7 @@ public class ListenerManager {
                 Networks.getSupportedPluginManager().setJustEnoughGuide(false);
             }
         }
+        addListener(new HangingBlockInteractListener());
     }
 
     private void addListener(@NotNull Listener listener) {

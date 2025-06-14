@@ -208,7 +208,6 @@ public class DrawerManager extends NetworkObject {
         }
     }
 
-    @SuppressWarnings("deprecation")
     public static @NotNull List<StorageUnitData> getStorageUnitDatas(
             @NotNull NetworkRoot root, @NotNull GridCache cache) {
         return root.getCargoStorageUnitDatas(MANAGER_STRATEGY, true).keySet().stream()

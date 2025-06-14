@@ -19,7 +19,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-@SuppressWarnings("deprecation")
 public class NetworksInfoTool extends SpecialSlimefunItem {
     public NetworksInfoTool(@NotNull ItemGroup itemGroup, @NotNull SlimefunItemStack item) {
         super(itemGroup, item, RecipeType.NULL, new ItemStack[] {});

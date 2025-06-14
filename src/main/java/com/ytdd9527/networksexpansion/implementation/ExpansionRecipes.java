@@ -1651,4 +1651,10 @@ public class ExpansionRecipes {
         NETWORK_BRIDGE.getItem(), NETWORK_AUTO_CRAFTER.getItem(), NETWORK_BRIDGE.getItem(),
         NETWORK_BRIDGE.getItem(), NETWORK_AUTO_CRAFTER.getItem(), NETWORK_BRIDGE.getItem()
     };
+
+    public static final ItemStack[] SWITCHING_MONITOR = new ItemStack[] {
+        NETWORK_MONITOR.getItem(), NETWORK_MONITOR.getItem(), NETWORK_MONITOR.getItem(),
+        NETWORK_BRIDGE.getItem(), NETWORK_GRID.getItem(), NETWORK_BRIDGE.getItem(),
+        NETWORK_MONITOR.getItem(), NETWORK_MONITOR.getItem(), NETWORK_MONITOR.getItem()
+    };
 }

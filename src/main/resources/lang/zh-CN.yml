@@ -1002,9 +1002,9 @@ items:
       - "<warning> 网络拓展开发版不接受 GitHub Issues"
       - "<warning> 网络拓展开发版不接受 GitHub PR"
       - "<passive> 版本信息:"
-      - "<passive> 网络拓展版本: Special-Version-22"
+      - "<passive> 网络拓展版本: Special-Version-23"
       - "<passive> 版本状态: 稳定版"
-      - "<passive> 版本更新时间: 2025-6-8 15:43:14"
+      - "<passive> 版本更新时间: 2025-6-14 16:32:55"
       - "<passive> 开发状态: 更新中"
       - "<passive> 开发者（们）: ytdd9527, balugaq"
       - "<passive> 开发者 GitHub 页面: <click_info>https://github.com/ytdd9527"
@@ -3555,6 +3555,11 @@ items:
       - "然后尝试将这些物品送入网络中."
       - ""
       - "<click_info>网络电力消耗: <passive>100J/粘液刻"
+
+  NTW_EXPANSION_SWITCHING_MONITOR:
+    name: "交换监视器"
+    lore:
+      - "交换物品"
 
 displays:
   quantum_storage:

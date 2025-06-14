@@ -150,7 +150,7 @@ public class Icon {
         var meta = clone.getItemMeta();
         if (meta != null) {
             var lore = Optional.ofNullable(meta.getLore()).orElse(new ArrayList<>());
-            lore.add(TextUtil.GRAY + "页 &a" + currentPage + " / " + maxPage);
+            lore.add(TextUtil.GRAY + "页 " + TextUtil.GREEN + currentPage + " / " + maxPage); // todo: add to lang
             meta.setLore(lore);
             clone.setItemMeta(meta);
         }

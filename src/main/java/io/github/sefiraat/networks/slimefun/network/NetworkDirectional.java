@@ -63,7 +63,7 @@ public abstract class NetworkDirectional extends NetworkObject {
     private static final int UP_SLOT = 15;
     private static final int DOWN_SLOT = 33;
     private static final Set<Location> locked = new HashSet<>();
-    private static final Set<BlockFace> VALID_FACES =
+    public static final Set<BlockFace> VALID_FACES =
             EnumSet.of(BlockFace.UP, BlockFace.DOWN, BlockFace.NORTH, BlockFace.EAST, BlockFace.SOUTH, BlockFace.WEST);
 
     private static final Map<Location, BlockFace> SELECTED_DIRECTION_MAP = new HashMap<>();

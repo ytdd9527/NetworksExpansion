@@ -96,6 +96,7 @@ public abstract class AbstractEncoder extends NetworkObject implements RecipeCom
 
         if (definition == null || definition.getNode() == null) {
             sendFeedback(blockMenu.getLocation(), FeedbackType.NO_NETWORK_FOUND);
+            player.sendMessage(Lang.getString("messages.feedback.no_network_found"));
             return;
         }
 

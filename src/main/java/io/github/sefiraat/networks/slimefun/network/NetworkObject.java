@@ -1,13 +1,16 @@
 package io.github.sefiraat.networks.slimefun.network;
 
+import com.balugaq.netex.api.interfaces.HangingBlock;
 import com.xzavier0722.mc.plugin.slimefun4.storage.controller.SlimefunBlockData;
 import com.xzavier0722.mc.plugin.slimefun4.storage.util.StorageCacheUtils;
 import com.ytdd9527.networksexpansion.core.items.SpecialSlimefunItem;
 import io.github.sefiraat.networks.NetworkStorage;
+import io.github.sefiraat.networks.Networks;
 import io.github.sefiraat.networks.network.NetworkRoot;
 import io.github.sefiraat.networks.network.NodeDefinition;
 import io.github.sefiraat.networks.network.NodeType;
 import io.github.sefiraat.networks.utils.Theme;
+import io.github.thebusybiscuit.slimefun4.api.exceptions.IncompatibleItemHandlerException;
 import io.github.thebusybiscuit.slimefun4.api.items.ItemGroup;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
@@ -16,12 +19,15 @@ import io.github.thebusybiscuit.slimefun4.core.handlers.BlockBreakHandler;
 import io.github.thebusybiscuit.slimefun4.core.handlers.BlockPlaceHandler;
 import io.github.thebusybiscuit.slimefun4.implementation.Slimefun;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import javax.annotation.ParametersAreNonnullByDefault;
 import lombok.Getter;
 import me.mrCookieSlime.Slimefun.Objects.handlers.BlockTicker;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -37,6 +43,7 @@ public abstract class NetworkObject extends SpecialSlimefunItem implements Admin
             Set.of(BlockFace.UP, BlockFace.DOWN, BlockFace.NORTH, BlockFace.SOUTH, BlockFace.EAST, BlockFace.WEST);
     private final NodeType nodeType;
     private final List<Integer> slotsToDrop = new ArrayList<>();
+    private final Set<Location> firstTickLocations = new HashSet<>();
 
     protected NetworkObject(
             @NotNull ItemGroup itemGroup,
@@ -66,7 +73,20 @@ public abstract class NetworkObject extends SpecialSlimefunItem implements Admin
 
                     @Override
                     public void tick(@NotNull Block b, SlimefunItem item, SlimefunBlockData data) {
+                        if (!firstTickLocations.contains(b.getLocation())) {
+                            // Netex - Hanging patch start
+                            Bukkit.getScheduler().runTask(Networks.getInstance(), () -> HangingBlock.loadHangingBlocks(data));
+                            // Netex - Hanging patch end
+                            firstTickLocations.add(b.getLocation());
+                            return;
+                        }
+
                         addToRegistry(b);
+                    }
+
+                    @Override
+                    @NotNull public Optional<IncompatibleItemHandlerException> validate(@NotNull SlimefunItem slimefunItem) {
+                        return Optional.empty();
                     }
                 },
                 new BlockBreakHandler(false, false) {

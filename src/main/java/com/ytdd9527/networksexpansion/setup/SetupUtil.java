@@ -105,7 +105,8 @@ public class SetupUtil {
                 ExpansionItems.QUANTUM_MANAGER.registerThis(),
                 ExpansionItems.DRAWER_MANAGER.registerThis(),
                 ExpansionItems.CRAFTER_MANAGER.registerThis(),
-                ExpansionItems.ITEM_FLOW_VIEWER.registerThis());
+                ExpansionItems.ITEM_FLOW_VIEWER.registerThis(),
+                ExpansionItems.SWITCHING_MONITOR.registerThis());
 
         ExpansionItemsMenus.SUB_MENU_CARGO.addTo(
                 ExpansionItems.SMART_GRABBER.registerThis(), ExpansionItems.SMART_PUSHER.registerThis());
