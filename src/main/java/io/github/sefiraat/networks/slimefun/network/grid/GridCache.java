@@ -2,7 +2,6 @@ package io.github.sefiraat.networks.slimefun.network.grid;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.inventory.ItemStack;
@@ -11,8 +10,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class GridCache {
 
-    @NotNull
-    private final List<ItemStack> pullItemHistory = new ArrayList<>();
+    @NotNull private final List<ItemStack> pullItemHistory = new ArrayList<>();
 
     @Setter
     @Getter
@@ -22,14 +20,11 @@ public class GridCache {
     @Getter
     private int maxPages;
 
-    @NotNull
-    private DisplayMode displayMode;
+    @NotNull private DisplayMode displayMode;
 
-    @NotNull
-    private SortOrder sortOrder;
+    @NotNull private SortOrder sortOrder;
 
-    @Nullable
-    private String filter;
+    @Nullable private String filter;
 
     public GridCache(int page, int maxPages, @NotNull SortOrder sortOrder) {
         this.page = page;
@@ -38,8 +33,7 @@ public class GridCache {
         this.displayMode = DisplayMode.DISPLAY;
     }
 
-    @NotNull
-    public SortOrder getSortOrder() {
+    @NotNull public SortOrder getSortOrder() {
         return this.sortOrder;
     }
 
@@ -47,8 +41,7 @@ public class GridCache {
         this.sortOrder = sortOrder;
     }
 
-    @Nullable
-    public String getFilter() {
+    @Nullable public String getFilter() {
         return this.filter;
     }
 
@@ -56,8 +49,7 @@ public class GridCache {
         this.filter = filter;
     }
 
-    @NotNull
-    public List<ItemStack> getPullItemHistory() {
+    @NotNull public List<ItemStack> getPullItemHistory() {
         return this.pullItemHistory;
     }
 

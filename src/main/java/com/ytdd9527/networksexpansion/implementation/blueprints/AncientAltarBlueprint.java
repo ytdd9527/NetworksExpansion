@@ -8,7 +8,7 @@ import org.bukkit.inventory.ItemStack;
 
 public class AncientAltarBlueprint extends AbstractBlueprint {
     public AncientAltarBlueprint(
-        ItemGroup itemGroup, SlimefunItemStack item, RecipeType recipeType, ItemStack[] recipe) {
+            ItemGroup itemGroup, SlimefunItemStack item, RecipeType recipeType, ItemStack[] recipe) {
         super(itemGroup, item, recipeType, recipe);
     }
 }

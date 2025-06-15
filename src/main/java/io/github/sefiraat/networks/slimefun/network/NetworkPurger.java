@@ -20,9 +20,7 @@ import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
 import io.github.thebusybiscuit.slimefun4.core.handlers.BlockBreakHandler;
 import io.github.thebusybiscuit.slimefun4.implementation.Slimefun;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.protection.Interaction;
-
 import java.util.List;
-
 import me.mrCookieSlime.Slimefun.Objects.handlers.BlockTicker;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenuPreset;
@@ -46,10 +44,10 @@ public class NetworkPurger extends NetworkObject {
     private final @NotNull ItemSetting<Integer> tickRate;
 
     public NetworkPurger(
-        @NotNull ItemGroup itemGroup,
-        @NotNull SlimefunItemStack item,
-        @NotNull RecipeType recipeType,
-        ItemStack[] recipe) {
+            @NotNull ItemGroup itemGroup,
+            @NotNull SlimefunItemStack item,
+            @NotNull RecipeType recipeType,
+            ItemStack[] recipe) {
         super(itemGroup, item, recipeType, recipe, NodeType.PURGER);
         this.tickRate = new IntRangeSetting(this, "tick_rate", 1, 1, 10);
         addItemSetting(this.tickRate);
@@ -57,44 +55,44 @@ public class NetworkPurger extends NetworkObject {
         this.getSlotsToDrop().add(TEST_ITEM_SLOT);
 
         addItemHandler(
-            new BlockTicker() {
+                new BlockTicker() {
 
-                private int tick = 1;
+                    private int tick = 1;
 
-                @Override
-                public boolean isSynchronized() {
-                    return false;
-                }
+                    @Override
+                    public boolean isSynchronized() {
+                        return false;
+                    }
 
-                @Override
-                public void tick(@NotNull Block block, SlimefunItem item, @NotNull SlimefunBlockData data) {
-                    if (tick <= 1) {
-                        BlockMenu blockMenu = data.getBlockMenu();
+                    @Override
+                    public void tick(@NotNull Block block, SlimefunItem item, @NotNull SlimefunBlockData data) {
+                        if (tick <= 1) {
+                            BlockMenu blockMenu = data.getBlockMenu();
+                            if (blockMenu == null) {
+                                return;
+                            }
+                            addToRegistry(block);
+                            tryKillItem(blockMenu);
+                        }
+                    }
+
+                    @Override
+                    public void uniqueTick() {
+                        tick = tick <= 1 ? tickRate.getValue() : tick - 1;
+                    }
+                },
+                new BlockBreakHandler(true, true) {
+                    @Override
+                    public void onPlayerBreak(
+                            @NotNull BlockBreakEvent e, @NotNull ItemStack item, @NotNull List<ItemStack> drops) {
+                        BlockMenu blockMenu =
+                                StorageCacheUtils.getMenu(e.getBlock().getLocation());
                         if (blockMenu == null) {
                             return;
                         }
-                        addToRegistry(block);
-                        tryKillItem(blockMenu);
+                        blockMenu.dropItems(blockMenu.getLocation(), TEST_ITEM_SLOT);
                     }
-                }
-
-                @Override
-                public void uniqueTick() {
-                    tick = tick <= 1 ? tickRate.getValue() : tick - 1;
-                }
-            },
-            new BlockBreakHandler(true, true) {
-                @Override
-                public void onPlayerBreak(
-                    @NotNull BlockBreakEvent e, @NotNull ItemStack item, @NotNull List<ItemStack> drops) {
-                    BlockMenu blockMenu =
-                        StorageCacheUtils.getMenu(e.getBlock().getLocation());
-                    if (blockMenu == null) {
-                        return;
-                    }
-                    blockMenu.dropItems(blockMenu.getLocation(), TEST_ITEM_SLOT);
-                }
-            });
+                });
     }
 
     private void tryKillItem(@NotNull BlockMenu blockMenu) {
@@ -138,9 +136,9 @@ public class NetworkPurger extends NetworkObject {
             @Override
             public boolean canOpen(@NotNull Block block, @NotNull Player player) {
                 return player.hasPermission("slimefun.inventory.bypass")
-                    || (NetworkSlimefunItems.NETWORK_PURGER.canUse(player, false)
-                    && Slimefun.getProtectionManager()
-                    .hasPermission(player, block.getLocation(), Interaction.INTERACT_BLOCK));
+                        || (NetworkSlimefunItems.NETWORK_PURGER.canUse(player, false)
+                                && Slimefun.getProtectionManager()
+                                        .hasPermission(player, block.getLocation(), Interaction.INTERACT_BLOCK));
             }
 
             @Override

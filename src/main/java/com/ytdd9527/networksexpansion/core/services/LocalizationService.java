@@ -10,7 +10,6 @@ import io.github.sefiraat.networks.utils.Theme;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
 import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.items.CustomItemStack;
-
 import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -30,7 +29,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import javax.annotation.ParametersAreNonnullByDefault;
-
 import lombok.Getter;
 import lombok.Setter;
 import net.md_5.bungee.api.ChatMessageType;
@@ -111,8 +109,7 @@ public class LocalizationService {
     }
 
     @ParametersAreNonnullByDefault
-    @NotNull
-    public String getString(String key, Object... args) {
+    @NotNull public String getString(String key, Object... args) {
         return MessageFormat.format(getString(key), args);
     }
 
@@ -145,8 +142,8 @@ public class LocalizationService {
                 this.plugin.saveResource(resourcePath, false);
             } catch (IllegalArgumentException var6) {
                 this.plugin
-                    .getLogger()
-                    .log(Level.SEVERE, "The default language file {0} does not exist in jar file!", resourcePath);
+                        .getLogger()
+                        .log(Level.SEVERE, "The default language file {0} does not exist in jar file!", resourcePath);
                 return;
             }
         }
@@ -155,15 +152,14 @@ public class LocalizationService {
         InputStream resource = this.plugin.getResource(resourcePath);
         if (resource == null) {
             throw new IllegalArgumentException(
-                "The default language file " + resourcePath + " does not exist in jar file!");
+                    "The default language file " + resourcePath + " does not exist in jar file!");
         }
         InputStreamReader defaultReader = new InputStreamReader(resource, StandardCharsets.UTF_8);
         FileConfiguration defaultConfig = YamlConfiguration.loadConfiguration(defaultReader);
         this.langMap.put(langFilename, new Language(langFilename, langFile, defaultConfig));
     }
 
-    @NotNull
-    public String getString0(@NotNull String path) {
+    @NotNull public String getString0(@NotNull String path) {
         Preconditions.checkArgument(path != null, "path cannot be null");
         String cached = CACHE.get(path);
         if (cached != null) {
@@ -187,8 +183,7 @@ public class LocalizationService {
         return localization;
     }
 
-    @NotNull
-    public List<String> getStringList(@NotNull String path) {
+    @NotNull public List<String> getStringList(@NotNull String path) {
         Preconditions.checkArgument(path != null, "path cannot be null");
         Iterator<String> languages = this.languages.iterator();
 
@@ -208,8 +203,7 @@ public class LocalizationService {
         return localization;
     }
 
-    @NotNull
-    public String @NotNull [] getStringArray(@NotNull String path) {
+    @NotNull public String @NotNull [] getStringArray(@NotNull String path) {
         return this.getStringList(path).stream().map(this::color).toList().toArray(new String[0]);
     }
 
@@ -217,72 +211,65 @@ public class LocalizationService {
         return this.plugin;
     }
 
-    @NotNull
-    public String getString(@NotNull String path) {
+    @NotNull public String getString(@NotNull String path) {
         return color(this.getString0(path));
     }
 
-    @NotNull
-    @ParametersAreNonnullByDefault
+    @NotNull @ParametersAreNonnullByDefault
     public SlimefunItemStack getItemBy(String key, String id, Material material, String... extraLore) {
         Preconditions.checkArgument(key != null, MSG_KEY_NULL);
         Preconditions.checkArgument(id != null, MSG_ID_NULL);
         Preconditions.checkArgument(material != null, MSG_MATERIAL_NULL);
         SlimefunItemStack item = new SlimefunItemStack(
-            (this.idPrefix + id).toUpperCase(Locale.ROOT),
-            material,
-            this.getString(key + "." + id + KEY_NAME),
-            this.getStringArray(key + "." + id + KEY_LORE));
+                (this.idPrefix + id).toUpperCase(Locale.ROOT),
+                material,
+                this.getString(key + "." + id + KEY_NAME),
+                this.getStringArray(key + "." + id + KEY_LORE));
         if (extraLore != null && extraLore.length != 0) {
             appendLore(item, extraLore);
         }
         return item;
     }
 
-    @NotNull
-    @ParametersAreNonnullByDefault
+    @NotNull @ParametersAreNonnullByDefault
     public SlimefunItemStack getItemBy(String key, String id, String texture, String... extraLore) {
         Preconditions.checkArgument(key != null, MSG_KEY_NULL);
         Preconditions.checkArgument(id != null, MSG_ID_NULL);
         Preconditions.checkArgument(texture != null, MSG_TEXTURE_NULL);
         return appendLore(
-            new SlimefunItemStack(
-                (this.idPrefix + id).toUpperCase(Locale.ROOT),
-                texture,
-                this.getString(key + "." + id + ".name"),
-                this.getStringArray(key + "." + id + ".lore")),
-            extraLore);
+                new SlimefunItemStack(
+                        (this.idPrefix + id).toUpperCase(Locale.ROOT),
+                        texture,
+                        this.getString(key + "." + id + ".name"),
+                        this.getStringArray(key + "." + id + ".lore")),
+                extraLore);
     }
 
-    @NotNull
-    @ParametersAreNonnullByDefault
+    @NotNull @ParametersAreNonnullByDefault
     public SlimefunItemStack getItemBy(String key, String id, ItemStack itemStack, String... extraLore) {
         Preconditions.checkArgument(key != null, MSG_KEY_NULL);
         Preconditions.checkArgument(id != null, MSG_ID_NULL);
         Preconditions.checkArgument(itemStack != null, MSG_ITEMSTACK_NULL);
         return appendLore(
-            new SlimefunItemStack(
-                (this.idPrefix + id).toUpperCase(Locale.ROOT),
-                itemStack,
-                this.getString(key + "." + id + ".name"),
-                this.getStringArray(key + "." + id + ".lore")),
-            extraLore);
+                new SlimefunItemStack(
+                        (this.idPrefix + id).toUpperCase(Locale.ROOT),
+                        itemStack,
+                        this.getString(key + "." + id + ".name"),
+                        this.getStringArray(key + "." + id + ".lore")),
+                extraLore);
     }
 
-    @NotNull
-    @ParametersAreNonnullByDefault
+    @NotNull @ParametersAreNonnullByDefault
     public SlimefunItemStack getItemGroupItem(String id, Material material) {
         return this.getItemBy(this.itemGroupKey, id, material);
     }
 
-    @NotNull
-    @ParametersAreNonnullByDefault
+    @NotNull @ParametersAreNonnullByDefault
     public SlimefunItemStack getItemGroupItem(String id, String texture) {
         return this.getItemBy(this.itemGroupKey, id, texture);
     }
 
-    @NotNull
-    @ParametersAreNonnullByDefault
+    @NotNull @ParametersAreNonnullByDefault
     public SlimefunItemStack getItemGroupItem(String id, ItemStack itemStack) {
         return this.getItemBy(this.itemGroupKey, id, itemStack);
     }
@@ -291,42 +278,37 @@ public class LocalizationService {
         return this.getItemBy(this.itemsKey, id, material, extraLore);
     }
 
-    @NotNull
-    @ParametersAreNonnullByDefault
+    @NotNull @ParametersAreNonnullByDefault
     public SlimefunItemStack getItem(String id, String texture, String... extraLore) {
         return this.getItemBy(this.itemsKey, id, texture, extraLore);
     }
 
-    @NotNull
-    @ParametersAreNonnullByDefault
+    @NotNull @ParametersAreNonnullByDefault
     public SlimefunItemStack getItem(String id, ItemStack itemStack, String... extraLore) {
         return this.getItemBy(this.itemsKey, id, itemStack, extraLore);
     }
 
-    @NotNull
-    @ParametersAreNonnullByDefault
+    @NotNull @ParametersAreNonnullByDefault
     public RecipeType getRecipeType(String id, Material material, String... extraLore) {
         return new RecipeType(
-            Keys.customNewKey(this.getPlugin(), id), this.getItemBy(this.recipesKey, id, material, extraLore));
+                Keys.customNewKey(this.getPlugin(), id), this.getItemBy(this.recipesKey, id, material, extraLore));
     }
 
-    @NotNull
-    @ParametersAreNonnullByDefault
+    @NotNull @ParametersAreNonnullByDefault
     public RecipeType getRecipeType(String id, String texture, String... extraLore) {
         return new RecipeType(
-            Keys.customNewKey(this.getPlugin(), id), this.getItemBy(this.recipesKey, id, texture, extraLore));
+                Keys.customNewKey(this.getPlugin(), id), this.getItemBy(this.recipesKey, id, texture, extraLore));
     }
 
-    @NotNull
-    @ParametersAreNonnullByDefault
+    @NotNull @ParametersAreNonnullByDefault
     public RecipeType getRecipeType(String id, ItemStack itemStack, String... extraLore) {
         return new RecipeType(
-            Keys.customNewKey(this.getPlugin(), id), this.getItemBy(this.recipesKey, id, itemStack, extraLore));
+                Keys.customNewKey(this.getPlugin(), id), this.getItemBy(this.recipesKey, id, itemStack, extraLore));
     }
 
     @SuppressWarnings("deprecation")
     private <T extends ItemStack> @NotNull T appendLore(
-        @NotNull T itemStack, @Nullable String @Nullable ... extraLore) {
+            @NotNull T itemStack, @Nullable String @Nullable ... extraLore) {
         Preconditions.checkArgument(itemStack != null, MSG_ITEMSTACK_NULL);
         if (extraLore != null && extraLore.length != 0) {
             ItemMeta meta = itemStack.getItemMeta();
@@ -342,8 +324,7 @@ public class LocalizationService {
         return itemStack;
     }
 
-    @NotNull
-    public String color(@NotNull String str) {
+    @NotNull public String color(@NotNull String str) {
         str = TextUtil.color(str);
         if (str.startsWith("<random_color>")) {
             str = str.replaceAll("<random_color>", "");
@@ -376,8 +357,7 @@ public class LocalizationService {
         return str;
     }
 
-    @NotNull
-    public List<String> color(@NotNull List<String> strList) {
+    @NotNull public List<String> color(@NotNull List<String> strList) {
         Preconditions.checkArgument(strList != null, "String list cannot be null");
         return strList.stream().map(this::color).collect(Collectors.toList());
     }
@@ -387,28 +367,24 @@ public class LocalizationService {
         sender.sendMessage(color(MessageFormat.format(message, args)));
     }
 
-    @NotNull
-    @ParametersAreNonnullByDefault
+    @NotNull @ParametersAreNonnullByDefault
     public ItemStack getItemStack(String key, Material material) {
         return ItemStackUtil.getCleanItem(
-            new CustomItemStack(material, this.getString(key + KEY_NAME), this.getStringArray(key + KEY_LORE)));
+                new CustomItemStack(material, this.getString(key + KEY_NAME), this.getStringArray(key + KEY_LORE)));
     }
 
-    @NotNull
-    @ParametersAreNonnullByDefault
+    @NotNull @ParametersAreNonnullByDefault
     public ItemStack getIcon(String key, Material material) {
         return getItemStack("icons." + key, material);
     }
 
-    @NotNull
-    @ParametersAreNonnullByDefault
+    @NotNull @ParametersAreNonnullByDefault
     public ItemStack getMechanism(String key) {
         return getIcon("mechanism." + key, Material.BOOK);
     }
 
     @Deprecated
-    @NotNull
-    @ParametersAreNonnullByDefault
+    @NotNull @ParametersAreNonnullByDefault
     public String getMCMessage(String key) {
         return getString("mc_messages." + key);
     }

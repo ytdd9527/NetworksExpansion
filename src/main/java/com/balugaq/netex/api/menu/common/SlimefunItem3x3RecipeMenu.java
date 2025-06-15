@@ -16,9 +16,7 @@ import io.github.thebusybiscuit.slimefun4.core.guide.SlimefunGuide;
 import io.github.thebusybiscuit.slimefun4.core.guide.SlimefunGuideMode;
 import io.github.thebusybiscuit.slimefun4.implementation.Slimefun;
 import io.github.thebusybiscuit.slimefun4.utils.ChestMenuUtils;
-
 import java.util.List;
-
 import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.ChestMenu;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -34,14 +32,14 @@ public class SlimefunItem3x3RecipeMenu extends ChestMenu {
     private final int BACK_SLOT = 1;
     private final int RECIPE_TYPE = 10;
     private final int RECIPE_RESULT = 16;
-    private final int[] RECIPE_CONTENT = new int[]{3, 4, 5, 12, 13, 14, 21, 22, 23};
+    private final int[] RECIPE_CONTENT = new int[] {3, 4, 5, 12, 13, 14, 21, 22, 23};
     private final int INFO_SLOT = 9;
 
-    private final int[] BORDER = new int[]{27, 29, 30, 31, 32, 33, 35};
+    private final int[] BORDER = new int[] {27, 29, 30, 31, 32, 33, 35};
     private final int PREVIOUS_SLOT = 28;
     private final int NEXT_SLOT = 34;
     private final int[] WORK_CONTENT =
-        new int[]{36, 45, 37, 46, 38, 47, 39, 48, 40, 49, 41, 50, 42, 51, 43, 52, 44, 53};
+            new int[] {36, 45, 37, 46, 38, 47, 39, 48, 40, 49, 41, 50, 42, 51, 43, 52, 44, 53};
 
     private final @NotNull Player player;
     private final @NotNull PlayerProfile playerProfile;
@@ -50,21 +48,21 @@ public class SlimefunItem3x3RecipeMenu extends ChestMenu {
     private final @NotNull ItemGroup itemGroup;
 
     public SlimefunItem3x3RecipeMenu(
-        @NotNull Player player,
-        @NotNull PlayerProfile playerProfile,
-        @NotNull SlimefunGuideMode slimefunGuideMode,
-        @NotNull SlimefunItem slimefunItem,
-        @NotNull ItemGroup itemGroup) {
+            @NotNull Player player,
+            @NotNull PlayerProfile playerProfile,
+            @NotNull SlimefunGuideMode slimefunGuideMode,
+            @NotNull SlimefunItem slimefunItem,
+            @NotNull ItemGroup itemGroup) {
         this(player, playerProfile, slimefunGuideMode, slimefunItem, itemGroup, 0);
     }
 
     public SlimefunItem3x3RecipeMenu(
-        @NotNull Player player,
-        @NotNull PlayerProfile playerProfile,
-        @NotNull SlimefunGuideMode slimefunGuideMode,
-        @NotNull SlimefunItem slimefunItem,
-        @NotNull ItemGroup itemGroup,
-        int page) {
+            @NotNull Player player,
+            @NotNull PlayerProfile playerProfile,
+            @NotNull SlimefunGuideMode slimefunGuideMode,
+            @NotNull SlimefunItem slimefunItem,
+            @NotNull ItemGroup itemGroup,
+            int page) {
         super(slimefunItem.getItemName());
         this.player = player;
         this.playerProfile = playerProfile;
@@ -87,9 +85,9 @@ public class SlimefunItem3x3RecipeMenu extends ChestMenu {
         });
 
         this.addItem(
-            RECIPE_TYPE,
-            ItemStackUtil.getCleanItem(ItemStackUtil.cloneWithoutNBT(
-                slimefunItem.getRecipeType().toItem())));
+                RECIPE_TYPE,
+                ItemStackUtil.getCleanItem(ItemStackUtil.cloneWithoutNBT(
+                        slimefunItem.getRecipeType().toItem())));
         this.addMenuClickHandler(RECIPE_TYPE, (p, slot, item, action) -> {
             TypeItemGroup typeItemGroup = TypeItemGroup.getByRecipeType(slimefunItem.getRecipeType());
             typeItemGroup.open(player, playerProfile, slimefunGuideMode);
@@ -97,8 +95,8 @@ public class SlimefunItem3x3RecipeMenu extends ChestMenu {
         });
 
         this.addItem(
-            RECIPE_RESULT,
-            ItemStackUtil.getCleanItem(ItemStackUtil.cloneWithoutNBT(slimefunItem.getRecipeOutput())));
+                RECIPE_RESULT,
+                ItemStackUtil.getCleanItem(ItemStackUtil.cloneWithoutNBT(slimefunItem.getRecipeOutput())));
         this.addMenuClickHandler(RECIPE_RESULT, (p, slot, item, action) -> {
             CraftItemGroup craftItemGroup = CraftItemGroup.getBySlimefunItem(slimefunItem);
             craftItemGroup.open(player, playerProfile, slimefunGuideMode);
@@ -114,21 +112,21 @@ public class SlimefunItem3x3RecipeMenu extends ChestMenu {
                 if (research != null && !this.playerProfile.hasUnlocked(research)) {
                     icon = ChestMenuUtils.getNotResearchedItem();
                     ItemStackUtil.setLore(
-                        icon,
-                        "§7" + research.getName(player),
-                        "§4§l" + Slimefun.getLocalization().getMessage(player, "guide.locked"),
-                        "",
-                        Lang.getString("messages.guide.click-to-research"),
-                        "",
-                        Lang.getString("messages.guide.cost")
-                            + research.getCost()
-                            + Lang.getString("messages.guide.cost-level"));
+                            icon,
+                            "§7" + research.getName(player),
+                            "§4§l" + Slimefun.getLocalization().getMessage(player, "guide.locked"),
+                            "",
+                            Lang.getString("messages.guide.click-to-research"),
+                            "",
+                            Lang.getString("messages.guide.cost")
+                                    + research.getCost()
+                                    + Lang.getString("messages.guide.cost-level"));
                 }
             }
             this.addItem(RECIPE_CONTENT[i], ItemStackUtil.getCleanItem(ItemStackUtil.cloneWithoutNBT(icon)));
             this.addMenuClickHandler(RECIPE_CONTENT[i], (p, slot, item, action) -> {
                 RecipeItemGroup recipeItemGroup =
-                    RecipeItemGroup.getByItemStack(player, playerProfile, slimefunGuideMode, itemStack);
+                        RecipeItemGroup.getByItemStack(player, playerProfile, slimefunGuideMode, itemStack);
                 if (recipeItemGroup != null) {
                     recipeItemGroup.open(player, playerProfile, slimefunGuideMode);
                 }
@@ -156,17 +154,17 @@ public class SlimefunItem3x3RecipeMenu extends ChestMenu {
             List<ItemStack> displayRecipes = recipeDisplayItem.getDisplayRecipes();
 
             this.addItem(
-                PREVIOUS_SLOT,
-                ItemStackUtil.getCleanItem(ChestMenuUtils.getPreviousButton(
-                    this.player, page, (displayRecipes.size() - 1) / WORK_CONTENT.length + 1)));
+                    PREVIOUS_SLOT,
+                    ItemStackUtil.getCleanItem(ChestMenuUtils.getPreviousButton(
+                            this.player, page, (displayRecipes.size() - 1) / WORK_CONTENT.length + 1)));
             this.addMenuClickHandler(PREVIOUS_SLOT, (p, slot, item, action) -> {
                 SlimefunItem3x3RecipeMenu instance = this;
                 RecipeItemGroup recipeItemGroup = RecipeItemGroup.getByItemStack(
-                    instance.player,
-                    instance.playerProfile,
-                    instance.slimefunGuideMode,
-                    instance.slimefunItem.getItem(),
-                    Math.max(page - 1, 1));
+                        instance.player,
+                        instance.playerProfile,
+                        instance.slimefunGuideMode,
+                        instance.slimefunItem.getItem(),
+                        Math.max(page - 1, 1));
                 if (recipeItemGroup != null) {
                     GuideUtil.removeLastEntry(instance.playerProfile.getGuideHistory());
                     recipeItemGroup.open(instance.player, instance.playerProfile, instance.slimefunGuideMode);
@@ -175,17 +173,17 @@ public class SlimefunItem3x3RecipeMenu extends ChestMenu {
             });
 
             this.addItem(
-                NEXT_SLOT,
-                ItemStackUtil.getCleanItem(ChestMenuUtils.getNextButton(
-                    this.player, page, (displayRecipes.size() - 1) / WORK_CONTENT.length + 1)));
+                    NEXT_SLOT,
+                    ItemStackUtil.getCleanItem(ChestMenuUtils.getNextButton(
+                            this.player, page, (displayRecipes.size() - 1) / WORK_CONTENT.length + 1)));
             this.addMenuClickHandler(NEXT_SLOT, (p, slot, item, action) -> {
                 SlimefunItem3x3RecipeMenu instance = this;
                 RecipeItemGroup recipeItemGroup = RecipeItemGroup.getByItemStack(
-                    instance.player,
-                    instance.playerProfile,
-                    instance.slimefunGuideMode,
-                    instance.slimefunItem.getItem(),
-                    Math.min(page + 1, (displayRecipes.size() - 1) / WORK_CONTENT.length + 1));
+                        instance.player,
+                        instance.playerProfile,
+                        instance.slimefunGuideMode,
+                        instance.slimefunItem.getItem(),
+                        Math.min(page + 1, (displayRecipes.size() - 1) / WORK_CONTENT.length + 1));
                 if (recipeItemGroup != null) {
                     GuideUtil.removeLastEntry(instance.playerProfile.getGuideHistory());
                     recipeItemGroup.open(instance.player, instance.playerProfile, instance.slimefunGuideMode);
@@ -205,21 +203,21 @@ public class SlimefunItem3x3RecipeMenu extends ChestMenu {
                         if (research != null && !this.playerProfile.hasUnlocked(research)) {
                             icon = ChestMenuUtils.getNotResearchedItem();
                             ItemStackUtil.setLore(
-                                icon,
-                                "§7" + research.getName(player),
-                                "§4§l" + Slimefun.getLocalization().getMessage(player, "guide.locked"),
-                                "",
-                                Lang.getString("messages.guide.click-to-research"),
-                                "",
-                                Lang.getString("messages.guide.cost")
-                                    + research.getCost()
-                                    + Lang.getString("messages.guide.cost-level"));
+                                    icon,
+                                    "§7" + research.getName(player),
+                                    "§4§l" + Slimefun.getLocalization().getMessage(player, "guide.locked"),
+                                    "",
+                                    Lang.getString("messages.guide.click-to-research"),
+                                    "",
+                                    Lang.getString("messages.guide.cost")
+                                            + research.getCost()
+                                            + Lang.getString("messages.guide.cost-level"));
                         }
                     }
                     this.addItem(WORK_CONTENT[i], ItemStackUtil.getCleanItem(ItemStackUtil.cloneWithoutNBT(icon)));
                     this.addMenuClickHandler(WORK_CONTENT[i], (p, slot, item, action) -> {
                         RecipeItemGroup recipeItemGroup = RecipeItemGroup.getByItemStack(
-                            this.player, this.playerProfile, this.slimefunGuideMode, itemStack);
+                                this.player, this.playerProfile, this.slimefunGuideMode, itemStack);
                         if (recipeItemGroup != null) {
                             recipeItemGroup.open(this.player, this.playerProfile, this.slimefunGuideMode);
                         }

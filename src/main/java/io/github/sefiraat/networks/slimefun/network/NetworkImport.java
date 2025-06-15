@@ -26,7 +26,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class NetworkImport extends NetworkObject {
 
-    private static final int[] INPUT_SLOTS = new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8};
+    private static final int[] INPUT_SLOTS = new int[] {0, 1, 2, 3, 4, 5, 6, 7, 8};
 
     private final @NotNull ItemSetting<Integer> tickRate;
 
@@ -99,9 +99,9 @@ public class NetworkImport extends NetworkObject {
             @Override
             public boolean canOpen(@NotNull Block block, @NotNull Player player) {
                 return player.hasPermission("slimefun.inventory.bypass")
-                    || (NetworkSlimefunItems.NETWORK_IMPORT.canUse(player, false)
-                    && Slimefun.getProtectionManager()
-                    .hasPermission(player, block.getLocation(), Interaction.INTERACT_BLOCK));
+                        || (NetworkSlimefunItems.NETWORK_IMPORT.canUse(player, false)
+                                && Slimefun.getProtectionManager()
+                                        .hasPermission(player, block.getLocation(), Interaction.INTERACT_BLOCK));
             }
 
             @Override

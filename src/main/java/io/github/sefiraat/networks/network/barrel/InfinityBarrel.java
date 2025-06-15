@@ -4,9 +4,7 @@ import com.xzavier0722.mc.plugin.slimefun4.storage.util.StorageCacheUtils;
 import io.github.mooy1.infinityexpansion.items.storage.StorageCache;
 import io.github.sefiraat.networks.network.stackcaches.BarrelIdentity;
 import io.github.sefiraat.networks.network.stackcaches.ItemRequest;
-
 import javax.annotation.ParametersAreNonnullByDefault;
-
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
 import org.bukkit.Location;
 import org.bukkit.inventory.ItemStack;
@@ -15,8 +13,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class InfinityBarrel extends BarrelIdentity {
 
-    @NotNull
-    private final StorageCache cache;
+    @NotNull private final StorageCache cache;
 
     @ParametersAreNonnullByDefault
     public InfinityBarrel(Location location, @Nullable ItemStack itemStack, long amount, StorageCache cache) {
@@ -24,8 +21,7 @@ public class InfinityBarrel extends BarrelIdentity {
         this.cache = cache;
     }
 
-    @Nullable
-    @Override
+    @Nullable @Override
     public ItemStack requestItem(@NotNull ItemRequest itemRequest) {
         BlockMenu blockMenu = StorageCacheUtils.getMenu(this.getLocation());
         return blockMenu == null ? null : blockMenu.getItemInSlot(this.getOutputSlot()[0]);
@@ -38,11 +34,11 @@ public class InfinityBarrel extends BarrelIdentity {
 
     @Override
     public int[] getInputSlot() {
-        return new int[]{10};
+        return new int[] {10};
     }
 
     @Override
     public int[] getOutputSlot() {
-        return new int[]{16};
+        return new int[] {16};
     }
 }

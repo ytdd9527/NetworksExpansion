@@ -28,15 +28,15 @@ public class NetworkWirelessReceiver extends NetworkObject {
     public static final int RECEIVED_SLOT = 13;
 
     private static final int[] BACKGROUND_SLOTS =
-        new int[]{0, 1, 2, 6, 7, 8, 9, 10, 11, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26};
+            new int[] {0, 1, 2, 6, 7, 8, 9, 10, 11, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26};
 
-    private static final int[] RECEIVED_SLOTS_TEMPLATE = new int[]{3, 4, 5, 12, 14, 21, 22, 23};
+    private static final int[] RECEIVED_SLOTS_TEMPLATE = new int[] {3, 4, 5, 12, 14, 21, 22, 23};
 
     public NetworkWirelessReceiver(
-        @NotNull ItemGroup itemGroup,
-        @NotNull SlimefunItemStack item,
-        @NotNull RecipeType recipeType,
-        ItemStack[] recipe) {
+            @NotNull ItemGroup itemGroup,
+            @NotNull SlimefunItemStack item,
+            @NotNull RecipeType recipeType,
+            ItemStack[] recipe) {
         super(itemGroup, item, recipeType, recipe, NodeType.WIRELESS_RECEIVER);
         this.getSlotsToDrop().add(RECEIVED_SLOT);
 
@@ -89,9 +89,9 @@ public class NetworkWirelessReceiver extends NetworkObject {
             @Override
             public boolean canOpen(@NotNull Block block, @NotNull Player player) {
                 return player.hasPermission("slimefun.inventory.bypass")
-                    || (NetworkSlimefunItems.NETWORK_WIRELESS_RECEIVER.canUse(player, false)
-                    && Slimefun.getProtectionManager()
-                    .hasPermission(player, block.getLocation(), Interaction.INTERACT_BLOCK));
+                        || (NetworkSlimefunItems.NETWORK_WIRELESS_RECEIVER.canUse(player, false)
+                                && Slimefun.getProtectionManager()
+                                        .hasPermission(player, block.getLocation(), Interaction.INTERACT_BLOCK));
             }
 
             @Override

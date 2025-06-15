@@ -12,9 +12,7 @@ import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
 import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
 import io.github.thebusybiscuit.slimefun4.core.handlers.ItemUseHandler;
-
 import java.util.Optional;
-
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -23,7 +21,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class NetworksInfoTool extends SpecialSlimefunItem {
     public NetworksInfoTool(@NotNull ItemGroup itemGroup, @NotNull SlimefunItemStack item) {
-        super(itemGroup, item, RecipeType.NULL, new ItemStack[]{});
+        super(itemGroup, item, RecipeType.NULL, new ItemStack[] {});
         addItemHandler((ItemUseHandler) e -> {
             e.cancel();
             final Player player = e.getPlayer();
@@ -54,7 +52,7 @@ public class NetworksInfoTool extends SpecialSlimefunItem {
                     }
 
                     player.sendMessage(TextUtil.GREEN + "nodeDefinition.Node.NodePosition = "
-                        + nodeDefinition.getNode().getNodePosition());
+                            + nodeDefinition.getNode().getNodePosition());
 
                     if (nodeDefinition.getNode().getRoot() == null) {
                         player.sendMessage(TextUtil.GREEN + "nodeDefinition.Node.Root = null");
@@ -62,7 +60,7 @@ public class NetworksInfoTool extends SpecialSlimefunItem {
                     }
 
                     player.sendMessage(TextUtil.GREEN + "nodeDefinition.Node.Root.NodePosition = "
-                        + nodeDefinition.getNode().getRoot().getNodePosition());
+                            + nodeDefinition.getNode().getRoot().getNodePosition());
                 } else {
                     player.sendMessage(TextUtil.RED + "Not a NetworkObject");
                 }

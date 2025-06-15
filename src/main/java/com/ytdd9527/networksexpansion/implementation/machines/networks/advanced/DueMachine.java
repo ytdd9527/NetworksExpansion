@@ -16,10 +16,8 @@ import io.github.thebusybiscuit.slimefun4.core.handlers.BlockPlaceHandler;
 import io.github.thebusybiscuit.slimefun4.implementation.Slimefun;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.protection.Interaction;
 import io.github.thebusybiscuit.slimefun4.utils.ChestMenuUtils;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import me.mrCookieSlime.Slimefun.Objects.handlers.BlockTicker;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenuPreset;
@@ -37,29 +35,29 @@ import org.jetbrains.annotations.Nullable;
 
 @SuppressWarnings("ALL")
 public class DueMachine extends SpecialSlimefunItem implements AdminDebuggable {
-    private static final int[] DUE_ITEM_SLOTS = new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8};
+    private static final int[] DUE_ITEM_SLOTS = new int[] {0, 1, 2, 3, 4, 5, 6, 7, 8};
 
-    private static final int[] DUE_BORDERS = new int[]{};
+    private static final int[] DUE_BORDERS = new int[] {};
 
-    private static final int[] DUE_INPUT_SPLIT = new int[]{9, 10, 11, 12, 13, 14, 15, 16};
+    private static final int[] DUE_INPUT_SPLIT = new int[] {9, 10, 11, 12, 13, 14, 15, 16};
 
-    private static final int[] INPUT_OUTPUT_SPLIT = new int[]{27, 28, 29, 30, 31, 32, 33, 34};
+    private static final int[] INPUT_OUTPUT_SPLIT = new int[] {27, 28, 29, 30, 31, 32, 33, 34};
 
-    private static final int[] BACKGROUND_BORDERS = new int[]{17, 35};
+    private static final int[] BACKGROUND_BORDERS = new int[] {17, 35};
 
-    private static final int[] INPUT_SLOTS = new int[]{18, 19, 20, 21, 22, 23, 24, 25, 26};
+    private static final int[] INPUT_SLOTS = new int[] {18, 19, 20, 21, 22, 23, 24, 25, 26};
 
-    private static final int[] OUTPUT_SLOTS = new int[]{36, 37, 38, 39, 40, 41, 42, 43, 44};
+    private static final int[] OUTPUT_SLOTS = new int[] {36, 37, 38, 39, 40, 41, 42, 43, 44};
 
-    private static final int[] INPUT_BORDERS = new int[]{};
+    private static final int[] INPUT_BORDERS = new int[] {};
 
-    private static final int[] OUTPUT_BORDERS = new int[]{};
+    private static final int[] OUTPUT_BORDERS = new int[] {};
 
     public DueMachine(
-        @NotNull ItemGroup itemGroup,
-        @NotNull SlimefunItemStack item,
-        @NotNull RecipeType recipeType,
-        @NotNull ItemStack @NotNull [] recipe) {
+            @NotNull ItemGroup itemGroup,
+            @NotNull SlimefunItemStack item,
+            @NotNull RecipeType recipeType,
+            @NotNull ItemStack @NotNull [] recipe) {
         super(itemGroup, item, recipeType, recipe);
     }
 
@@ -95,17 +93,15 @@ public class DueMachine extends SpecialSlimefunItem implements AdminDebuggable {
     public void preRegister() {
         addItemHandler(new BlockPlaceHandler(false) {
             @Override
-            public void onPlayerPlace(@NotNull BlockPlaceEvent blockPlaceEvent) {
-            }
+            public void onPlayerPlace(@NotNull BlockPlaceEvent blockPlaceEvent) {}
         });
 
         addItemHandler(new BlockBreakHandler(false, false) {
             @Override
             public void onPlayerBreak(
-                @NotNull BlockBreakEvent blockBreakEvent,
-                @NotNull ItemStack itemStack,
-                @NotNull List<ItemStack> list) {
-            }
+                    @NotNull BlockBreakEvent blockBreakEvent,
+                    @NotNull ItemStack itemStack,
+                    @NotNull List<ItemStack> list) {}
         });
 
         addItemHandler(new BlockTicker() {
@@ -155,9 +151,9 @@ public class DueMachine extends SpecialSlimefunItem implements AdminDebuggable {
             @Override
             public boolean canOpen(@NotNull Block block, @NotNull Player player) {
                 return player.hasPermission("slimefun.inventory.bypass")
-                    || (Slimefun.getPermissionsService().hasPermission(player, this.getSlimefunItem())
-                    && Slimefun.getProtectionManager()
-                    .hasPermission(player, block, Interaction.INTERACT_BLOCK));
+                        || (Slimefun.getPermissionsService().hasPermission(player, this.getSlimefunItem())
+                                && Slimefun.getProtectionManager()
+                                        .hasPermission(player, block, Interaction.INTERACT_BLOCK));
             }
 
             @Override
@@ -171,7 +167,7 @@ public class DueMachine extends SpecialSlimefunItem implements AdminDebuggable {
 
             @Override
             public int[] getSlotsAccessedByItemTransport(
-                @NotNull DirtyChestMenu menu, ItemTransportFlow itemTransportFlow, @Nullable ItemStack incoming) {
+                    @NotNull DirtyChestMenu menu, ItemTransportFlow itemTransportFlow, @Nullable ItemStack incoming) {
                 if (itemTransportFlow == ItemTransportFlow.INSERT) {
                     if (incoming == null || incoming.getType() == Material.AIR) {
                         return new int[0];

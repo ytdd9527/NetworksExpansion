@@ -20,11 +20,9 @@ import io.github.thebusybiscuit.slimefun4.core.handlers.BlockPlaceHandler;
 import io.github.thebusybiscuit.slimefun4.implementation.Slimefun;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.protection.Interaction;
 import io.github.thebusybiscuit.slimefun4.utils.SlimefunUtils;
-
 import java.util.Collection;
 import java.util.Optional;
 import java.util.UUID;
-
 import me.mrCookieSlime.Slimefun.Objects.handlers.BlockTicker;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenuPreset;
@@ -45,16 +43,16 @@ import org.jetbrains.annotations.NotNull;
 
 public class NetworkVacuum extends NetworkObject {
 
-    private static final int[] INPUT_SLOTS = new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8};
+    private static final int[] INPUT_SLOTS = new int[] {0, 1, 2, 3, 4, 5, 6, 7, 8};
 
     private final @NotNull ItemSetting<Integer> tickRate;
     private final @NotNull ItemSetting<Integer> vacuumRange;
 
     public NetworkVacuum(
-        @NotNull ItemGroup itemGroup,
-        @NotNull SlimefunItemStack item,
-        @NotNull RecipeType recipeType,
-        ItemStack[] recipe) {
+            @NotNull ItemGroup itemGroup,
+            @NotNull SlimefunItemStack item,
+            @NotNull RecipeType recipeType,
+            ItemStack[] recipe) {
         super(itemGroup, item, recipeType, recipe, NodeType.VACUUM);
 
         this.tickRate = new IntRangeSetting(this, "tick_rate", 1, 1, 10);
@@ -97,13 +95,14 @@ public class NetworkVacuum extends NetworkObject {
             @Override
             public void onPlayerPlace(@NotNull BlockPlaceEvent event) {
                 NetworkStorage.removeNode(event.getBlock().getLocation());
-                SlimefunBlockData blockData = StorageCacheUtils.getBlock(event.getBlock().getLocation());
+                SlimefunBlockData blockData =
+                        StorageCacheUtils.getBlock(event.getBlock().getLocation());
                 if (blockData == null) {
                     return;
                 }
                 blockData.setData(
-                    NetworkDirectional.OWNER_KEY,
-                    event.getPlayer().getUniqueId().toString());
+                        NetworkDirectional.OWNER_KEY,
+                        event.getPlayer().getUniqueId().toString());
             }
         });
     }
@@ -115,7 +114,7 @@ public class NetworkVacuum extends NetworkObject {
                 final Location location = blockMenu.getLocation().clone().add(0.5, 0.5, 0.5);
                 final int range = this.vacuumRange.getValue();
                 Collection<Entity> items =
-                    location.getWorld().getNearbyEntities(location, range, range, range, Item.class::isInstance);
+                        location.getWorld().getNearbyEntities(location, range, range, range, Item.class::isInstance);
                 Optional<Entity> optionalEntity = items.stream().findFirst();
                 if (optionalEntity.isEmpty() || !(optionalEntity.get() instanceof Item item)) {
                     sendFeedback(blockMenu.getLocation(), FeedbackType.NO_ITEM_FOUND);
@@ -123,13 +122,13 @@ public class NetworkVacuum extends NetworkObject {
                 }
 
                 final String ownerUUID =
-                    StorageCacheUtils.getData(blockMenu.getLocation(), NetworkDirectional.OWNER_KEY);
+                        StorageCacheUtils.getData(blockMenu.getLocation(), NetworkDirectional.OWNER_KEY);
                 // There's no owner before... but the new ones has owner.
                 if (ownerUUID != null) {
                     final UUID uuid = UUID.fromString(ownerUUID);
                     final OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(uuid);
                     if (!Slimefun.getProtectionManager()
-                        .hasPermission(offlinePlayer, item.getLocation(), Interaction.INTERACT_ENTITY)) {
+                            .hasPermission(offlinePlayer, item.getLocation(), Interaction.INTERACT_ENTITY)) {
                         sendFeedback(blockMenu.getLocation(), FeedbackType.NO_PERMISSION);
                         return;
                     }
@@ -186,9 +185,9 @@ public class NetworkVacuum extends NetworkObject {
             @Override
             public boolean canOpen(@NotNull Block block, @NotNull Player player) {
                 return player.hasPermission("slimefun.inventory.bypass")
-                    || (NetworkSlimefunItems.NETWORK_VACUUM.canUse(player, false)
-                    && Slimefun.getProtectionManager()
-                    .hasPermission(player, block.getLocation(), Interaction.INTERACT_BLOCK));
+                        || (NetworkSlimefunItems.NETWORK_VACUUM.canUse(player, false)
+                                && Slimefun.getProtectionManager()
+                                        .hasPermission(player, block.getLocation(), Interaction.INTERACT_BLOCK));
             }
 
             @Override

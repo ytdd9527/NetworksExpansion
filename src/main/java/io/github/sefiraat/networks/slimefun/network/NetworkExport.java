@@ -18,9 +18,7 @@ import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
 import io.github.thebusybiscuit.slimefun4.core.handlers.BlockBreakHandler;
 import io.github.thebusybiscuit.slimefun4.implementation.Slimefun;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.protection.Interaction;
-
 import java.util.List;
-
 import me.mrCookieSlime.Slimefun.Objects.handlers.BlockTicker;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenuPreset;
@@ -53,45 +51,45 @@ public class NetworkExport extends NetworkObject {
         this.getSlotsToDrop().add(OUTPUT_ITEM_SLOT);
 
         addItemHandler(
-            new BlockTicker() {
+                new BlockTicker() {
 
-                private int tick = 1;
+                    private int tick = 1;
 
-                @Override
-                public boolean isSynchronized() {
-                    return false;
-                }
+                    @Override
+                    public boolean isSynchronized() {
+                        return false;
+                    }
 
-                @Override
-                public void tick(@NotNull Block block, SlimefunItem item, @NotNull SlimefunBlockData data) {
-                    if (tick <= 1) {
-                        final BlockMenu blockMenu = data.getBlockMenu();
+                    @Override
+                    public void tick(@NotNull Block block, SlimefunItem item, @NotNull SlimefunBlockData data) {
+                        if (tick <= 1) {
+                            final BlockMenu blockMenu = data.getBlockMenu();
+                            if (blockMenu == null) {
+                                return;
+                            }
+                            addToRegistry(block);
+                            tryFetchItem(blockMenu);
+                        }
+                    }
+
+                    @Override
+                    public void uniqueTick() {
+                        tick = tick <= 1 ? tickRate.getValue() : tick - 1;
+                    }
+                },
+                new BlockBreakHandler(true, true) {
+                    @Override
+                    public void onPlayerBreak(
+                            @NotNull BlockBreakEvent e, @NotNull ItemStack item, @NotNull List<ItemStack> drops) {
+                        BlockMenu blockMenu =
+                                StorageCacheUtils.getMenu(e.getBlock().getLocation());
                         if (blockMenu == null) {
                             return;
                         }
-                        addToRegistry(block);
-                        tryFetchItem(blockMenu);
+                        blockMenu.dropItems(blockMenu.getLocation(), TEST_ITEM_SLOT);
+                        blockMenu.dropItems(blockMenu.getLocation(), OUTPUT_ITEM_SLOT);
                     }
-                }
-
-                @Override
-                public void uniqueTick() {
-                    tick = tick <= 1 ? tickRate.getValue() : tick - 1;
-                }
-            },
-            new BlockBreakHandler(true, true) {
-                @Override
-                public void onPlayerBreak(
-                    @NotNull BlockBreakEvent e, @NotNull ItemStack item, @NotNull List<ItemStack> drops) {
-                    BlockMenu blockMenu =
-                        StorageCacheUtils.getMenu(e.getBlock().getLocation());
-                    if (blockMenu == null) {
-                        return;
-                    }
-                    blockMenu.dropItems(blockMenu.getLocation(), TEST_ITEM_SLOT);
-                    blockMenu.dropItems(blockMenu.getLocation(), OUTPUT_ITEM_SLOT);
-                }
-            });
+                });
     }
 
     private void tryFetchItem(@NotNull BlockMenu blockMenu) {
@@ -134,15 +132,15 @@ public class NetworkExport extends NetworkObject {
             @Override
             public boolean canOpen(@NotNull Block block, @NotNull Player player) {
                 return player.hasPermission("slimefun.inventory.bypass")
-                    || (NetworkSlimefunItems.NETWORK_EXPORT.canUse(player, false)
-                    && Slimefun.getProtectionManager()
-                    .hasPermission(player, block.getLocation(), Interaction.INTERACT_BLOCK));
+                        || (NetworkSlimefunItems.NETWORK_EXPORT.canUse(player, false)
+                                && Slimefun.getProtectionManager()
+                                        .hasPermission(player, block.getLocation(), Interaction.INTERACT_BLOCK));
             }
 
             @Override
             public int[] getSlotsAccessedByItemTransport(ItemTransportFlow flow) {
                 if (flow == ItemTransportFlow.WITHDRAW) {
-                    return new int[]{OUTPUT_ITEM_SLOT};
+                    return new int[] {OUTPUT_ITEM_SLOT};
                 }
                 return new int[0];
             }

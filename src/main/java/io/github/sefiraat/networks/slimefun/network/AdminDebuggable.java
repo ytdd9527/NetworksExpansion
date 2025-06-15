@@ -4,13 +4,11 @@ import com.balugaq.netex.utils.Lang;
 import com.xzavier0722.mc.plugin.slimefun4.storage.util.StorageCacheUtils;
 import io.github.sefiraat.networks.Networks;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.collections.Pair;
-
 import java.util.HashSet;
 import java.util.Queue;
 import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.logging.Level;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -23,23 +21,23 @@ public interface AdminDebuggable {
 
     static void load() {
         Bukkit.getScheduler()
-            .runTaskTimerAsynchronously(
-                Networks.getInstance(),
-                () -> {
-                    while (!DEBUG_QUEUE.isEmpty()) {
-                        final Pair<Location, String> pair = DEBUG_QUEUE.poll();
-                        if (pair != null) {
-                            Location v1 = pair.getFirstValue();
-                            String v2 = pair.getSecondValue();
-                            if (v1 == null || v2 == null) {
-                                continue;
+                .runTaskTimerAsynchronously(
+                        Networks.getInstance(),
+                        () -> {
+                            while (!DEBUG_QUEUE.isEmpty()) {
+                                final Pair<Location, String> pair = DEBUG_QUEUE.poll();
+                                if (pair != null) {
+                                    Location v1 = pair.getFirstValue();
+                                    String v2 = pair.getSecondValue();
+                                    if (v1 == null || v2 == null) {
+                                        continue;
+                                    }
+                                    sendDebugMessage1(v1, v2);
+                                }
                             }
-                            sendDebugMessage1(v1, v2);
-                        }
-                    }
-                },
-                1L,
-                10L);
+                        },
+                        1L,
+                        10L);
     }
 
     static boolean isDebug0(@NotNull Location location) {
@@ -55,12 +53,12 @@ public interface AdminDebuggable {
 
     static void sendDebugMessage1(@NotNull Location location, @NotNull String string) {
         final String locationString = "W[" + location.getWorld().getName() + "] " + "X["
-            + location.getBlockX() + "] " + "Y["
-            + location.getBlockY() + "] " + "Z["
-            + location.getBlockZ() + "] ";
+                + location.getBlockX() + "] " + "Y["
+                + location.getBlockY() + "] " + "Z["
+                + location.getBlockZ() + "] ";
         Networks.getInstance()
-            .getLogger()
-            .log(Level.INFO, String.format(Lang.getString("messages.debug.info"), locationString, string));
+                .getLogger()
+                .log(Level.INFO, String.format(Lang.getString("messages.debug.info"), locationString, string));
         for (Player player : VIEWERS) {
             if (player.isOnline()) {
                 player.sendMessage(String.format(Lang.getString("messages.debug.viewer-info"), locationString, string));

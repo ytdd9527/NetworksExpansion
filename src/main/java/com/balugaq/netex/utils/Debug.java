@@ -2,9 +2,7 @@ package com.balugaq.netex.utils;
 
 import com.ytdd9527.networksexpansion.utils.TextUtil;
 import io.github.sefiraat.networks.Networks;
-
 import java.util.Arrays;
-
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
@@ -143,14 +141,14 @@ public class Debug {
     public static void trace(@NotNull Throwable e, @Nullable String doing, @Nullable Integer code) {
         init();
         plugin.getLogger()
-            .severe(
-                "DO NOT REPORT THIS ERROR TO NetworksExpansion DEVELOPERS!!! THIS IS NOT A NetworksExpansion BUG!");
+                .severe(
+                        "DO NOT REPORT THIS ERROR TO NetworksExpansion DEVELOPERS!!! THIS IS NOT A NetworksExpansion BUG!");
         if (code != null) {
             plugin.getLogger().severe("Error code: " + code);
         }
         plugin.getLogger()
-            .severe("If you are sure that this is a NetworksExpansion bug, please report to "
-                + Networks.getInstance().getBugTrackerURL());
+                .severe("If you are sure that this is a NetworksExpansion bug, please report to "
+                        + Networks.getInstance().getBugTrackerURL());
         if (doing != null) {
             plugin.getLogger().severe("An unexpected error occurred while " + doing);
         } else {
@@ -164,17 +162,17 @@ public class Debug {
     public static void traceExactly(@NotNull Throwable e, @Nullable String doing, @Nullable Integer code) {
         init();
         plugin.getLogger()
-            .severe("====================AN FATAL OCCURRED"
-                + (doing != null ? (" WHEN " + doing.toUpperCase()) : "") + "====================");
+                .severe("====================AN FATAL OCCURRED"
+                        + (doing != null ? (" WHEN " + doing.toUpperCase()) : "") + "====================");
         plugin.getLogger()
-            .severe(
-                "DO NOT REPORT THIS ERROR TO NetworksExpansion DEVELOPERS!!! THIS IS NOT A NetworksExpansion BUG!");
+                .severe(
+                        "DO NOT REPORT THIS ERROR TO NetworksExpansion DEVELOPERS!!! THIS IS NOT A NetworksExpansion BUG!");
         if (code != null) {
             plugin.getLogger().severe("Error code: " + code);
         }
         plugin.getLogger()
-            .severe("If you are sure that this is a NetworksExpansion bug, please report to "
-                + Networks.getInstance().getBugTrackerURL());
+                .severe("If you are sure that this is a NetworksExpansion bug, please report to "
+                        + Networks.getInstance().getBugTrackerURL());
         if (doing != null) {
             plugin.getLogger().severe("An unexpected error occurred while " + doing);
         } else {

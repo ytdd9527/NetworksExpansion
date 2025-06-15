@@ -44,13 +44,11 @@ public interface TwinHologramOwner extends ItemAttribute {
         return 0.2;
     }
 
-    @NotNull
-    default Vector getTopHologramOffset(@NotNull Block block) {
+    @NotNull default Vector getTopHologramOffset(@NotNull Block block) {
         return getBottomHologramOffset(block).add(new Vector(0.0D, this.getSpacingBetweenBottomAndTop(), 0.0D));
     }
 
-    @NotNull
-    default Vector getBottomHologramOffset(@NotNull Block block) {
+    @NotNull default Vector getBottomHologramOffset(@NotNull Block block) {
         return Slimefun.getHologramsService().getDefaultOffset();
     }
 }

@@ -2,11 +2,9 @@ package com.balugaq.netex.api.data;
 
 import com.ytdd9527.networksexpansion.utils.itemstacks.CompareUtil;
 import com.ytdd9527.networksexpansion.utils.itemstacks.ItemStackUtil;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
 import lombok.Getter;
 import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.abstractItems.MachineRecipe;
 import org.bukkit.Material;
@@ -20,8 +18,7 @@ import org.jetbrains.annotations.NotNull;
  * @since 2.0
  */
 public class RandomMachineRecipe extends MachineRecipe {
-    @NotNull
-    private RandomOutput[] randomOutputs;
+    @NotNull private RandomOutput[] randomOutputs;
 
     private int[] weightBeginValues;
     private int weightSum = 0;
@@ -57,7 +54,7 @@ public class RandomMachineRecipe extends MachineRecipe {
     }
 
     public RandomMachineRecipe(@NotNull ItemStack input, @NotNull List<RandomOutput> randomOutputs) {
-        super(0, new ItemStack[]{input}, new ItemStack[0]);
+        super(0, new ItemStack[] {input}, new ItemStack[0]);
         this.randomOutputs = randomOutputs.toArray(new RandomOutput[0]);
         this.weightBeginValues = new int[randomOutputs.size()];
         for (int i = 0; i < this.randomOutputs.length; i++) {
@@ -66,15 +63,13 @@ public class RandomMachineRecipe extends MachineRecipe {
         }
     }
 
-    @NotNull
-    @Override
+    @NotNull @Override
     public ItemStack[] getOutput() {
         int r = (int) (Math.random() * this.weightSum);
         return this.randomOutputs[CompareUtil.getIntSmallFuzzyIndex(this.weightBeginValues, r)].outputItem;
     }
 
-    @NotNull
-    public ItemStack[] getAllOutput() {
+    @NotNull public ItemStack[] getAllOutput() {
         List<ItemStack> itemList = new ArrayList<>();
         for (RandomOutput randomOutput : this.randomOutputs) {
             itemList.addAll(Arrays.asList(randomOutput.outputItem));
@@ -82,13 +77,11 @@ public class RandomMachineRecipe extends MachineRecipe {
         return ItemStackUtil.getItemArray(itemList);
     }
 
-    @NotNull
-    public RandomOutput[] getRandomOutputs() {
+    @NotNull public RandomOutput[] getRandomOutputs() {
         return this.randomOutputs;
     }
 
-    @NotNull
-    public RandomMachineRecipe addRandomOutput(@NotNull RandomOutput @NotNull ... randomOutputs) {
+    @NotNull public RandomMachineRecipe addRandomOutput(@NotNull RandomOutput @NotNull ... randomOutputs) {
         RandomOutput[] newRandomOutput = new RandomOutput[this.randomOutputs.length + randomOutputs.length];
         int[] newWeightBeginValues = new int[this.weightBeginValues.length + randomOutputs.length];
         System.arraycopy(this.randomOutputs, 0, newRandomOutput, 0, this.randomOutputs.length);
@@ -112,8 +105,7 @@ public class RandomMachineRecipe extends MachineRecipe {
      * @since 2.0
      */
     public static class RandomOutput {
-        @NotNull
-        private final ItemStack[] outputItem;
+        @NotNull private final ItemStack[] outputItem;
 
         @Getter
         private final int weight;
@@ -129,17 +121,16 @@ public class RandomMachineRecipe extends MachineRecipe {
         }
 
         public RandomOutput(@NotNull ItemStack outputItem, int weight) {
-            this.outputItem = new ItemStack[]{outputItem};
+            this.outputItem = new ItemStack[] {outputItem};
             this.weight = weight;
         }
 
         public RandomOutput(@NotNull Material outputItem, int weight) {
-            this.outputItem = new ItemStack[]{new ItemStack(outputItem)};
+            this.outputItem = new ItemStack[] {new ItemStack(outputItem)};
             this.weight = weight;
         }
 
-        @NotNull
-        public ItemStack[] getOutputItem() {
+        @NotNull public ItemStack[] getOutputItem() {
             return outputItem;
         }
     }

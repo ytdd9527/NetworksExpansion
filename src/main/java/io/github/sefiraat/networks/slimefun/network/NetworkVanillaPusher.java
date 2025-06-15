@@ -15,9 +15,7 @@ import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
 import io.github.thebusybiscuit.slimefun4.implementation.Slimefun;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.inventory.InvUtils;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.protection.Interaction;
-
 import java.util.UUID;
-
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
@@ -38,7 +36,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class NetworkVanillaPusher extends NetworkDirectional {
 
-    private static final int[] BACKGROUND_SLOTS = new int[]{
+    private static final int[] BACKGROUND_SLOTS = new int[] {
         0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 13, 15, 16, 17, 18, 20, 22, 23, 24, 26, 27, 28, 30, 31, 33, 34, 35, 36,
         37, 38, 39, 40, 41, 42, 43, 44
     };
@@ -51,10 +49,10 @@ public class NetworkVanillaPusher extends NetworkDirectional {
     private static final int DOWN_SLOT = 32;
 
     public NetworkVanillaPusher(
-        @NotNull ItemGroup itemGroup,
-        @NotNull SlimefunItemStack item,
-        @NotNull RecipeType recipeType,
-        ItemStack[] recipe) {
+            @NotNull ItemGroup itemGroup,
+            @NotNull SlimefunItemStack item,
+            @NotNull RecipeType recipeType,
+            ItemStack[] recipe) {
         super(itemGroup, item, recipeType, recipe, NodeType.PUSHER);
         this.getSlotsToDrop().add(INPUT_SLOT);
     }
@@ -90,7 +88,7 @@ public class NetworkVanillaPusher extends NetworkDirectional {
         // dirty fix
         try {
             if (!Slimefun.getProtectionManager()
-                .hasPermission(offlinePlayer, targetBlock, Interaction.INTERACT_BLOCK)) {
+                    .hasPermission(offlinePlayer, targetBlock, Interaction.INTERACT_BLOCK)) {
                 sendFeedback(block.getLocation(), FeedbackType.NO_PERMISSION);
                 return;
             }
@@ -141,14 +139,14 @@ public class NetworkVanillaPusher extends NetworkDirectional {
     }
 
     private void handleFurnace(
-        @NotNull BlockMenu blockMenu, @NotNull ItemStack stack, @NotNull FurnaceInventory furnace) {
+            @NotNull BlockMenu blockMenu, @NotNull ItemStack stack, @NotNull FurnaceInventory furnace) {
         if (stack.getType().isFuel()
-            && (furnace.getFuel() == null || furnace.getFuel().getType() == Material.AIR)) {
+                && (furnace.getFuel() == null || furnace.getFuel().getType() == Material.AIR)) {
             furnace.setFuel(stack.clone());
             stack.setAmount(0);
             sendFeedback(blockMenu.getLocation(), FeedbackType.WORKING);
         } else if (!stack.getType().isFuel()
-            && (furnace.getSmelting() == null || furnace.getSmelting().getType() == Material.AIR)) {
+                && (furnace.getSmelting() == null || furnace.getSmelting().getType() == Material.AIR)) {
             furnace.setSmelting(stack.clone());
             stack.setAmount(0);
             sendFeedback(blockMenu.getLocation(), FeedbackType.WORKING);
@@ -156,7 +154,7 @@ public class NetworkVanillaPusher extends NetworkDirectional {
     }
 
     private void handleBrewingStand(
-        @NotNull BlockMenu blockMenu, @NotNull ItemStack stack, @NotNull BrewerInventory brewer) {
+            @NotNull BlockMenu blockMenu, @NotNull ItemStack stack, @NotNull BrewerInventory brewer) {
         if (stack.getType() == Material.BLAZE_POWDER) {
             if (brewer.getFuel() == null || brewer.getFuel().getType() == Material.AIR) {
                 brewer.setFuel(stack.clone());
@@ -228,7 +226,7 @@ public class NetworkVanillaPusher extends NetworkDirectional {
 
     @Override
     public int[] getInputSlots() {
-        return new int[]{INPUT_SLOT};
+        return new int[] {INPUT_SLOT};
     }
 
     @Override

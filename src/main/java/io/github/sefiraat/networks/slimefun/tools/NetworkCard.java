@@ -24,25 +24,25 @@ import org.jetbrains.annotations.NotNull;
 public class NetworkCard extends SlimefunItem implements DistinctiveItem {
 
     private static final int[] SIZES =
-        new int[]{4096, 32768, 262144, 2097152, 16777216, 134217728, 1073741824, Integer.MAX_VALUE};
+            new int[] {4096, 32768, 262144, 2097152, 16777216, 134217728, 1073741824, Integer.MAX_VALUE};
 
     private static final String WIKI_PAGE = "Network-Memory-Card";
 
     private final int size;
 
     public NetworkCard(
-        @NotNull ItemGroup itemGroup,
-        @NotNull SlimefunItemStack item,
-        @NotNull RecipeType recipeType,
-        ItemStack @NotNull [] recipe,
-        int size) {
+            @NotNull ItemGroup itemGroup,
+            @NotNull SlimefunItemStack item,
+            @NotNull RecipeType recipeType,
+            ItemStack @NotNull [] recipe,
+            int size) {
         super(itemGroup, item, recipeType, recipe);
         this.size = size;
         addItemHandler((ItemUseHandler) e -> {
             final Player player = e.getPlayer();
             final ItemStack card = player.getInventory().getItemInMainHand();
             final ItemStack stackToSet =
-                player.getInventory().getItemInOffHand().clone();
+                    player.getInventory().getItemInOffHand().clone();
 
             e.cancel();
             if (card.getAmount() > 1) {
@@ -59,19 +59,19 @@ public class NetworkCard extends SlimefunItem implements DistinctiveItem {
             if (cardItem instanceof NetworkCard networkCard) {
                 final ItemMeta cardMeta = card.getItemMeta();
                 CardInstance cardInstance =
-                    DataTypeMethods.getCustom(cardMeta, Keys.CARD_INSTANCE, PersistentCardInstanceType.TYPE);
+                        DataTypeMethods.getCustom(cardMeta, Keys.CARD_INSTANCE, PersistentCardInstanceType.TYPE);
 
                 if (cardInstance == null) {
                     cardInstance =
-                        DataTypeMethods.getCustom(cardMeta, Keys.CARD_INSTANCE2, PersistentCardInstanceType.TYPE);
+                            DataTypeMethods.getCustom(cardMeta, Keys.CARD_INSTANCE2, PersistentCardInstanceType.TYPE);
                 }
 
                 if (cardInstance == null) {
                     cardInstance = DataTypeMethods.getCustom(
-                        cardMeta,
-                        Keys.CARD_INSTANCE3,
-                        PersistentCardInstanceType.TYPE,
-                        new CardInstance(null, 0, networkCard.getSize()));
+                            cardMeta,
+                            Keys.CARD_INSTANCE3,
+                            PersistentCardInstanceType.TYPE,
+                            new CardInstance(null, 0, networkCard.getSize()));
                 }
 
                 if (cardInstance.getAmount() > 0) {
@@ -93,9 +93,9 @@ public class NetworkCard extends SlimefunItem implements DistinctiveItem {
 
     private boolean isBlacklisted(@NotNull ItemStack itemStack) {
         return itemStack.getType() == Material.AIR
-            || itemStack.getType().getMaxDurability() < 0
-            || Tag.SHULKER_BOXES.isTagged(itemStack.getType())
-            || itemStack.getType() == Material.BUNDLE;
+                || itemStack.getType().getMaxDurability() < 0
+                || Tag.SHULKER_BOXES.isTagged(itemStack.getType())
+                || itemStack.getType() == Material.BUNDLE;
     }
 
     @Override

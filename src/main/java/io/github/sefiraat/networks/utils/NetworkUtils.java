@@ -26,7 +26,7 @@ import org.jetbrains.annotations.NotNull;
 public class NetworkUtils {
 
     public static void applyConfig(
-        @NotNull NetworkDirectional directional, @NotNull BlockMenu blockMenu, @NotNull Player player) {
+            @NotNull NetworkDirectional directional, @NotNull BlockMenu blockMenu, @NotNull Player player) {
         ItemStack itemStack = player.getInventory().getItemInOffHand();
 
         if (SlimefunItem.getByItem(itemStack) instanceof NetworkConfigurator) {
@@ -35,10 +35,10 @@ public class NetworkUtils {
     }
 
     public static void applyConfig(
-        @NotNull NetworkDirectional directional,
-        @NotNull ItemStack itemStack,
-        @NotNull BlockMenu blockMenu,
-        @NotNull Player player) {
+            @NotNull NetworkDirectional directional,
+            @NotNull ItemStack itemStack,
+            @NotNull BlockMenu blockMenu,
+            @NotNull Player player) {
         final ItemMeta itemMeta = itemStack.getItemMeta();
         ItemStack[] templateStacks = DataTypeMethods.getCustom(itemMeta, Keys.ITEM, DataType.ITEM_STACK_ARRAY);
         if (templateStacks == null) {
@@ -86,19 +86,19 @@ public class NetworkUtils {
                             stack.setAmount(stack.getAmount() - 1);
                             blockMenu.replaceExistingItem(directional.getItemSlots()[i], stackClone);
                             player.sendMessage(String.format(
-                                Lang.getString("messages.completed-operation.configurator.pasted_item"), i));
+                                    Lang.getString("messages.completed-operation.configurator.pasted_item"), i));
                             worked = true;
                             break;
                         }
                     }
                     if (!worked) {
                         player.sendMessage(String.format(
-                            Lang.getString("messages.unsupported-operation.configurator.not_enough_items"), i));
+                                Lang.getString("messages.unsupported-operation.configurator.not_enough_items"), i));
                     }
                 } else if (directional instanceof NetworkPusher) {
                     player.sendMessage(String.format(
-                        Lang.getString("messages.unsupported-operation.configurator.no_item_configured_pusher"),
-                        i));
+                            Lang.getString("messages.unsupported-operation.configurator.no_item_configured_pusher"),
+                            i));
                 }
                 i++;
             }

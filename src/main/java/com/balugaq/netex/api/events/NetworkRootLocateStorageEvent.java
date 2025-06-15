@@ -18,7 +18,7 @@ public class NetworkRootLocateStorageEvent extends Event {
     private final Strategy strategy;
 
     public NetworkRootLocateStorageEvent(
-        NetworkRoot root, StorageType storageType, boolean inputAble, boolean outputAble, boolean isSync) {
+            NetworkRoot root, StorageType storageType, boolean inputAble, boolean outputAble, boolean isSync) {
         super(!isSync);
         this.root = root;
         this.storageType = storageType;
@@ -40,8 +40,7 @@ public class NetworkRootLocateStorageEvent extends Event {
         return handlers;
     }
 
-    @NotNull
-    @Override
+    @NotNull @Override
     public HandlerList getHandlers() {
         return handlers;
     }
@@ -66,19 +65,16 @@ public class NetworkRootLocateStorageEvent extends Event {
             }
 
             @SneakyThrows
-            @NotNull
-            public static Strategy custom(String tag) {
+            @NotNull public static Strategy custom(String tag) {
                 return new StrategyImpl().setTag(tag);
             }
 
-            @NotNull
-            @Override
+            @NotNull @Override
             public String getTag() {
                 return tag;
             }
 
-            @NotNull
-            @Override
+            @NotNull @Override
             public Strategy setTag(String tag) {
                 this.tag = tag;
                 return this;

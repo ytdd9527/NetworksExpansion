@@ -19,11 +19,9 @@ import io.github.thebusybiscuit.slimefun4.libraries.dough.protection.Interaction
 import io.github.thebusybiscuit.slimefun4.libraries.paperlib.PaperLib;
 import io.github.thebusybiscuit.slimefun4.libraries.paperlib.features.blockstatesnapshot.BlockStateSnapshotResult;
 import io.github.thebusybiscuit.slimefun4.utils.tags.SlimefunTag;
-
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
-
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
@@ -39,11 +37,11 @@ import org.jetbrains.annotations.Nullable;
 
 public class NetworkControlX extends NetworkDirectional {
 
-    private static final int[] BACKGROUND_SLOTS = new int[]{
+    private static final int[] BACKGROUND_SLOTS = new int[] {
         0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 13, 15, 17, 18, 20, 22, 23, 24, 26, 27, 28, 30, 31, 33, 34, 35, 36, 37,
         38, 39, 40, 41, 42, 43, 44
     };
-    private static final int[] TEMPLATE_BACKGROUND = new int[]{16};
+    private static final int[] TEMPLATE_BACKGROUND = new int[] {16};
     private static final int TEMPLATE_SLOT = 25;
     private static final int NORTH_SLOT = 11;
     private static final int SOUTH_SLOT = 29;
@@ -123,7 +121,7 @@ public class NetworkControlX extends NetworkDirectional {
         boolean mustMatch = templateStack != null && templateStack.getType() != Material.AIR;
 
         if ((mustMatch && (targetBlock.getType() != templateStack.getType()))
-            || (SlimefunItem.getByItem(templateStack) != null)) {
+                || (SlimefunItem.getByItem(templateStack) != null)) {
             sendFeedback(blockMenu.getLocation(), FeedbackType.BLOCK_NOT_MATCH_TEMPLATE);
             return;
         }
@@ -159,7 +157,7 @@ public class NetworkControlX extends NetworkDirectional {
 
                 targetBlock.setType(Material.AIR, true);
                 ParticleUtils.displayParticleRandomly(
-                    LocationUtils.centre(targetBlock.getLocation()), 1, 5, DUST_OPTIONS);
+                        LocationUtils.centre(targetBlock.getLocation()), 1, 5, DUST_OPTIONS);
                 definition.getNode().getRoot().removeRootPower(REQUIRED_POWER);
                 sendFeedback(blockMenu.getLocation(), FeedbackType.WORKING);
             }
@@ -176,8 +174,7 @@ public class NetworkControlX extends NetworkDirectional {
         return TEMPLATE_BACKGROUND;
     }
 
-    @Nullable
-    @Override
+    @Nullable @Override
     protected ItemStack getOtherBackgroundStack() {
         return Icon.CONTROL_X_TEMPLATE_BACKGROUND_STACK;
     }
@@ -214,7 +211,7 @@ public class NetworkControlX extends NetworkDirectional {
 
     @Override
     public int[] getItemSlots() {
-        return new int[]{TEMPLATE_SLOT};
+        return new int[] {TEMPLATE_SLOT};
     }
 
     @Override

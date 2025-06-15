@@ -18,33 +18,33 @@ import org.jetbrains.annotations.NotNull;
 public final class NetworksItemGroups {
 
     public static final MainFlexGroup MAIN = new MainFlexGroup(
-        Keys.newKey("main"),
-        new CustomItemStack(new ItemStack(Material.BLACK_STAINED_GLASS), Lang.getString("groups.main")),
-        0);
+            Keys.newKey("main"),
+            new CustomItemStack(new ItemStack(Material.BLACK_STAINED_GLASS), Lang.getString("groups.main")),
+            0);
 
     public static final DummyItemGroup MATERIALS = new DummyItemGroup(
-        Keys.newKey("materials"),
-        new CustomItemStack(new ItemStack(Material.WHITE_STAINED_GLASS), Lang.getString("groups.materials")),
-        0);
+            Keys.newKey("materials"),
+            new CustomItemStack(new ItemStack(Material.WHITE_STAINED_GLASS), Lang.getString("groups.materials")),
+            0);
 
     public static final DummyItemGroup TOOLS = new DummyItemGroup(
-        Keys.newKey("tools"),
-        new CustomItemStack(new ItemStack(Material.PAINTING), Lang.getString("groups.tools")),
-        0);
+            Keys.newKey("tools"),
+            new CustomItemStack(new ItemStack(Material.PAINTING), Lang.getString("groups.tools")),
+            0);
 
     public static final DummyItemGroup NETWORK_ITEMS = new DummyItemGroup(
-        Keys.newKey("network_items"),
-        new CustomItemStack(new ItemStack(Material.BLACK_STAINED_GLASS), Lang.getString("groups.network_items")),
-        0);
+            Keys.newKey("network_items"),
+            new CustomItemStack(new ItemStack(Material.BLACK_STAINED_GLASS), Lang.getString("groups.network_items")),
+            0);
 
     public static final DummyItemGroup NETWORK_QUANTUMS = new DummyItemGroup(
-        Keys.newKey("network_quantums"),
-        new CustomItemStack(new ItemStack(Material.WHITE_TERRACOTTA), Lang.getString("groups.network_quantums")),
-        0);
+            Keys.newKey("network_quantums"),
+            new CustomItemStack(new ItemStack(Material.WHITE_TERRACOTTA), Lang.getString("groups.network_quantums")),
+            0);
 
     public static final ItemGroup DISABLED_ITEMS = new HiddenItemGroup(
-        Keys.newKey("disabled_items"),
-        new CustomItemStack(new ItemStack(Material.BARRIER), Lang.getString("groups.disabled_items")));
+            Keys.newKey("disabled_items"),
+            new CustomItemStack(new ItemStack(Material.BARRIER), Lang.getString("groups.disabled_items")));
 
     static {
         final Networks plugin = Networks.getInstance();

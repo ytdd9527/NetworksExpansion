@@ -11,8 +11,7 @@ public class ItemStackCache {
 
     private @Nullable ItemStack itemStack;
 
-    @Nullable
-    private ItemMeta itemMeta = null;
+    @Nullable private ItemMeta itemMeta = null;
 
     private boolean metaCached = false;
 
@@ -20,8 +19,7 @@ public class ItemStackCache {
         this.itemStack = itemStack;
     }
 
-    @Nullable
-    public ItemStack getItemStack() {
+    @Nullable public ItemStack getItemStack() {
         return this.itemStack;
     }
 
@@ -33,8 +31,7 @@ public class ItemStackCache {
         this.itemMeta = null;
     }
 
-    @Nullable
-    public ItemMeta getItemMeta() {
+    @Nullable public ItemMeta getItemMeta() {
         if (this.itemMeta == null && !this.metaCached) {
             this.itemMeta = itemStack == null ? null : itemStack.hasItemMeta() ? itemStack.getItemMeta() : null;
             this.metaCached = !this.metaCached;
@@ -42,8 +39,7 @@ public class ItemStackCache {
         return this.itemMeta;
     }
 
-    @Nullable
-    public Material getItemType() {
+    @Nullable public Material getItemType() {
         return this.itemStack == null ? null : this.itemStack.getType();
     }
 }

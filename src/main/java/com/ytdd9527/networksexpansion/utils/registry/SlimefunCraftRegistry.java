@@ -2,12 +2,10 @@ package com.ytdd9527.networksexpansion.utils.registry;
 
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
 import io.github.thebusybiscuit.slimefun4.implementation.Slimefun;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
@@ -20,8 +18,7 @@ public class SlimefunCraftRegistry {
     private boolean init = false;
     private @NotNull Map<String, List<String>> craftMap = new HashMap<>();
 
-    @NotNull
-    public static SlimefunCraftRegistry getInstance() {
+    @NotNull public static SlimefunCraftRegistry getInstance() {
         if (instance == null) {
             synchronized (SlimefunCraftRegistry.class) {
                 if (instance == null) {
@@ -67,8 +64,7 @@ public class SlimefunCraftRegistry {
         this.craftMap = craftMap;
     }
 
-    @NotNull
-    public List<String> getCraftSlimefunItemIdList(@NotNull String id) {
+    @NotNull public List<String> getCraftSlimefunItemIdList(@NotNull String id) {
         if (!this.init) {
             this.init();
         }
@@ -76,13 +72,11 @@ public class SlimefunCraftRegistry {
         return this.craftMap.containsKey(id) ? this.craftMap.get(id) : new ArrayList<>();
     }
 
-    @NotNull
-    public List<String> getCraftSlimefunItemIdList(@NotNull SlimefunItem slimefunItem) {
+    @NotNull public List<String> getCraftSlimefunItemIdList(@NotNull SlimefunItem slimefunItem) {
         return this.getCraftSlimefunItemIdList(slimefunItem.getId());
     }
 
-    @NotNull
-    public List<SlimefunItem> getCraftSlimefunItemList(@NotNull String id) {
+    @NotNull public List<SlimefunItem> getCraftSlimefunItemList(@NotNull String id) {
         if (!this.init) {
             this.init();
         }
@@ -102,8 +96,7 @@ public class SlimefunCraftRegistry {
         return slimefunItemList;
     }
 
-    @NotNull
-    public List<SlimefunItem> getCraftSlimefunItemList(@NotNull SlimefunItem slimefunItem) {
+    @NotNull public List<SlimefunItem> getCraftSlimefunItemList(@NotNull SlimefunItem slimefunItem) {
         return this.getCraftSlimefunItemList(slimefunItem.getId());
     }
 }

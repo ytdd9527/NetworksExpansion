@@ -58,9 +58,9 @@ public class SupportedPluginManager {
         }
 
         Networks.getInstance()
-            .getServer()
-            .getScheduler()
-            .runTaskLater(Networks.getInstance(), this::firstTickRegistrations, 1);
+                .getServer()
+                .getScheduler()
+                .runTaskLater(Networks.getInstance(), this::firstTickRegistrations, 1);
     }
 
     public static int getStackAmount(@NotNull Item item) {

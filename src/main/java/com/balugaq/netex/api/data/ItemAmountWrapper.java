@@ -2,9 +2,7 @@ package com.balugaq.netex.api.data;
 
 import com.ytdd9527.networksexpansion.utils.itemstacks.ItemStackUtil;
 import io.github.sefiraat.networks.utils.StackUtils;
-
 import java.util.List;
-
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.inventory.ItemStack;
@@ -106,14 +104,12 @@ public class ItemAmountWrapper extends ItemWrapper {
         this.amount = amount;
     }
 
-    @NotNull
-    @Override
+    @NotNull @Override
     public ItemAmountWrapper shallowClone() {
         return new ItemAmountWrapper(this.getItemStack(), this.getItemMeta(), this.amount);
     }
 
-    @NotNull
-    @Override
+    @NotNull @Override
     public ItemAmountWrapper deepClone() {
         ItemStack itemStack = ItemStackUtil.cloneItem(this.getItemStack());
         itemStack.setAmount(this.getItemStack().getAmount());

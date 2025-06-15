@@ -16,9 +16,7 @@ import io.github.thebusybiscuit.slimefun4.core.handlers.ItemUseHandler;
 import io.github.thebusybiscuit.slimefun4.implementation.Slimefun;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.data.persistent.PersistentDataAPI;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.protection.Interaction;
-
 import java.util.Optional;
-
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -29,10 +27,10 @@ import org.jetbrains.annotations.NotNull;
 
 public class DueMachineConfigurator extends SpecialSlimefunItem {
     public DueMachineConfigurator(
-        @NotNull ItemGroup itemGroup,
-        @NotNull SlimefunItemStack item,
-        @NotNull RecipeType recipeType,
-        ItemStack @NotNull [] recipe) {
+            @NotNull ItemGroup itemGroup,
+            @NotNull SlimefunItemStack item,
+            @NotNull RecipeType recipeType,
+            ItemStack @NotNull [] recipe) {
         super(itemGroup, item, recipeType, recipe);
         addItemHandler((ItemUseHandler) e -> {
             final Player player = e.getPlayer();
@@ -55,7 +53,7 @@ public class DueMachineConfigurator extends SpecialSlimefunItem {
                         }
                     } else {
                         player.sendMessage(
-                            Lang.getString("messages.unsupported-operation.configurator.not_a_pasteable_block"));
+                                Lang.getString("messages.unsupported-operation.configurator.not_a_pasteable_block"));
                     }
                 }
             }
@@ -64,10 +62,10 @@ public class DueMachineConfigurator extends SpecialSlimefunItem {
     }
 
     public static void applyConfig(
-        @NotNull DueMachine dueMachine,
-        @NotNull ItemStack itemStack,
-        @NotNull BlockMenu blockMenu,
-        @NotNull Player player) {
+            @NotNull DueMachine dueMachine,
+            @NotNull ItemStack itemStack,
+            @NotNull BlockMenu blockMenu,
+            @NotNull Player player) {
         final ItemMeta itemMeta = itemStack.getItemMeta();
         final ItemStack[] templateStacks = DataTypeMethods.getCustom(itemMeta, Keys.ITEM, DataType.ITEM_STACK_ARRAY);
 
@@ -91,14 +89,14 @@ public class DueMachineConfigurator extends SpecialSlimefunItem {
                             stack.setAmount(stack.getAmount() - 1);
                             blockMenu.replaceExistingItem(dueMachine.getItemSlots()[i], stackClone);
                             player.sendMessage(String.format(
-                                Lang.getString("messages.completed-operation.configurator.pasted_item"), i));
+                                    Lang.getString("messages.completed-operation.configurator.pasted_item"), i));
                             worked = true;
                             break;
                         }
                     }
                     if (!worked) {
                         player.sendMessage(String.format(
-                            Lang.getString("messages.unsupported-operation.configurator.not_enough_items"), i));
+                                Lang.getString("messages.unsupported-operation.configurator.not_enough_items"), i));
                     }
                 }
                 i++;
@@ -109,10 +107,10 @@ public class DueMachineConfigurator extends SpecialSlimefunItem {
     }
 
     private void setConfigurator(
-        @NotNull DueMachine dueMachine,
-        @NotNull ItemStack itemStack,
-        @NotNull BlockMenu blockMenu,
-        @NotNull Player player) {
+            @NotNull DueMachine dueMachine,
+            @NotNull ItemStack itemStack,
+            @NotNull BlockMenu blockMenu,
+            @NotNull Player player) {
         final ItemMeta itemMeta = itemStack.getItemMeta();
 
         if (dueMachine.getItemSlots().length > 0) {

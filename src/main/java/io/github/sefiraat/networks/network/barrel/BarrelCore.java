@@ -10,7 +10,7 @@ public interface BarrelCore {
     @Nullable ItemStack requestItem(@NotNull ItemRequest itemRequest);
 
     default void depositItemStack(ItemStack itemToDeposit) {
-        depositItemStack(new ItemStack[]{itemToDeposit});
+        depositItemStack(new ItemStack[] {itemToDeposit});
     }
 
     void depositItemStack(ItemStack[] itemsToDeposit);

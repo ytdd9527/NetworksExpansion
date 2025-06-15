@@ -37,7 +37,6 @@ import io.github.thebusybiscuit.slimefun4.implementation.Slimefun;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.items.CustomItemStack;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.protection.Interaction;
 import io.github.thebusybiscuit.slimefun4.utils.ChestMenuUtils;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -46,7 +45,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.function.Function;
-
 import me.ddggdd135.guguslimefunlib.GuguSlimefunLib;
 import me.mrCookieSlime.Slimefun.Objects.handlers.BlockTicker;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
@@ -97,11 +95,11 @@ public class NetworksDrawer extends SpecialSlimefunItem implements DistinctiveIt
     private boolean useSpecialModel;
 
     public NetworksDrawer(
-        @NotNull ItemGroup itemGroup,
-        @NotNull SlimefunItemStack item,
-        @NotNull RecipeType recipeType,
-        ItemStack @NotNull [] recipe,
-        StorageUnitType sizeType) {
+            @NotNull ItemGroup itemGroup,
+            @NotNull SlimefunItemStack item,
+            @NotNull RecipeType recipeType,
+            ItemStack @NotNull [] recipe,
+            StorageUnitType sizeType) {
         super(itemGroup, item, recipeType, recipe);
 
         this.sizeType = sizeType;
@@ -132,7 +130,7 @@ public class NetworksDrawer extends SpecialSlimefunItem implements DistinctiveIt
                     quickModeStr = blockData.getData("quickTransferMode");
                 }
                 QuickTransferMode quickTransferMode =
-                    quickModeStr == null ? QuickTransferMode.FROM_QUANTUM : QuickTransferMode.valueOf(quickModeStr);
+                        quickModeStr == null ? QuickTransferMode.FROM_QUANTUM : QuickTransferMode.valueOf(quickModeStr);
                 quickTransferModes.put(l, quickTransferMode);
                 if (lock != null) {
                     locked.add(l);
@@ -179,8 +177,8 @@ public class NetworksDrawer extends SpecialSlimefunItem implements DistinctiveIt
             @Override
             public boolean canOpen(@NotNull Block b, @NotNull Player p) {
                 return p.hasPermission("slimefun.inventory.bypass")
-                    || (canUse(p, false)
-                    && Slimefun.getProtectionManager().hasPermission(p, b, Interaction.INTERACT_BLOCK));
+                        || (canUse(p, false)
+                                && Slimefun.getProtectionManager().hasPermission(p, b, Interaction.INTERACT_BLOCK));
             }
 
             @Override
@@ -194,13 +192,11 @@ public class NetworksDrawer extends SpecialSlimefunItem implements DistinctiveIt
         }
     }
 
-    @Nullable
-    public static StorageUnitData getStorageData(Location l) {
+    @Nullable public static StorageUnitData getStorageData(Location l) {
         return storages.get(l);
     }
 
-    @NotNull
-    public static Map<Location, StorageUnitData> getAllStorageData() {
+    @NotNull public static Map<Location, StorageUnitData> getAllStorageData() {
         return storages;
     }
 
@@ -222,14 +218,14 @@ public class NetworksDrawer extends SpecialSlimefunItem implements DistinctiveIt
 
             // Update information
             menu.replaceExistingItem(
-                STORAGE_INFO_SLOT,
-                getStorageInfoItem(
-                    data.getId(),
-                    data.getStoredTypeCount(),
-                    sizeType.getMaxItemCount(),
-                    maxEach,
-                    isLocked(l),
-                    isVoidExcess(l)));
+                    STORAGE_INFO_SLOT,
+                    getStorageInfoItem(
+                            data.getId(),
+                            data.getStoredTypeCount(),
+                            sizeType.getMaxItemCount(),
+                            maxEach,
+                            isLocked(l),
+                            isVoidExcess(l)));
 
             // Update item display
             List<ItemContainer> itemStored = storages.get(l).getStoredItems();
@@ -237,7 +233,7 @@ public class NetworksDrawer extends SpecialSlimefunItem implements DistinctiveIt
                 if (i < itemStored.size()) {
                     ItemContainer each = itemStored.get(i);
                     menu.replaceExistingItem(
-                        DISPLAY_SLOTS[i], getDisplayItem(each.getSampleDirectly(), each.getAmount(), maxEach));
+                            DISPLAY_SLOTS[i], getDisplayItem(each.getSampleDirectly(), each.getAmount(), maxEach));
                 } else {
                     menu.replaceExistingItem(DISPLAY_SLOTS[i], Icon.ERROR_BORDER);
                 }
@@ -308,8 +304,8 @@ public class NetworksDrawer extends SpecialSlimefunItem implements DistinctiveIt
             lore.add(String.format(Lang.getString("messages.completed-operation.drawer.bound_id"), id));
             if (Networks.getSupportedPluginManager().isGuguSlimefunLib()) {
                 lore.add(String.format(
-                    Lang.getString("messages.completed-operation.drawer.server-uuid"),
-                    GuguSlimefunLib.getServerUUID()));
+                        Lang.getString("messages.completed-operation.drawer.server-uuid"),
+                        GuguSlimefunLib.getServerUUID()));
             }
             meta.setLore(lore);
             meta.getPersistentDataContainer().set(idKey, PersistentDataType.INTEGER, id);
@@ -322,7 +318,7 @@ public class NetworksDrawer extends SpecialSlimefunItem implements DistinctiveIt
     }
 
     public static @NotNull ItemStack bindIdNew(
-        @NotNull ItemStack itemSample, int id, boolean lock, boolean voidExcess) {
+            @NotNull ItemStack itemSample, int id, boolean lock, boolean voidExcess) {
         final ItemStack item = itemSample.clone();
         final ItemMeta meta = item.getItemMeta();
         List<String> lore;
@@ -334,8 +330,8 @@ public class NetworksDrawer extends SpecialSlimefunItem implements DistinctiveIt
             lore.add(String.format(Lang.getString("messages.completed-operation.drawer.bound_id"), id));
             if (Networks.getSupportedPluginManager().isGuguSlimefunLib()) {
                 lore.add(String.format(
-                    Lang.getString("messages.completed-operation.drawer.server-uuid"),
-                    GuguSlimefunLib.getServerUUID()));
+                        Lang.getString("messages.completed-operation.drawer.server-uuid"),
+                        GuguSlimefunLib.getServerUUID()));
             }
             meta.setLore(lore);
             meta.getPersistentDataContainer().set(idKey, PersistentDataType.INTEGER, id);
@@ -389,7 +385,7 @@ public class NetworksDrawer extends SpecialSlimefunItem implements DistinctiveIt
         }
         try {
             return new CustomItemStack(
-                item, (String) null, "", String.format(Lang.getString("icons.drawer.stored_item"), amount, max));
+                    item, (String) null, "", String.format(Lang.getString("icons.drawer.stored_item"), amount, max));
         } catch (NullPointerException e) {
             return item.clone();
         }
@@ -425,7 +421,7 @@ public class NetworksDrawer extends SpecialSlimefunItem implements DistinctiveIt
                     }
                     int index = a.indexOf(slot);
                     final ItemStack take =
-                        storages.get(l).getStoredItems().get(index).getSampleDirectly();
+                            storages.get(l).getStoredItems().get(index).getSampleDirectly();
 
                     final ItemRequest itemRequest = new ItemRequest(take, 1);
 
@@ -440,14 +436,14 @@ public class NetworksDrawer extends SpecialSlimefunItem implements DistinctiveIt
                         if (requestedItemStack != null) {
                             do {
                                 int max =
-                                    Math.min(requestedItemStack.getAmount(), requestedItemStack.getMaxStackSize());
+                                        Math.min(requestedItemStack.getAmount(), requestedItemStack.getMaxStackSize());
                                 final ItemStack clone = StackUtils.getAsQuantity(requestedItemStack, max);
                                 requestedItemStack.setAmount(requestedItemStack.getAmount() - max);
                                 final HashMap<Integer, ItemStack> remnant =
-                                    player.getInventory().addItem(clone);
+                                        player.getInventory().addItem(clone);
                                 remnant.values().stream()
-                                    .findFirst()
-                                    .ifPresent(leftOver -> data.depositItemStack0(l, leftOver, false));
+                                        .findFirst()
+                                        .ifPresent(leftOver -> data.depositItemStack0(l, leftOver, false));
                             } while (requestedItemStack.getAmount() > 0);
                         }
                     } else {
@@ -464,24 +460,24 @@ public class NetworksDrawer extends SpecialSlimefunItem implements DistinctiveIt
     }
 
     private static @NotNull ItemStack getStorageInfoItem(
-        int id, int typeCount, int maxType, int maxEach, boolean locked, boolean voidExcess) {
+            int id, int typeCount, int maxType, int maxEach, boolean locked, boolean voidExcess) {
         return new CustomItemStack(
-            Material.LIGHT_BLUE_STAINED_GLASS_PANE,
-            Lang.getString("icons.drawer.storage_info.name"),
-            "",
-            String.format(Lang.getString("icons.drawer.storage_info.id"), id),
-            String.format(Lang.getString("icons.drawer.storage_info.type_count"), typeCount, maxType),
-            String.format(Lang.getString("icons.drawer.storage_info.max_each"), maxType, maxEach),
-            String.format(
-                Lang.getString("icons.drawer.storage_info.locked"),
-                locked
-                    ? Lang.getString("icons.drawer.storage_info.enabled")
-                    : Lang.getString("icons.drawer.storage_info.disabled")),
-            String.format(
-                Lang.getString("icons.drawer.storage_info.void_excess"),
-                voidExcess
-                    ? Lang.getString("icons.drawer.storage_info.enabled")
-                    : Lang.getString("icons.drawer.storage_info.disabled")));
+                Material.LIGHT_BLUE_STAINED_GLASS_PANE,
+                Lang.getString("icons.drawer.storage_info.name"),
+                "",
+                String.format(Lang.getString("icons.drawer.storage_info.id"), id),
+                String.format(Lang.getString("icons.drawer.storage_info.type_count"), typeCount, maxType),
+                String.format(Lang.getString("icons.drawer.storage_info.max_each"), maxType, maxEach),
+                String.format(
+                        Lang.getString("icons.drawer.storage_info.locked"),
+                        locked
+                                ? Lang.getString("icons.drawer.storage_info.enabled")
+                                : Lang.getString("icons.drawer.storage_info.disabled")),
+                String.format(
+                        Lang.getString("icons.drawer.storage_info.void_excess"),
+                        voidExcess
+                                ? Lang.getString("icons.drawer.storage_info.enabled")
+                                : Lang.getString("icons.drawer.storage_info.disabled")));
     }
 
     private static void setLock(@NotNull Location l, boolean lock) {
@@ -511,7 +507,7 @@ public class NetworksDrawer extends SpecialSlimefunItem implements DistinctiveIt
     }
 
     private static void quickTransfer(
-        @NotNull BlockMenu blockMenu, @NotNull Location location, @NotNull Player player) {
+            @NotNull BlockMenu blockMenu, @NotNull Location location, @NotNull Player player) {
         final ItemStack itemStack = blockMenu.getItemInSlot(QUANTUM_SLOT);
         if (itemStack == null || itemStack.getType() == Material.AIR) {
             player.sendMessage(Lang.getString("messages.unsupported-operation.drawer.invalid_container"));
@@ -547,38 +543,38 @@ public class NetworksDrawer extends SpecialSlimefunItem implements DistinctiveIt
                 if (StackUtils.itemsMatch(sample, toTransfer)) {
                     final ItemMeta meta = itemStack.getItemMeta();
                     QuantumCache quantumCache = DataTypeMethods.getCustom(
-                        meta, Keys.QUANTUM_STORAGE_INSTANCE, PersistentQuantumStorageType.TYPE);
+                            meta, Keys.QUANTUM_STORAGE_INSTANCE, PersistentQuantumStorageType.TYPE);
 
                     if (quantumCache == null) {
                         quantumCache = DataTypeMethods.getCustom(
-                            meta, Keys.QUANTUM_STORAGE_INSTANCE2, PersistentQuantumStorageType.TYPE);
+                                meta, Keys.QUANTUM_STORAGE_INSTANCE2, PersistentQuantumStorageType.TYPE);
                     }
 
                     if (quantumCache == null) {
                         quantumCache = DataTypeMethods.getCustom(
-                            meta, Keys.QUANTUM_STORAGE_INSTANCE3, PersistentQuantumStorageType.TYPE);
+                                meta, Keys.QUANTUM_STORAGE_INSTANCE3, PersistentQuantumStorageType.TYPE);
                     }
 
                     switch (mode) {
                         case FROM_QUANTUM -> {
                             if (quantumCache == null
-                                || quantumCache.getItemStack() == null
-                                || quantumCache.getAmount() <= 0) {
+                                    || quantumCache.getItemStack() == null
+                                    || quantumCache.getAmount() <= 0) {
                                 player.sendMessage(Lang.getString(
-                                    "messages.unsupported-operation.drawer.invalid_quantum_storage"));
+                                        "messages.unsupported-operation.drawer.invalid_quantum_storage"));
                                 return;
                             }
                             if (!StackUtils.itemsMatch(quantumCache.getItemStack(), sample)) {
                                 player.sendMessage(Lang.getString(
-                                    "messages.unsupported-operation.drawer.quantum_storage_item_mismatch"));
+                                        "messages.unsupported-operation.drawer.quantum_storage_item_mismatch"));
                                 return;
                             }
                             final long quantumAmount = quantumCache.getAmount();
                             final int canAdd = (int) Math.min(
-                                quantumAmount, thisStorage.getSizeType().getEachMaxSize() - each.getAmount());
+                                    quantumAmount, thisStorage.getSizeType().getEachMaxSize() - each.getAmount());
                             if (canAdd <= 0) {
                                 player.sendMessage(
-                                    Lang.getString("messages.unsupported-operation.drawer.quantum_storage_full"));
+                                        Lang.getString("messages.unsupported-operation.drawer.quantum_storage_full"));
                                 return;
                             }
 
@@ -586,10 +582,10 @@ public class NetworksDrawer extends SpecialSlimefunItem implements DistinctiveIt
                             if (left > 0) {
                                 quantumCache.setAmount(left);
                                 DataTypeMethods.setCustom(
-                                    meta,
-                                    Keys.QUANTUM_STORAGE_INSTANCE,
-                                    PersistentQuantumStorageType.TYPE,
-                                    quantumCache);
+                                        meta,
+                                        Keys.QUANTUM_STORAGE_INSTANCE,
+                                        PersistentQuantumStorageType.TYPE,
+                                        quantumCache);
                                 quantumCache.updateMetaLore(meta);
                                 itemStack.setItemMeta(meta);
                             } else {
@@ -605,7 +601,7 @@ public class NetworksDrawer extends SpecialSlimefunItem implements DistinctiveIt
                         case TO_QUANTUM -> {
                             if (each.getAmount() == 0 && locked.contains(location)) {
                                 player.sendMessage(
-                                    Lang.getString("messages.unsupported-operation.drawer.not_enough_item"));
+                                        Lang.getString("messages.unsupported-operation.drawer.not_enough_item"));
                                 return;
                             }
 
@@ -617,7 +613,7 @@ public class NetworksDrawer extends SpecialSlimefunItem implements DistinctiveIt
                                 final int canAdd = Math.min(unitAmount, quantumLimit);
                                 if (canAdd <= 0) {
                                     player.sendMessage(Lang.getString(
-                                        "messages.unsupported-operation.drawer.each_not_enough_item"));
+                                            "messages.unsupported-operation.drawer.each_not_enough_item"));
                                     return;
                                 }
                                 final ItemStack clone = sample.clone();
@@ -627,15 +623,15 @@ public class NetworksDrawer extends SpecialSlimefunItem implements DistinctiveIt
 
                                 quantumCache = new QuantumCache(clone, canAdd, quantumLimit, false, false);
                                 DataTypeMethods.setCustom(
-                                    meta,
-                                    Keys.QUANTUM_STORAGE_INSTANCE,
-                                    PersistentQuantumStorageType.TYPE,
-                                    quantumCache);
+                                        meta,
+                                        Keys.QUANTUM_STORAGE_INSTANCE,
+                                        PersistentQuantumStorageType.TYPE,
+                                        quantumCache);
                                 quantumCache.updateMetaLore(meta);
                                 itemStack.setItemMeta(meta);
 
                                 player.sendMessage(Lang.getString(
-                                    "messages.completed-operation.drawer.transferred_to_quantum_storage"));
+                                        "messages.completed-operation.drawer.transferred_to_quantum_storage"));
                                 return;
                             } else if (StackUtils.itemsMatch(quantumCache.getItemStack(), sample)) {
                                 final int quantumLimit = quantumCache.getLimit();
@@ -644,7 +640,7 @@ public class NetworksDrawer extends SpecialSlimefunItem implements DistinctiveIt
                                 final int canAdd = Math.min(unitAmount, quantumLimit - quantumAmount);
                                 if (canAdd <= 0) {
                                     player.sendMessage(Lang.getString(
-                                        "messages.unsupported-operation.drawer.each_not_enough_item"));
+                                            "messages.unsupported-operation.drawer.each_not_enough_item"));
                                     return;
                                 }
                                 final ItemStack clone = sample.clone();
@@ -653,16 +649,16 @@ public class NetworksDrawer extends SpecialSlimefunItem implements DistinctiveIt
                                 storages.put(location, thisStorage);
 
                                 quantumCache =
-                                    new QuantumCache(clone, quantumAmount + canAdd, quantumLimit, false, false);
+                                        new QuantumCache(clone, quantumAmount + canAdd, quantumLimit, false, false);
                                 DataTypeMethods.setCustom(
-                                    meta,
-                                    Keys.QUANTUM_STORAGE_INSTANCE,
-                                    PersistentQuantumStorageType.TYPE,
-                                    quantumCache);
+                                        meta,
+                                        Keys.QUANTUM_STORAGE_INSTANCE,
+                                        PersistentQuantumStorageType.TYPE,
+                                        quantumCache);
                                 quantumCache.updateMetaLore(meta);
                                 itemStack.setItemMeta(meta);
                                 player.sendMessage(Lang.getString(
-                                    "messages.completed-operation.drawer.transferred_to_quantum_storage"));
+                                        "messages.completed-operation.drawer.transferred_to_quantum_storage"));
                                 return;
                             } else {
                                 return;
@@ -672,8 +668,8 @@ public class NetworksDrawer extends SpecialSlimefunItem implements DistinctiveIt
                 }
             }
             player.sendMessage(String.format(
-                Lang.getString("messages.unsupported-operation.drawer.not_found_chosen_item"),
-                ItemStackHelper.getDisplayName(toTransfer)));
+                    Lang.getString("messages.unsupported-operation.drawer.not_found_chosen_item"),
+                    ItemStackHelper.getDisplayName(toTransfer)));
         } else if (isMover) {
             ItemStack moverStored = ItemMover.getStoredItemStack(itemStack);
             if (mode == QuickTransferMode.FROM_QUANTUM) {
@@ -683,14 +679,14 @@ public class NetworksDrawer extends SpecialSlimefunItem implements DistinctiveIt
                 }
                 if (!StackUtils.itemsMatch(moverStored, toTransfer)) {
                     player.sendMessage(
-                        Lang.getString("messages.unsupported-operation.drawer.item_mover_item_mismatch"));
+                            Lang.getString("messages.unsupported-operation.drawer.item_mover_item_mismatch"));
                     return;
                 }
             }
             if (mode == QuickTransferMode.TO_QUANTUM) {
                 if (moverStored != null && !StackUtils.itemsMatch(moverStored, toTransfer)) {
                     player.sendMessage(
-                        Lang.getString("messages.unsupported-operation.drawer.item_mover_item_mismatch"));
+                            Lang.getString("messages.unsupported-operation.drawer.item_mover_item_mismatch"));
                     return;
                 }
             }
@@ -701,10 +697,10 @@ public class NetworksDrawer extends SpecialSlimefunItem implements DistinctiveIt
                     switch (mode) {
                         case FROM_QUANTUM -> {
                             ItemStack stored = StackUtils.getAsQuantity(
-                                ItemMover.getStoredItemStack(itemStack), ItemMover.getStoredAmount(itemStack));
+                                    ItemMover.getStoredItemStack(itemStack), ItemMover.getStoredAmount(itemStack));
                             if (stored == null || stored.getType() == Material.AIR) {
                                 player.sendMessage(
-                                    Lang.getString("messages.unsupported-operation.drawer.item_mover_empty"));
+                                        Lang.getString("messages.unsupported-operation.drawer.item_mover_empty"));
                             }
                             int before = stored.getAmount();
                             String name = ItemStackHelper.getDisplayName(stored);
@@ -712,9 +708,9 @@ public class NetworksDrawer extends SpecialSlimefunItem implements DistinctiveIt
                             int left = stored.getAmount();
                             ItemMover.setStoredAmount(itemStack, left);
                             player.sendMessage(String.format(
-                                Lang.getString("messages.completed-operation.drawer.transferred_to_drawer"),
-                                name,
-                                before - left));
+                                    Lang.getString("messages.completed-operation.drawer.transferred_to_drawer"),
+                                    name,
+                                    before - left));
                         }
                         case TO_QUANTUM -> {
                             ItemRequest itemRequest = new ItemRequest(sample, each.getAmount());
@@ -728,9 +724,9 @@ public class NetworksDrawer extends SpecialSlimefunItem implements DistinctiveIt
                                     thisStorage.depositItemStack0(location, fetched, false);
                                 }
                                 player.sendMessage(String.format(
-                                    Lang.getString("messages.completed-operation.drawer.transferred_to_item_mover"),
-                                    name,
-                                    before - left));
+                                        Lang.getString("messages.completed-operation.drawer.transferred_to_item_mover"),
+                                        name,
+                                        before - left));
                             }
                         }
                     }
@@ -739,8 +735,8 @@ public class NetworksDrawer extends SpecialSlimefunItem implements DistinctiveIt
                 }
             }
             player.sendMessage(String.format(
-                Lang.getString("messages.unsupported-operation.drawer.not_found_chosen_item"),
-                ItemStackHelper.getDisplayName(toTransfer)));
+                    Lang.getString("messages.unsupported-operation.drawer.not_found_chosen_item"),
+                    ItemStackHelper.getDisplayName(toTransfer)));
         } else {
             player.sendMessage(Lang.getString("messages.unsupported-operation.drawer.invalid_container"));
         }
@@ -754,15 +750,15 @@ public class NetworksDrawer extends SpecialSlimefunItem implements DistinctiveIt
     private static @NotNull ItemStack getQuickTransferItem(QuickTransferMode mode) {
         List<String> lore = new ArrayList<>(Lang.getStringList("icons.drawer.quick_transfer.lore_before_status"));
         lore.add(String.format(
-            Lang.getString("icons.drawer.quick_transfer.status"),
-            mode == QuickTransferMode.FROM_QUANTUM
-                ? Lang.getString("icons.drawer.quick_transfer.from_quantum")
-                : Lang.getString("icons.drawer.quick_transfer.to_quantum")));
+                Lang.getString("icons.drawer.quick_transfer.status"),
+                mode == QuickTransferMode.FROM_QUANTUM
+                        ? Lang.getString("icons.drawer.quick_transfer.from_quantum")
+                        : Lang.getString("icons.drawer.quick_transfer.to_quantum")));
         lore.addAll(Lang.getStringList("icons.drawer.quick_transfer.lore_after_status"));
         CustomItemStack cis = new CustomItemStack(
-            mode == QuickTransferMode.FROM_QUANTUM ? Material.GREEN_CONCRETE_POWDER : Material.BLUE_CONCRETE_POWDER,
-            Lang.getString("icons.drawer.quick_transfer.name"),
-            lore);
+                mode == QuickTransferMode.FROM_QUANTUM ? Material.GREEN_CONCRETE_POWDER : Material.BLUE_CONCRETE_POWDER,
+                Lang.getString("icons.drawer.quick_transfer.name"),
+                lore);
 
         return ItemStackUtil.getCleanItem(cis);
     }
@@ -786,7 +782,7 @@ public class NetworksDrawer extends SpecialSlimefunItem implements DistinctiveIt
         FileConfiguration config = Networks.getInstance().getConfig();
 
         this.useSpecialModel =
-            config.getBoolean("items." + configKey + ".use-special-model.enable", DEFAULT_USE_SPECIAL_MODEL);
+                config.getBoolean("items." + configKey + ".use-special-model.enable", DEFAULT_USE_SPECIAL_MODEL);
 
         Map<String, Function<Location, DisplayGroup>> generatorMap = new HashMap<>();
         generatorMap.put("1", DisplayGroupGenerators::generateStorageUnit_1);
@@ -810,9 +806,9 @@ public class NetworksDrawer extends SpecialSlimefunItem implements DistinctiveIt
             this.displayGroupGenerator = generatorMap.get(generatorKey);
             if (this.displayGroupGenerator == null) {
                 Networks.getInstance()
-                    .getLogger()
-                    .warning(String.format(
-                        Lang.getString("messages.unsupported-operation.display.unknown_type"), generatorKey));
+                        .getLogger()
+                        .warning(String.format(
+                                Lang.getString("messages.unsupported-operation.display.unknown_type"), generatorKey));
                 this.useSpecialModel = false;
             }
         }
@@ -823,8 +819,8 @@ public class NetworksDrawer extends SpecialSlimefunItem implements DistinctiveIt
         ItemStack itemInHand = e.getItemInHand();
         Player p = e.getPlayer();
         if (!(p.hasPermission("slimefun.inventory.bypass")
-            || (canUse(p, false)
-            && Slimefun.getProtectionManager().hasPermission(p, e.getBlock(), Interaction.PLACE_BLOCK)))) {
+                || (canUse(p, false)
+                        && Slimefun.getProtectionManager().hasPermission(p, e.getBlock(), Interaction.PLACE_BLOCK)))) {
             return;
         }
         boolean a = false;
@@ -833,9 +829,9 @@ public class NetworksDrawer extends SpecialSlimefunItem implements DistinctiveIt
         if (Networks.getSupportedPluginManager().isGuguSlimefunLib()) {
             if (suuid != null && !p.isOp() && !suuid.equals(GuguSlimefunLib.getServerUUID())) {
                 p.sendMessage(String.format(
-                    Lang.getString("messages.unsupported-operation.drawer.wrong_server"),
-                    suuid,
-                    GuguSlimefunLib.getServerUUID()));
+                        Lang.getString("messages.unsupported-operation.drawer.wrong_server"),
+                        suuid,
+                        GuguSlimefunLib.getServerUUID()));
                 e.setCancelled(true);
                 if (useSpecialModel) {
                     removeDisplay(l);
@@ -853,12 +849,12 @@ public class NetworksDrawer extends SpecialSlimefunItem implements DistinctiveIt
                 p.sendMessage(Lang.getString("messages.unsupported-operation.drawer.already_exists"));
                 Location currLoc = data.getLastLocation();
                 p.sendMessage(TextUtil.YELLOW
-                    + (currLoc.getWorld() == null
-                    ? "Unknown"
-                    : currLoc.getWorld().getName()) + " " + TextUtil.GRAY + "| " + TextUtil.YELLOW
-                    + currLoc.getBlockX() + TextUtil.GRAY + "/" + TextUtil.YELLOW
-                    + currLoc.getBlockY() + TextUtil.GRAY + "/" + TextUtil.YELLOW + currLoc.getBlockZ()
-                    + TextUtil.GRAY + ";");
+                        + (currLoc.getWorld() == null
+                                ? "Unknown"
+                                : currLoc.getWorld().getName()) + " " + TextUtil.GRAY + "| " + TextUtil.YELLOW
+                        + currLoc.getBlockX() + TextUtil.GRAY + "/" + TextUtil.YELLOW
+                        + currLoc.getBlockY() + TextUtil.GRAY + "/" + TextUtil.YELLOW + currLoc.getBlockZ()
+                        + TextUtil.GRAY + ";");
                 e.setCancelled(true);
                 if (useSpecialModel) {
                     removeDisplay(l);
@@ -969,9 +965,9 @@ public class NetworksDrawer extends SpecialSlimefunItem implements DistinctiveIt
         addItemHandler(new BlockBreakHandler(false, false) {
             @Override
             public void onPlayerBreak(
-                @NotNull BlockBreakEvent blockBreakEvent,
-                @NotNull ItemStack itemStack,
-                @NotNull List<ItemStack> list) {
+                    @NotNull BlockBreakEvent blockBreakEvent,
+                    @NotNull ItemStack itemStack,
+                    @NotNull List<ItemStack> list) {
                 onBreak(blockBreakEvent);
             }
         });
@@ -1019,19 +1015,19 @@ public class NetworksDrawer extends SpecialSlimefunItem implements DistinctiveIt
         List<String> lore = new ArrayList<>(Lang.getStringList("icons.drawer.location_error.lore_before_info"));
         lore.add(String.format(Lang.getString("icons.drawer.location_error.id"), id));
         lore.add(
-            lastLoc == null
-                ? Lang.getString("icons.drawer.location_error.unknown")
-                : String.format(
-                Lang.getString("icons.drawer.location_error.world"),
-                lastLoc.getWorld().getName()));
+                lastLoc == null
+                        ? Lang.getString("icons.drawer.location_error.unknown")
+                        : String.format(
+                                Lang.getString("icons.drawer.location_error.world"),
+                                lastLoc.getWorld().getName()));
         lore.add(
-            lastLoc == null
-                ? Lang.getString("icons.drawer.location_error.unknown")
-                : String.format(
-                Lang.getString("icons.drawer.location_error.location"),
-                lastLoc.getBlockX(),
-                lastLoc.getBlockY(),
-                lastLoc.getBlockZ()));
+                lastLoc == null
+                        ? Lang.getString("icons.drawer.location_error.unknown")
+                        : String.format(
+                                Lang.getString("icons.drawer.location_error.location"),
+                                lastLoc.getBlockX(),
+                                lastLoc.getBlockY(),
+                                lastLoc.getBlockZ()));
         return new CustomItemStack(Material.REDSTONE_TORCH, Lang.getString("icons.drawer.location_error.name"), lore);
     }
 
@@ -1062,45 +1058,45 @@ public class NetworksDrawer extends SpecialSlimefunItem implements DistinctiveIt
     private @NotNull ItemStack getContentLockItem(boolean locked) {
         List<String> lore = new ArrayList<>(Lang.getStringList("icons.drawer.content_lock.lore_before_status"));
         lore.add(String.format(
-            Lang.getString("icons.drawer.content_lock.status"),
-            locked
-                ? Lang.getString("icons.drawer.content_lock.locked")
-                : Lang.getString("icons.drawer.content_lock.unlocked")));
+                Lang.getString("icons.drawer.content_lock.status"),
+                locked
+                        ? Lang.getString("icons.drawer.content_lock.locked")
+                        : Lang.getString("icons.drawer.content_lock.unlocked")));
         lore.addAll(Lang.getStringList("icons.drawer.content_lock.lore_after_status"));
         lore.add(
-            locked
-                ? Lang.getString("icons.drawer.click_to_disable")
-                : Lang.getString("icons.drawer.click_to_enable"));
+                locked
+                        ? Lang.getString("icons.drawer.click_to_disable")
+                        : Lang.getString("icons.drawer.click_to_enable"));
         return new CustomItemStack(
-            locked ? Material.RED_STAINED_GLASS_PANE : Material.LIME_STAINED_GLASS_PANE,
-            Lang.getString("icons.drawer.content_lock.name"),
-            lore);
+                locked ? Material.RED_STAINED_GLASS_PANE : Material.LIME_STAINED_GLASS_PANE,
+                Lang.getString("icons.drawer.content_lock.name"),
+                lore);
     }
 
     private @NotNull ItemStack getVoidExcessItem(boolean voidExcess) {
         List<String> lore = new ArrayList<>(Lang.getStringList("icons.drawer.void_excess.lore_before_status"));
         lore.add(String.format(
-            Lang.getString("icons.drawer.void_excess.status"),
-            voidExcess
-                ? Lang.getString("icons.drawer.void_excess.enabled")
-                : Lang.getString("icons.drawer.void_excess.disabled")));
+                Lang.getString("icons.drawer.void_excess.status"),
+                voidExcess
+                        ? Lang.getString("icons.drawer.void_excess.enabled")
+                        : Lang.getString("icons.drawer.void_excess.disabled")));
         lore.addAll(Lang.getStringList("icons.drawer.void_excess.lore_after_status"));
         lore.add(
-            voidExcess
-                ? Lang.getString("icons.drawer.click_to_disable")
-                : Lang.getString("icons.drawer.click_to_enable"));
+                voidExcess
+                        ? Lang.getString("icons.drawer.click_to_disable")
+                        : Lang.getString("icons.drawer.click_to_enable"));
         return new CustomItemStack(
-            voidExcess ? Material.LIME_STAINED_GLASS_PANE : Material.RED_STAINED_GLASS_PANE,
-            Lang.getString("icons.drawer.void_excess.name"),
-            lore);
+                voidExcess ? Material.LIME_STAINED_GLASS_PANE : Material.RED_STAINED_GLASS_PANE,
+                Lang.getString("icons.drawer.void_excess.name"),
+                lore);
     }
 
     private void setupDisplay(@NotNull Location location) {
         if (this.displayGroupGenerator != null) {
             DisplayGroup displayGroup =
-                this.displayGroupGenerator.apply(location.clone().add(0.5, 0, 0.5));
+                    this.displayGroupGenerator.apply(location.clone().add(0.5, 0, 0.5));
             StorageCacheUtils.setData(
-                location, KEY_UUID, displayGroup.getParentUUID().toString());
+                    location, KEY_UUID, displayGroup.getParentUUID().toString());
         }
     }
 
@@ -1111,8 +1107,7 @@ public class NetworksDrawer extends SpecialSlimefunItem implements DistinctiveIt
         }
     }
 
-    @Nullable
-    private UUID getDisplayGroupUUID(@NotNull Location location) {
+    @Nullable private UUID getDisplayGroupUUID(@NotNull Location location) {
         String uuid = StorageCacheUtils.getData(location, KEY_UUID);
         if (uuid == null) {
             return null;
@@ -1120,8 +1115,7 @@ public class NetworksDrawer extends SpecialSlimefunItem implements DistinctiveIt
         return UUID.fromString(uuid);
     }
 
-    @Nullable
-    private DisplayGroup getDisplayGroup(@NotNull Location location) {
+    @Nullable private DisplayGroup getDisplayGroup(@NotNull Location location) {
         UUID uuid = getDisplayGroupUUID(location);
         if (uuid == null) {
             return null;

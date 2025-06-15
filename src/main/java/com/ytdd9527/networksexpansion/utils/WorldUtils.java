@@ -1,8 +1,7 @@
 package com.ytdd9527.networksexpansion.utils;
 
-import java.lang.reflect.Field;
-
 import io.github.thebusybiscuit.slimefun4.libraries.dough.collections.Pair;
+import java.lang.reflect.Field;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -34,7 +33,8 @@ public class WorldUtils {
                 }
                 craftBlockStateClass = result.getSecondValue();
                 if (craftBlockStateClass != null) {
-                    Pair<Field, Class<?>> r2 = ReflectionUtil.getDeclaredFieldsRecursively(craftBlockStateClass, "position");
+                    Pair<Field, Class<?>> r2 =
+                            ReflectionUtil.getDeclaredFieldsRecursively(craftBlockStateClass, "position");
                     if (r2 != null) {
                         blockPositionField = r2.getFirstValue();
                         if (blockPositionField != null) {
@@ -46,7 +46,8 @@ public class WorldUtils {
                         fail = true;
                     }
 
-                    Pair<Field, Class<?>> r3 = ReflectionUtil.getDeclaredFieldsRecursively(craftBlockStateClass, "world");
+                    Pair<Field, Class<?>> r3 =
+                            ReflectionUtil.getDeclaredFieldsRecursively(craftBlockStateClass, "world");
                     if (r3 != null) {
                         worldField = r3.getFirstValue();
                         if (worldField != null) {
@@ -58,7 +59,8 @@ public class WorldUtils {
                         fail = true;
                     }
 
-                    Pair<Field, Class<?>> r4 = ReflectionUtil.getDeclaredFieldsRecursively(craftBlockStateClass, "weakWorld");
+                    Pair<Field, Class<?>> r4 =
+                            ReflectionUtil.getDeclaredFieldsRecursively(craftBlockStateClass, "weakWorld");
                     if (r4 != null) {
                         weakWorldField = r4.getFirstValue();
                         if (weakWorldField != null) {
@@ -86,7 +88,7 @@ public class WorldUtils {
 
         BlockState toState = toBlock.getState();
         if (craftBlockStateClass != null
-            && (!craftBlockStateClass.isInstance(toState) || !craftBlockStateClass.isInstance(fromBlockState))) {
+                && (!craftBlockStateClass.isInstance(toState) || !craftBlockStateClass.isInstance(fromBlockState))) {
             return false;
         }
 

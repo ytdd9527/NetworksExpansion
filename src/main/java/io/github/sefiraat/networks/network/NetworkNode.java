@@ -7,11 +7,9 @@ import io.github.sefiraat.networks.slimefun.network.NetworkController;
 import io.github.sefiraat.networks.slimefun.network.NetworkPowerNode;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
 import io.github.thebusybiscuit.slimefun4.implementation.Slimefun;
-
 import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Set;
-
 import lombok.Getter;
 import lombok.ToString;
 import org.bukkit.Location;
@@ -25,7 +23,7 @@ import org.jetbrains.annotations.Nullable;
 public class NetworkNode {
 
     protected static final Set<BlockFace> VALID_FACES =
-        EnumSet.of(BlockFace.UP, BlockFace.DOWN, BlockFace.NORTH, BlockFace.EAST, BlockFace.SOUTH, BlockFace.WEST);
+            EnumSet.of(BlockFace.UP, BlockFace.DOWN, BlockFace.NORTH, BlockFace.EAST, BlockFace.SOUTH, BlockFace.WEST);
 
     @Getter
     protected final Set<NetworkNode> childrenNodes = new HashSet<>();
@@ -58,13 +56,11 @@ public class NetworkNode {
         this.childrenNodes.add(child);
     }
 
-    @NotNull
-    public Location getNodePosition() {
+    @NotNull public Location getNodePosition() {
         return nodePosition;
     }
 
-    @NotNull
-    public NodeType getNodeType() {
+    @NotNull public NodeType getNodeType() {
         return nodeType;
     }
 

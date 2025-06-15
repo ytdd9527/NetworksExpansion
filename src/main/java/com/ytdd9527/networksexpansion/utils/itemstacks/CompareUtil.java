@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 @UtilityClass
 public class CompareUtil {
     public static @NotNull SimpleComparator<Integer> INTEGER_SIMPLE_COMPARATOR =
-        (comparison, compared) -> comparison - compared;
+            (comparison, compared) -> comparison - compared;
 
     /**
      * @param sources          should be ordered
@@ -17,7 +17,7 @@ public class CompareUtil {
      * @return The index that the targetValue match. Or -1 if not matched.
      */
     public static <T> int getIndex(
-        T @NotNull [] sources, T targetValue, @NotNull SimpleComparator<T> simpleComparator) {
+            T @NotNull [] sources, T targetValue, @NotNull SimpleComparator<T> simpleComparator) {
         int left = 0;
         int right = sources.length;
         int mid = (left + right) >> 1;
@@ -42,7 +42,7 @@ public class CompareUtil {
      * @return The smallest index that the targetValue match (or be close to).
      */
     public static <T> int getSmallFuzzyIndex(
-        T @NotNull [] sources, T targetValue, @NotNull SimpleComparator<T> simpleComparator) {
+            T @NotNull [] sources, T targetValue, @NotNull SimpleComparator<T> simpleComparator) {
         int left = 0;
         int right = sources.length;
         int mid = (left + right) >> 1;
@@ -67,7 +67,7 @@ public class CompareUtil {
      * @return The smallest index that the targetValue match (or be close to).
      */
     public static <T> int getBigFuzzyIndex(
-        T @NotNull [] sources, T targetValue, @NotNull SimpleComparator<T> simpleComparator) {
+            T @NotNull [] sources, T targetValue, @NotNull SimpleComparator<T> simpleComparator) {
         int left = 0;
         int right = sources.length;
         int mid = (left + right) >> 1;

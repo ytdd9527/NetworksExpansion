@@ -28,7 +28,6 @@ import io.github.thebusybiscuit.slimefun4.core.handlers.BlockPlaceHandler;
 import io.github.thebusybiscuit.slimefun4.implementation.Slimefun;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.protection.Interaction;
 import io.github.thebusybiscuit.slimefun4.utils.SlimefunUtils;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -37,7 +36,6 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import javax.annotation.ParametersAreNonnullByDefault;
-
 import me.mrCookieSlime.Slimefun.Objects.handlers.BlockTicker;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenuPreset;
@@ -64,23 +62,23 @@ public class AdvancedVacuum extends NetworkObject {
     public static final String BS_MATCH_MODE = "match-mode";
     public static final Map<Location, List<ItemStack>> CACHE_FILTER_ITEMS = new ConcurrentHashMap<>();
     private static final int[] BACKGROUND_SLOTS =
-        new int[]{38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53};
-    private static final int[] INPUT_SLOTS = new int[]{
+            new int[] {38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53};
+    private static final int[] INPUT_SLOTS = new int[] {
         0, 1, 2, 3, 4, 5, 6, 7, 8,
         9, 10, 11, 12, 13, 14, 15, 16, 17
     };
-    private static final int[] SPLIT_SLOTS = new int[]{18, 19, 20, 21, 22, 23, 24, 25, 26};
-    private static final int[] FILTER_SLOTS = new int[]{27, 28, 29, 30, 31, 32, 33, 34, 35};
+    private static final int[] SPLIT_SLOTS = new int[] {18, 19, 20, 21, 22, 23, 24, 25, 26};
+    private static final int[] FILTER_SLOTS = new int[] {27, 28, 29, 30, 31, 32, 33, 34, 35};
     private static final int FILTER_MODE_SLOT = 36;
     private static final int MATCH_MODE_SLOT = 37;
     private final @NotNull ItemSetting<Integer> tickRate;
     private final @NotNull ItemSetting<Integer> vacuumRange;
 
     public AdvancedVacuum(
-        @NotNull ItemGroup itemGroup,
-        @NotNull SlimefunItemStack item,
-        @NotNull RecipeType recipeType,
-        ItemStack[] recipe) {
+            @NotNull ItemGroup itemGroup,
+            @NotNull SlimefunItemStack item,
+            @NotNull RecipeType recipeType,
+            ItemStack[] recipe) {
         super(itemGroup, item, recipeType, recipe, NodeType.ADVANCED_VACUUM);
 
         this.tickRate = new IntRangeSetting(this, "tick_rate", 1, 1, 10);
@@ -123,13 +121,14 @@ public class AdvancedVacuum extends NetworkObject {
             @Override
             public void onPlayerPlace(@NotNull BlockPlaceEvent event) {
                 NetworkStorage.removeNode(event.getBlock().getLocation());
-                SlimefunBlockData blockData = StorageCacheUtils.getBlock(event.getBlock().getLocation());
+                SlimefunBlockData blockData =
+                        StorageCacheUtils.getBlock(event.getBlock().getLocation());
                 if (blockData == null) {
                     return;
                 }
                 blockData.setData(
-                    NetworkDirectional.OWNER_KEY,
-                    event.getPlayer().getUniqueId().toString());
+                        NetworkDirectional.OWNER_KEY,
+                        event.getPlayer().getUniqueId().toString());
             }
         });
         addItemHandler(new BlockBreakHandler(false, false) {
@@ -294,10 +293,10 @@ public class AdvancedVacuum extends NetworkObject {
         }
 
         player.sendMessage(String.format(
-            Lang.getString("messages.completed-operation.comprehensive.toggled_filter_mode"),
-            currentMode == FilterMode.BLACK_LIST
-                ? Lang.getString("messages.completed-operation.comprehensive.filter_mode_black_list")
-                : Lang.getString("messages.completed-operation.comprehensive.filter_mode_white_list")));
+                Lang.getString("messages.completed-operation.comprehensive.toggled_filter_mode"),
+                currentMode == FilterMode.BLACK_LIST
+                        ? Lang.getString("messages.completed-operation.comprehensive.filter_mode_black_list")
+                        : Lang.getString("messages.completed-operation.comprehensive.filter_mode_white_list")));
     }
 
     public static void toggleMatchMode(@NotNull Player player, @NotNull BlockMenu menu) {
@@ -311,10 +310,10 @@ public class AdvancedVacuum extends NetworkObject {
         }
 
         player.sendMessage(String.format(
-            Lang.getString("messages.completed-operation.comprehensive.toggled_match_mode"),
-            currentMode == MatchMode.ALL_MATCH
-                ? Lang.getString("messages.completed-operation.comprehensive.match_mode_all_match")
-                : Lang.getString("messages.completed-operation.comprehensive.match_mode_material_match")));
+                Lang.getString("messages.completed-operation.comprehensive.toggled_match_mode"),
+                currentMode == MatchMode.ALL_MATCH
+                        ? Lang.getString("messages.completed-operation.comprehensive.match_mode_all_match")
+                        : Lang.getString("messages.completed-operation.comprehensive.match_mode_material_match")));
     }
 
     public static void updateBlockMenu(@NotNull BlockMenu menu) {
@@ -329,7 +328,7 @@ public class AdvancedVacuum extends NetworkObject {
                 final Location location = blockMenu.getLocation().clone().add(0.5, 0.5, 0.5);
                 final int range = this.vacuumRange.getValue();
                 Collection<Entity> items =
-                    location.getWorld().getNearbyEntities(location, range, range, range, Item.class::isInstance);
+                        location.getWorld().getNearbyEntities(location, range, range, range, Item.class::isInstance);
 
                 for (Entity optionalEntity : items.stream().toList()) {
                     if (!(optionalEntity instanceof Item item)) {
@@ -338,7 +337,7 @@ public class AdvancedVacuum extends NetworkObject {
                     }
 
                     final String ownerUUID =
-                        StorageCacheUtils.getData(blockMenu.getLocation(), NetworkDirectional.OWNER_KEY);
+                            StorageCacheUtils.getData(blockMenu.getLocation(), NetworkDirectional.OWNER_KEY);
                     if (ownerUUID == null) {
                         sendFeedback(blockMenu.getLocation(), FeedbackType.NO_OWNER_FOUND);
                         return;
@@ -346,7 +345,7 @@ public class AdvancedVacuum extends NetworkObject {
                     final UUID uuid = UUID.fromString(ownerUUID);
                     final OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(uuid);
                     if (!Slimefun.getProtectionManager()
-                        .hasPermission(offlinePlayer, item.getLocation(), Interaction.INTERACT_ENTITY)) {
+                            .hasPermission(offlinePlayer, item.getLocation(), Interaction.INTERACT_ENTITY)) {
                         sendFeedback(blockMenu.getLocation(), FeedbackType.NO_PERMISSION);
                         return;
                     }
@@ -426,9 +425,9 @@ public class AdvancedVacuum extends NetworkObject {
             @Override
             public boolean canOpen(@NotNull Block block, @NotNull Player player) {
                 return player.hasPermission("slimefun.inventory.bypass")
-                    || (NetworkSlimefunItems.NETWORK_VACUUM.canUse(player, false)
-                    && Slimefun.getProtectionManager()
-                    .hasPermission(player, block.getLocation(), Interaction.INTERACT_BLOCK));
+                        || (NetworkSlimefunItems.NETWORK_VACUUM.canUse(player, false)
+                                && Slimefun.getProtectionManager()
+                                        .hasPermission(player, block.getLocation(), Interaction.INTERACT_BLOCK));
             }
 
             @Override

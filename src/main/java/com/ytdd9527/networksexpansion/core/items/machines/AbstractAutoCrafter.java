@@ -20,13 +20,11 @@ import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
 import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
 import io.github.thebusybiscuit.slimefun4.implementation.Slimefun;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.protection.Interaction;
-
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-
 import me.mrCookieSlime.Slimefun.Objects.handlers.BlockTicker;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenuPreset;
@@ -44,19 +42,19 @@ public abstract class AbstractAutoCrafter extends NetworkObject {
     public static final int BLUEPRINT_SLOT = 10;
     public static final int OUTPUT_SLOT = 16;
     public static final Map<Location, BlueprintInstance> INSTANCE_MAP = new HashMap<>();
-    private static final int[] BACKGROUND_SLOTS = new int[]{3, 4, 5, 12, 13, 14, 21, 22, 23};
-    private static final int[] BLUEPRINT_BACKGROUND = new int[]{0, 1, 2, 9, 11, 18, 19, 20};
-    private static final int[] OUTPUT_BACKGROUND = new int[]{6, 7, 8, 15, 17, 24, 25, 26};
+    private static final int[] BACKGROUND_SLOTS = new int[] {3, 4, 5, 12, 13, 14, 21, 22, 23};
+    private static final int[] BLUEPRINT_BACKGROUND = new int[] {0, 1, 2, 9, 11, 18, 19, 20};
+    private static final int[] OUTPUT_BACKGROUND = new int[] {6, 7, 8, 15, 17, 24, 25, 26};
     private final int chargePerCraft;
     private final boolean withholding;
 
     public AbstractAutoCrafter(
-        @NotNull ItemGroup itemGroup,
-        @NotNull SlimefunItemStack item,
-        @NotNull RecipeType recipeType,
-        ItemStack[] recipe,
-        int chargePerCraft,
-        boolean withholding) {
+            @NotNull ItemGroup itemGroup,
+            @NotNull SlimefunItemStack item,
+            @NotNull RecipeType recipeType,
+            ItemStack[] recipe,
+            int chargePerCraft,
+            boolean withholding) {
         super(itemGroup, item, recipeType, recipe, NodeType.CRAFTER);
 
         this.chargePerCraft = chargePerCraft;
@@ -132,16 +130,16 @@ public abstract class AbstractAutoCrafter extends NetworkObject {
                 final ItemMeta blueprintMeta = blueprint.getItemMeta();
                 Optional<BlueprintInstance> optional;
                 optional = DataTypeMethods.getOptionalCustom(
-                    blueprintMeta, Keys.BLUEPRINT_INSTANCE, PersistentCraftingBlueprintType.TYPE);
+                        blueprintMeta, Keys.BLUEPRINT_INSTANCE, PersistentCraftingBlueprintType.TYPE);
 
                 if (optional.isEmpty()) {
                     optional = DataTypeMethods.getOptionalCustom(
-                        blueprintMeta, Keys.BLUEPRINT_INSTANCE2, PersistentCraftingBlueprintType.TYPE);
+                            blueprintMeta, Keys.BLUEPRINT_INSTANCE2, PersistentCraftingBlueprintType.TYPE);
                 }
 
                 if (optional.isEmpty()) {
                     optional = DataTypeMethods.getOptionalCustom(
-                        blueprintMeta, Keys.BLUEPRINT_INSTANCE3, PersistentCraftingBlueprintType.TYPE);
+                            blueprintMeta, Keys.BLUEPRINT_INSTANCE3, PersistentCraftingBlueprintType.TYPE);
                 }
 
                 if (optional.isEmpty()) {
@@ -158,10 +156,10 @@ public abstract class AbstractAutoCrafter extends NetworkObject {
 
             ItemStack targetOutput = instance.getItemStack();
             if (output != null
-                && output.getType() != Material.AIR
-                && targetOutput != null
-                && (output.getAmount() + targetOutput.getAmount() > output.getMaxStackSize()
-                || !StackUtils.itemsMatch(targetOutput, output))) {
+                    && output.getType() != Material.AIR
+                    && targetOutput != null
+                    && (output.getAmount() + targetOutput.getAmount() > output.getMaxStackSize()
+                            || !StackUtils.itemsMatch(targetOutput, output))) {
                 sendDebugMessage(blockMenu.getLocation(), "Output slot is full");
                 sendFeedback(blockMenu.getLocation(), FeedbackType.OUTPUT_FULL);
                 return;
@@ -176,7 +174,7 @@ public abstract class AbstractAutoCrafter extends NetworkObject {
     }
 
     private boolean tryCraft(
-        @NotNull BlockMenu blockMenu, @NotNull BlueprintInstance instance, @NotNull NetworkRoot root) {
+            @NotNull BlockMenu blockMenu, @NotNull BlueprintInstance instance, @NotNull NetworkRoot root) {
         // Get the recipe input
         final ItemStack[] inputs = new ItemStack[9];
 
@@ -205,7 +203,7 @@ public abstract class AbstractAutoCrafter extends NetworkObject {
             final ItemStack requested = instance.getRecipeItems()[i];
             if (requested != null) {
                 final ItemStack fetched =
-                    root.getItemStack0(blockMenu.getLocation(), new ItemRequest(requested, requested.getAmount()));
+                        root.getItemStack0(blockMenu.getLocation(), new ItemRequest(requested, requested.getAmount()));
                 inputs[i] = fetched;
             } else {
                 inputs[i] = null;
@@ -257,7 +255,7 @@ public abstract class AbstractAutoCrafter extends NetworkObject {
     }
 
     private void returnItems(
-        @NotNull NetworkRoot root, @NotNull ItemStack @NotNull [] inputs, @NotNull BlockMenu blockMenu) {
+            @NotNull NetworkRoot root, @NotNull ItemStack @NotNull [] inputs, @NotNull BlockMenu blockMenu) {
         for (ItemStack input : inputs) {
             if (input != null) {
                 root.addItemStack0(blockMenu.getLocation(), input);
@@ -299,15 +297,15 @@ public abstract class AbstractAutoCrafter extends NetworkObject {
             @Override
             public boolean canOpen(@NotNull Block block, @NotNull Player player) {
                 return player.hasPermission("slimefun.inventory.bypass")
-                    || (this.getSlimefunItem().canUse(player, false)
-                    && Slimefun.getProtectionManager()
-                    .hasPermission(player, block.getLocation(), Interaction.INTERACT_BLOCK));
+                        || (this.getSlimefunItem().canUse(player, false)
+                                && Slimefun.getProtectionManager()
+                                        .hasPermission(player, block.getLocation(), Interaction.INTERACT_BLOCK));
             }
 
             @Override
             public int[] getSlotsAccessedByItemTransport(ItemTransportFlow flow) {
                 if (AbstractAutoCrafter.this.withholding && flow == ItemTransportFlow.WITHDRAW) {
-                    return new int[]{OUTPUT_SLOT};
+                    return new int[] {OUTPUT_SLOT};
                 }
                 return new int[0];
             }

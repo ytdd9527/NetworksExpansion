@@ -63,9 +63,9 @@ public class ItemContainer {
 
     public @NotNull String toString() {
         return "ItemContainer{" + "id="
-            + id + ", sample="
-            + sample + ", wrapper="
-            + wrapper + ", amount="
-            + amount + '}';
+                + id + ", sample="
+                + sample + ", wrapper="
+                + wrapper + ", amount="
+                + amount + '}';
     }
 }

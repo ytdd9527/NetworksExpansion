@@ -15,9 +15,7 @@ import io.github.thebusybiscuit.slimefun4.core.handlers.ItemUseHandler;
 import io.github.thebusybiscuit.slimefun4.implementation.Slimefun;
 import io.github.thebusybiscuit.slimefun4.implementation.items.LimitedUseItem;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.protection.Interaction;
-
 import java.util.Optional;
-
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
@@ -33,11 +31,11 @@ public class NetworkRake extends LimitedUseItem {
     private static final NamespacedKey key = Keys.newKey("uses");
 
     public NetworkRake(
-        @NotNull ItemGroup itemGroup,
-        @NotNull SlimefunItemStack item,
-        @NotNull RecipeType recipeType,
-        ItemStack @NotNull [] recipe,
-        int amount) {
+            @NotNull ItemGroup itemGroup,
+            @NotNull SlimefunItemStack item,
+            @NotNull RecipeType recipeType,
+            ItemStack @NotNull [] recipe,
+            int amount) {
         super(itemGroup, item, recipeType, recipe);
         setMaxUseCount(amount);
     }
@@ -52,8 +50,7 @@ public class NetworkRake extends LimitedUseItem {
      *
      * @return The {@link ItemHandler} that should be added to this {@link SlimefunItem}
      */
-    @NotNull
-    @Override
+    @NotNull @Override
     public ItemUseHandler getItemHandler() {
         return this::onUse;
     }
@@ -66,7 +63,7 @@ public class NetworkRake extends LimitedUseItem {
             final Player player = e.getPlayer();
             final SlimefunItem slimefunItem = StorageCacheUtils.getSfItem(block.getLocation());
             if ((slimefunItem instanceof NetworkObject || slimefunItem instanceof ModelledItem)
-                && Slimefun.getProtectionManager().hasPermission(player, block, Interaction.BREAK_BLOCK)) {
+                    && Slimefun.getProtectionManager().hasPermission(player, block, Interaction.BREAK_BLOCK)) {
                 final BlockBreakEvent event = new BlockBreakEvent(block, player);
                 Networks.getPluginManager().callEvent(event);
                 if (event.isCancelled()) {

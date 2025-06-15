@@ -11,9 +11,9 @@ public enum Transformations {
     BRIDGE_1(new TransformationBuilder().scale(0.5f, 0.5f, 2f).build()),
     BRIDGE_3(new TransformationBuilder().scale(-1.5f, 1.5f, 0.8f).build()),
     BRIDGE_2(new TransformationBuilder()
-        .scale(2f, 1f, 1f)
-        .secondRotation(RotationFace.TOP, 90)
-        .build()),
+            .scale(2f, 1f, 1f)
+            .secondRotation(RotationFace.TOP, 90)
+            .build()),
     TWO(new TransformationBuilder().scale(1.9f, 2f, 1.9f).build()),
     NE_MODEL_CAPACITOR_5(new TransformationBuilder().scale(1.5f, -4f, 1.5f).build()),
     CLOCHE_BASE(new TransformationBuilder().scale(0.5f, 1f, 0.5f).build()),
@@ -36,10 +36,10 @@ public enum Transformations {
         // This corrects the visuals by rotating again
         if (itemDisplay && Networks.getInstance().getMCVersion().isAtLeast(MinecraftVersion.MC1_20)) {
             return new Transformation(
-                transformation.getTranslation(),
-                transformation.getLeftRotation(),
-                transformation.getScale(),
-                new Quaternionf(transformation.getRightRotation()).rotateY((float) Math.PI));
+                    transformation.getTranslation(),
+                    transformation.getLeftRotation(),
+                    transformation.getScale(),
+                    new Quaternionf(transformation.getRightRotation()).rotateY((float) Math.PI));
         }
         return transformation;
     }

@@ -15,12 +15,10 @@ import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
 import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
 import io.github.thebusybiscuit.slimefun4.core.handlers.ItemUseHandler;
-
 import java.text.MessageFormat;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
-
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -34,10 +32,10 @@ public class NetworkProbe extends SpecialSlimefunItem implements CanCooldown {
     private static final MessageFormat MESSAGE_FORMAT = new MessageFormat("{0}{1}: {2}{3}", Locale.ROOT);
 
     public NetworkProbe(
-        @NotNull ItemGroup itemGroup,
-        @NotNull SlimefunItemStack item,
-        @NotNull RecipeType recipeType,
-        ItemStack[] recipe) {
+            @NotNull ItemGroup itemGroup,
+            @NotNull SlimefunItemStack item,
+            @NotNull RecipeType recipeType,
+            ItemStack[] recipe) {
         super(itemGroup, item, recipeType, recipe);
     }
 
@@ -75,9 +73,9 @@ public class NetworkProbe extends SpecialSlimefunItem implements CanCooldown {
             final int transferGrabbers = root.getTransferGrabbers().size();
             final int transfers = root.getTransfers().size();
             final int lineTransferVanillaPushers =
-                root.getLineTransferVanillaPushers().size();
+                    root.getLineTransferVanillaPushers().size();
             final int lineTransferVanillaGrabbers =
-                root.getLineTransferVanillaGrabbers().size();
+                    root.getLineTransferVanillaGrabbers().size();
             final int inputOnlyMonitor = root.getInputOnlyMonitors().size();
             final int outputOnlyMonitor = root.getOutputOnlyMonitors().size();
             final int linePowerOutlets = root.getLinePowerOutlets().size();
@@ -91,12 +89,12 @@ public class NetworkProbe extends SpecialSlimefunItem implements CanCooldown {
             final int distinctItems = allNetworkItems.size();
 
             long totalItems = allNetworkItems.values().stream()
-                .mapToLong(integer -> integer)
-                .sum();
+                    .mapToLong(integer -> integer)
+                    .sum();
 
             final String nodeCount = root.getNodeCount() >= root.getMaxNodes()
-                ? Theme.ERROR + String.valueOf(root.getNodeCount()) + "+"
-                : String.valueOf(root.getNodeCount());
+                    ? Theme.ERROR + String.valueOf(root.getNodeCount()) + "+"
+                    : String.valueOf(root.getNodeCount());
 
             final ChatColor c = Theme.CLICK_INFO.getColor();
             final ChatColor p = Theme.SUCCESS.getColor();
@@ -116,25 +114,25 @@ public class NetworkProbe extends SpecialSlimefunItem implements CanCooldown {
             player.sendMessage(formatter(NetworksSlimefunItemStacks.NETWORK_PURGER.getDisplayName(), purgers));
             player.sendMessage(formatter(NetworksSlimefunItemStacks.NETWORK_AUTO_CRAFTER.getDisplayName(), crafters));
             player.sendMessage(formatter(
-                nullOrSpaces(NetworksSlimefunItemStacks.NETWORK_CAPACITOR_1.getDisplayName())
-                    .substring(0, 4),
-                powerNodes));
+                    nullOrSpaces(NetworksSlimefunItemStacks.NETWORK_CAPACITOR_1.getDisplayName())
+                            .substring(0, 4),
+                    powerNodes));
             player.sendMessage(
-                formatter(NetworksSlimefunItemStacks.NETWORK_POWER_DISPLAY.getDisplayName(), powerDisplays));
+                    formatter(NetworksSlimefunItemStacks.NETWORK_POWER_DISPLAY.getDisplayName(), powerDisplays));
             player.sendMessage(formatter(NetworksSlimefunItemStacks.NETWORK_RECIPE_ENCODER.getDisplayName(), encoders));
             player.sendMessage(formatter(NetworksSlimefunItemStacks.NETWORK_CONTROL_X.getDisplayName(), cutters));
             player.sendMessage(formatter(NetworksSlimefunItemStacks.NETWORK_CONTROL_V.getDisplayName(), pasters));
             player.sendMessage(formatter(NetworksSlimefunItemStacks.NETWORK_VACUUM.getDisplayName(), vacuums));
             player.sendMessage(formatter(
-                NetworksSlimefunItemStacks.NETWORK_WIRELESS_TRANSMITTER.getDisplayName(), wirelessTransmitters));
+                    NetworksSlimefunItemStacks.NETWORK_WIRELESS_TRANSMITTER.getDisplayName(), wirelessTransmitters));
             player.sendMessage(formatter(
-                NetworksSlimefunItemStacks.NETWORK_WIRELESS_RECEIVER.getDisplayName(), wirelessReceivers));
+                    NetworksSlimefunItemStacks.NETWORK_WIRELESS_RECEIVER.getDisplayName(), wirelessReceivers));
             player.sendMessage(formatter(
-                nullOrSpaces(NetworksSlimefunItemStacks.NETWORK_POWER_OUTLET_1.getDisplayName())
-                    .substring(0, 4),
-                powerOutlets));
+                    nullOrSpaces(NetworksSlimefunItemStacks.NETWORK_POWER_OUTLET_1.getDisplayName())
+                            .substring(0, 4),
+                    powerOutlets));
             player.sendMessage(
-                formatter(NetworksSlimefunItemStacks.NETWORK_GREEDY_BLOCK.getDisplayName(), greedyBlocks));
+                    formatter(NetworksSlimefunItemStacks.NETWORK_GREEDY_BLOCK.getDisplayName(), greedyBlocks));
 
             player.sendMessage(Lang.getString("messages.completed-operation.probe.split"));
             player.sendMessage(Lang.getString("messages.completed-operation.probe.expansion_title"));
@@ -142,24 +140,24 @@ public class NetworkProbe extends SpecialSlimefunItem implements CanCooldown {
             player.sendMessage(formatter(ExpansionItemStacks.ADVANCED_IMPORT.getDisplayName(), advancedImporters));
             player.sendMessage(formatter(ExpansionItemStacks.ADVANCED_EXPORT.getDisplayName(), advancedExporters));
             player.sendMessage(
-                formatter(ExpansionItemStacks.ADVANCED_GREEDY_BLOCK.getDisplayName(), advancedGreedyBlocks));
+                    formatter(ExpansionItemStacks.ADVANCED_GREEDY_BLOCK.getDisplayName(), advancedGreedyBlocks));
             player.sendMessage(formatter(ExpansionItemStacks.ADVANCED_PURGER.getDisplayName(), advancedPurgers));
             player.sendMessage(formatter(ExpansionItemStacks.ADVANCED_VACUUM.getDisplayName(), advancedVacuums));
             player.sendMessage(formatter(ExpansionItemStacks.TRANSFER.getDisplayName(), transfers));
             player.sendMessage(formatter(ExpansionItemStacks.TRANSFER_GRABBER.getDisplayName(), transferGrabbers));
             player.sendMessage(formatter(ExpansionItemStacks.TRANSFER_PUSHER.getDisplayName(), transferPushers));
             player.sendMessage(formatter(
-                ExpansionItemStacks.LINE_TRANSFER_VANILLA_PUSHER.getDisplayName(), lineTransferVanillaPushers));
+                    ExpansionItemStacks.LINE_TRANSFER_VANILLA_PUSHER.getDisplayName(), lineTransferVanillaPushers));
             player.sendMessage(formatter(
-                ExpansionItemStacks.LINE_TRANSFER_VANILLA_GRABBER.getDisplayName(), lineTransferVanillaGrabbers));
+                    ExpansionItemStacks.LINE_TRANSFER_VANILLA_GRABBER.getDisplayName(), lineTransferVanillaGrabbers));
             player.sendMessage(
-                formatter(ExpansionItemStacks.NETWORK_INPUT_ONLY_MONITOR.getDisplayName(), inputOnlyMonitor));
+                    formatter(ExpansionItemStacks.NETWORK_INPUT_ONLY_MONITOR.getDisplayName(), inputOnlyMonitor));
             player.sendMessage(
-                formatter(ExpansionItemStacks.NETWORK_OUTPUT_ONLY_MONITOR.getDisplayName(), outputOnlyMonitor));
+                    formatter(ExpansionItemStacks.NETWORK_OUTPUT_ONLY_MONITOR.getDisplayName(), outputOnlyMonitor));
             player.sendMessage(formatter(
-                nullOrSpaces(ExpansionItemStacks.LINE_POWER_OUTLET_1.getDisplayName())
-                    .substring(0, 6),
-                linePowerOutlets));
+                    nullOrSpaces(ExpansionItemStacks.LINE_POWER_OUTLET_1.getDisplayName())
+                            .substring(0, 6),
+                    linePowerOutlets));
             player.sendMessage(formatter(ExpansionItemStacks.NETWORK_BLUEPRINT_DECODER.getDisplayName(), decoders));
             player.sendMessage(formatter(ExpansionItemStacks.QUANTUM_MANAGER.getDisplayName(), quantumManagers));
             player.sendMessage(formatter(ExpansionItemStacks.DRAWER_MANAGER.getDisplayName(), drawerManagers));
@@ -167,11 +165,11 @@ public class NetworkProbe extends SpecialSlimefunItem implements CanCooldown {
             player.sendMessage(formatter(ExpansionItemStacks.ITEM_FLOW_VIEWER.getDisplayName(), itemFlowViewers));
             player.sendMessage(Lang.getString("messages.completed-operation.probe.split"));
             player.sendMessage(
-                formatter(Lang.getString("messages.completed-operation.probe.distinct_items"), distinctItems));
+                    formatter(Lang.getString("messages.completed-operation.probe.distinct_items"), distinctItems));
             player.sendMessage(formatter(Lang.getString("messages.completed-operation.probe.total_items"), totalItems));
             player.sendMessage(Lang.getString("messages.completed-operation.probe.split"));
             player.sendMessage(String.format(
-                Lang.getString("messages.completed-operation.probe.total_nodes"), nodeCount, root.getMaxNodes()));
+                    Lang.getString("messages.completed-operation.probe.total_nodes"), nodeCount, root.getMaxNodes()));
             if (root.isOverburdened()) {
                 player.sendMessage(Lang.getString("messages.completed-operation.probe.overburdened"));
             }
@@ -180,20 +178,20 @@ public class NetworkProbe extends SpecialSlimefunItem implements CanCooldown {
 
     public static @NotNull String formatter(String name, long count) {
         return MESSAGE_FORMAT
-            .format(
-                new Object[]{Theme.CLICK_INFO.getColor(), name, Theme.SUCCESS.getColor(), count},
-                new StringBuffer(),
-                null)
-            .toString();
+                .format(
+                        new Object[] {Theme.CLICK_INFO.getColor(), name, Theme.SUCCESS.getColor(), count},
+                        new StringBuffer(),
+                        null)
+                .toString();
     }
 
     public static @NotNull String formatter(String name, String s) {
         return MESSAGE_FORMAT
-            .format(
-                new Object[]{Theme.CLICK_INFO.getColor(), name, Theme.SUCCESS.getColor(), s},
-                new StringBuffer(),
-                null)
-            .toString();
+                .format(
+                        new Object[] {Theme.CLICK_INFO.getColor(), name, Theme.SUCCESS.getColor(), s},
+                        new StringBuffer(),
+                        null)
+                .toString();
     }
 
     public static @NotNull String nullOrSpaces(@Nullable String s) {

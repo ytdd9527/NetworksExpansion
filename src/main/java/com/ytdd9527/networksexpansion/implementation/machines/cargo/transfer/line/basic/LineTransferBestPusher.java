@@ -21,14 +21,12 @@ import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
 import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
 import io.github.thebusybiscuit.slimefun4.core.attributes.RecipeDisplayItem;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.items.CustomItemStack;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.function.Function;
-
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
 import org.bukkit.Color;
 import org.bukkit.Location;
@@ -49,9 +47,9 @@ public class LineTransferBestPusher extends NetworkDirectional implements Recipe
     private static final boolean DEFAULT_USE_SPECIAL_MODEL = false;
     private static final String KEY_UUID = "display-uuid";
     private static final int[] BACKGROUND_SLOTS =
-        new int[]{0, 1, 2, 3, 4, 5, 6, 8, 9, 10, 12, 13, 18, 20, 22, 23, 27, 28, 30, 31, 36, 37, 38, 39, 40, 41};
-    private static final int[] TEMPLATE_BACKGROUND = new int[]{7};
-    private static final int[] TEMPLATE_SLOTS = new int[]{15, 16, 17, 24, 25, 26, 33, 34, 35, 42, 43, 44};
+            new int[] {0, 1, 2, 3, 4, 5, 6, 8, 9, 10, 12, 13, 18, 20, 22, 23, 27, 28, 30, 31, 36, 37, 38, 39, 40, 41};
+    private static final int[] TEMPLATE_BACKGROUND = new int[] {7};
+    private static final int[] TEMPLATE_SLOTS = new int[] {15, 16, 17, 24, 25, 26, 33, 34, 35, 42, 43, 44};
     private static final int NORTH_SLOT = 11;
     private static final int SOUTH_SLOT = 29;
     private static final int EAST_SLOT = 21;
@@ -65,10 +63,10 @@ public class LineTransferBestPusher extends NetworkDirectional implements Recipe
     private int maxDistance;
 
     public LineTransferBestPusher(
-        @NotNull ItemGroup itemGroup,
-        @NotNull SlimefunItemStack item,
-        @NotNull RecipeType recipeType,
-        ItemStack[] recipe) {
+            @NotNull ItemGroup itemGroup,
+            @NotNull SlimefunItemStack item,
+            @NotNull RecipeType recipeType,
+            ItemStack[] recipe) {
         super(itemGroup, item, recipeType, recipe, NodeType.TRANSFER_PUSHER);
         for (int slot : TEMPLATE_SLOTS) {
             this.getSlotsToDrop().add(slot);
@@ -83,7 +81,7 @@ public class LineTransferBestPusher extends NetworkDirectional implements Recipe
         this.maxDistance = config.getInt("items." + configKey + ".max-distance", DEFAULT_MAX_DISTANCE);
         this.pushItemTick = config.getInt("items." + configKey + ".pushitem-tick", DEFAULT_PUSH_ITEM_TICK);
         this.useSpecialModel =
-            config.getBoolean("items." + configKey + ".use-special-model.enable", DEFAULT_USE_SPECIAL_MODEL);
+                config.getBoolean("items." + configKey + ".use-special-model.enable", DEFAULT_USE_SPECIAL_MODEL);
 
         Map<String, Function<Location, DisplayGroup>> generatorMap = new HashMap<>();
         generatorMap.put("cloche", DisplayGroupGenerators::generateCloche);
@@ -96,9 +94,9 @@ public class LineTransferBestPusher extends NetworkDirectional implements Recipe
             this.displayGroupGenerator = generatorMap.get(generatorKey);
             if (this.displayGroupGenerator == null) {
                 Networks.getInstance()
-                    .getLogger()
-                    .warning(String.format(
-                        Lang.getString("messages.unsupported-operation.display.unknown_type"), generatorKey));
+                        .getLogger()
+                        .warning(String.format(
+                                Lang.getString("messages.unsupported-operation.display.unknown_type"), generatorKey));
                 this.useSpecialModel = false;
             }
         }
@@ -164,13 +162,13 @@ public class LineTransferBestPusher extends NetworkDirectional implements Recipe
 
         final boolean drawParticle = blockMenu.hasViewer();
         LineOperationUtil.doOperation(
-            blockMenu.getLocation(),
-            direction,
-            maxDistance,
-            false,
-            false,
-            (targetMenu) -> LineOperationUtil.pushItem(
-                blockMenu.getLocation(), root, targetMenu, templates, TransportMode.FIRST_STOP, 64));
+                blockMenu.getLocation(),
+                direction,
+                maxDistance,
+                false,
+                false,
+                (targetMenu) -> LineOperationUtil.pushItem(
+                        blockMenu.getLocation(), root, targetMenu, templates, TransportMode.FIRST_STOP, 64));
         sendFeedback(blockMenu.getLocation(), FeedbackType.WORKING);
     }
 
@@ -184,8 +182,7 @@ public class LineTransferBestPusher extends NetworkDirectional implements Recipe
         return TEMPLATE_BACKGROUND;
     }
 
-    @Nullable
-    @Override
+    @Nullable @Override
     protected ItemStack getOtherBackgroundStack() {
         return Icon.PUSHER_TEMPLATE_BACKGROUND_STACK;
     }
@@ -250,9 +247,9 @@ public class LineTransferBestPusher extends NetworkDirectional implements Recipe
     private void setupDisplay(@NotNull Location location) {
         if (this.displayGroupGenerator != null) {
             DisplayGroup displayGroup =
-                this.displayGroupGenerator.apply(location.clone().add(0.5, 0, 0.5));
+                    this.displayGroupGenerator.apply(location.clone().add(0.5, 0, 0.5));
             StorageCacheUtils.setData(
-                location, KEY_UUID, displayGroup.getParentUUID().toString());
+                    location, KEY_UUID, displayGroup.getParentUUID().toString());
         }
     }
 
@@ -263,8 +260,7 @@ public class LineTransferBestPusher extends NetworkDirectional implements Recipe
         }
     }
 
-    @Nullable
-    private UUID getDisplayGroupUUID(@NotNull Location location) {
+    @Nullable private UUID getDisplayGroupUUID(@NotNull Location location) {
         String uuid = StorageCacheUtils.getData(location, KEY_UUID);
         if (uuid == null) {
             return null;
@@ -272,8 +268,7 @@ public class LineTransferBestPusher extends NetworkDirectional implements Recipe
         return UUID.fromString(uuid);
     }
 
-    @Nullable
-    private DisplayGroup getDisplayGroup(@NotNull Location location) {
+    @Nullable private DisplayGroup getDisplayGroup(@NotNull Location location) {
         UUID uuid = getDisplayGroupUUID(location);
         if (uuid == null) {
             return null;
@@ -281,16 +276,15 @@ public class LineTransferBestPusher extends NetworkDirectional implements Recipe
         return DisplayGroup.fromUUID(uuid);
     }
 
-    @NotNull
-    @Override
+    @NotNull @Override
     public List<ItemStack> getDisplayRecipes() {
         List<ItemStack> displayRecipes = new ArrayList<>(6);
         displayRecipes.add(new CustomItemStack(
-            Material.BOOK,
-            Lang.getString("icons.mechanism.transfers.data_title"),
-            "",
-            String.format(Lang.getString("icons.mechanism.transfers.max_distance"), maxDistance),
-            String.format(Lang.getString("icons.mechanism.transfers.push_item_tick"), pushItemTick)));
+                Material.BOOK,
+                Lang.getString("icons.mechanism.transfers.data_title"),
+                "",
+                String.format(Lang.getString("icons.mechanism.transfers.max_distance"), maxDistance),
+                String.format(Lang.getString("icons.mechanism.transfers.push_item_tick"), pushItemTick)));
         return displayRecipes;
     }
 }

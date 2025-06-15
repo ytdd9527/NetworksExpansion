@@ -19,14 +19,12 @@ import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
 import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
 import io.github.thebusybiscuit.slimefun4.core.attributes.RecipeDisplayItem;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.items.CustomItemStack;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.function.Function;
-
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
 import org.bukkit.Color;
 import org.bukkit.Location;
@@ -52,10 +50,10 @@ public class TransferGrabber extends NetworkDirectional implements RecipeDisplay
     private int grabItemTick;
 
     public TransferGrabber(
-        @NotNull ItemGroup itemGroup,
-        @NotNull SlimefunItemStack item,
-        @NotNull RecipeType recipeType,
-        ItemStack[] recipe) {
+            @NotNull ItemGroup itemGroup,
+            @NotNull SlimefunItemStack item,
+            @NotNull RecipeType recipeType,
+            ItemStack[] recipe) {
         super(itemGroup, item, recipeType, recipe, NodeType.TRANSFER_GRABBER);
         loadConfigurations();
     }
@@ -66,7 +64,7 @@ public class TransferGrabber extends NetworkDirectional implements RecipeDisplay
 
         this.grabItemTick = config.getInt("items." + configKey + ".grabitem-tick", DEFAULT_GRAB_ITEM_TICK);
         this.useSpecialModel =
-            config.getBoolean("items." + configKey + ".use-special-model.enable", DEFAULT_USE_SPECIAL_MODEL);
+                config.getBoolean("items." + configKey + ".use-special-model.enable", DEFAULT_USE_SPECIAL_MODEL);
 
         Map<String, Function<Location, DisplayGroup>> generatorMap = new HashMap<>();
         generatorMap.put("cloche", DisplayGroupGenerators::generateCloche);
@@ -78,9 +76,9 @@ public class TransferGrabber extends NetworkDirectional implements RecipeDisplay
             this.displayGroupGenerator = generatorMap.get(generatorKey);
             if (this.displayGroupGenerator == null) {
                 Networks.getInstance()
-                    .getLogger()
-                    .warning(String.format(
-                        Lang.getString("messages.unsupported-operation.display.unknown_type"), generatorKey));
+                        .getLogger()
+                        .warning(String.format(
+                                Lang.getString("messages.unsupported-operation.display.unknown_type"), generatorKey));
                 this.useSpecialModel = false;
             }
         }
@@ -139,13 +137,13 @@ public class TransferGrabber extends NetworkDirectional implements RecipeDisplay
         final NetworkRoot root = definition.getNode().getRoot();
 
         LineOperationUtil.doOperation(
-            blockMenu.getLocation(),
-            direction,
-            1,
-            false,
-            false,
-            (targetMenu) -> LineOperationUtil.grabItem(
-                blockMenu.getLocation(), root, targetMenu, TransportMode.FIRST_STOP, 64));
+                blockMenu.getLocation(),
+                direction,
+                1,
+                false,
+                false,
+                (targetMenu) -> LineOperationUtil.grabItem(
+                        blockMenu.getLocation(), root, targetMenu, TransportMode.FIRST_STOP, 64));
         sendFeedback(blockMenu.getLocation(), FeedbackType.WORKING);
     }
 
@@ -174,9 +172,9 @@ public class TransferGrabber extends NetworkDirectional implements RecipeDisplay
     private void setupDisplay(@NotNull Location location) {
         if (this.displayGroupGenerator != null) {
             DisplayGroup displayGroup =
-                this.displayGroupGenerator.apply(location.clone().add(0.5, 0, 0.5));
+                    this.displayGroupGenerator.apply(location.clone().add(0.5, 0, 0.5));
             StorageCacheUtils.setData(
-                location, KEY_UUID, displayGroup.getParentUUID().toString());
+                    location, KEY_UUID, displayGroup.getParentUUID().toString());
         }
     }
 
@@ -187,8 +185,7 @@ public class TransferGrabber extends NetworkDirectional implements RecipeDisplay
         }
     }
 
-    @Nullable
-    private UUID getDisplayGroupUUID(@NotNull Location location) {
+    @Nullable private UUID getDisplayGroupUUID(@NotNull Location location) {
         String uuid = StorageCacheUtils.getData(location, KEY_UUID);
         if (uuid == null) {
             return null;
@@ -196,8 +193,7 @@ public class TransferGrabber extends NetworkDirectional implements RecipeDisplay
         return UUID.fromString(uuid);
     }
 
-    @Nullable
-    private DisplayGroup getDisplayGroup(@NotNull Location location) {
+    @Nullable private DisplayGroup getDisplayGroup(@NotNull Location location) {
         UUID uuid = getDisplayGroupUUID(location);
         if (uuid == null) {
             return null;
@@ -205,15 +201,14 @@ public class TransferGrabber extends NetworkDirectional implements RecipeDisplay
         return DisplayGroup.fromUUID(uuid);
     }
 
-    @NotNull
-    @Override
+    @NotNull @Override
     public List<ItemStack> getDisplayRecipes() {
         List<ItemStack> displayRecipes = new ArrayList<>(6);
         displayRecipes.add(new CustomItemStack(
-            Material.BOOK,
-            Lang.getString("icons.mechanism.transfers.data_title"),
-            "",
-            String.format(Lang.getString("icons.mechanism.transfers.grab_item_tick"), grabItemTick)));
+                Material.BOOK,
+                Lang.getString("icons.mechanism.transfers.data_title"),
+                "",
+                String.format(Lang.getString("icons.mechanism.transfers.grab_item_tick"), grabItemTick)));
         return displayRecipes;
     }
 }

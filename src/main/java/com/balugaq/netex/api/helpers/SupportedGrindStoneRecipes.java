@@ -9,10 +9,8 @@ import io.github.thebusybiscuit.slimefun4.core.multiblocks.MultiBlockMachine;
 import io.github.thebusybiscuit.slimefun4.implementation.Slimefun;
 import io.github.thebusybiscuit.slimefun4.implementation.SlimefunItems;
 import io.github.thebusybiscuit.slimefun4.implementation.items.backpacks.SlimefunBackpack;
-
 import java.util.HashMap;
 import java.util.Map;
-
 import lombok.experimental.UtilityClass;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;

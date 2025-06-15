@@ -3,12 +3,11 @@ package io.github.sefiraat.networks;
 import io.github.bakedlibs.dough.blocks.ChunkPosition;
 import io.github.sefiraat.networks.network.NetworkNode;
 import io.github.sefiraat.networks.network.NodeDefinition;
-
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-
 import lombok.experimental.UtilityClass;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
@@ -79,5 +78,9 @@ public class NetworkStorage {
         synchronized (ALL_NETWORK_OBJECTS_BY_CHUNK) {
             ALL_NETWORK_OBJECTS_BY_CHUNK.remove(chunkPosition);
         }
+    }
+
+    public static Map<Location, NodeDefinition> getAllNetworkObjects() {
+        return new HashMap<>(ALL_NETWORK_OBJECTS);
     }
 }

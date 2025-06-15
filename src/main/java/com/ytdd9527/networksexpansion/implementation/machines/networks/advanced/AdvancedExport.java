@@ -25,10 +25,8 @@ import io.github.thebusybiscuit.slimefun4.core.handlers.BlockBreakHandler;
 import io.github.thebusybiscuit.slimefun4.implementation.Slimefun;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.protection.Interaction;
 import io.github.thebusybiscuit.slimefun4.utils.ChestMenuUtils;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import me.mrCookieSlime.Slimefun.Objects.handlers.BlockTicker;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenuPreset;
@@ -58,10 +56,10 @@ public class AdvancedExport extends NetworkObject implements RecipeDisplayItem {
     private final @NotNull ItemSetting<Integer> tickRate;
 
     public AdvancedExport(
-        @NotNull ItemGroup itemGroup,
-        @NotNull SlimefunItemStack item,
-        @NotNull RecipeType recipeType,
-        ItemStack[] recipe) {
+            @NotNull ItemGroup itemGroup,
+            @NotNull SlimefunItemStack item,
+            @NotNull RecipeType recipeType,
+            ItemStack[] recipe) {
         super(itemGroup, item, recipeType, recipe, NodeType.ADVANCED_EXPORT);
         this.tickRate = new IntRangeSetting(this, "tick_rate", 1, 1, 10);
         addItemSetting(this.tickRate);
@@ -74,50 +72,50 @@ public class AdvancedExport extends NetworkObject implements RecipeDisplayItem {
         }
 
         addItemHandler(
-            new BlockTicker() {
+                new BlockTicker() {
 
-                private int tick = 1;
+                    private int tick = 1;
 
-                @Override
-                public boolean isSynchronized() {
-                    return false;
-                }
+                    @Override
+                    public boolean isSynchronized() {
+                        return false;
+                    }
 
-                @Override
-                public void tick(@NotNull Block block, SlimefunItem item, @NotNull SlimefunBlockData data) {
-                    if (tick <= 1) {
-                        final BlockMenu blockMenu = data.getBlockMenu();
+                    @Override
+                    public void tick(@NotNull Block block, SlimefunItem item, @NotNull SlimefunBlockData data) {
+                        if (tick <= 1) {
+                            final BlockMenu blockMenu = data.getBlockMenu();
+                            if (blockMenu == null) {
+                                return;
+                            }
+                            addToRegistry(block);
+                            tryFetchItem(blockMenu);
+                        }
+                    }
+
+                    @Override
+                    public void uniqueTick() {
+                        tick = tick <= 1 ? tickRate.getValue() : tick - 1;
+                    }
+                },
+                new BlockBreakHandler(true, true) {
+                    @Override
+                    public void onPlayerBreak(
+                            @NotNull BlockBreakEvent e, @NotNull ItemStack item, @NotNull List<ItemStack> drops) {
+                        BlockMenu blockMenu =
+                                StorageCacheUtils.getMenu(e.getBlock().getLocation());
                         if (blockMenu == null) {
                             return;
                         }
-                        addToRegistry(block);
-                        tryFetchItem(blockMenu);
-                    }
-                }
 
-                @Override
-                public void uniqueTick() {
-                    tick = tick <= 1 ? tickRate.getValue() : tick - 1;
-                }
-            },
-            new BlockBreakHandler(true, true) {
-                @Override
-                public void onPlayerBreak(
-                    @NotNull BlockBreakEvent e, @NotNull ItemStack item, @NotNull List<ItemStack> drops) {
-                    BlockMenu blockMenu =
-                        StorageCacheUtils.getMenu(e.getBlock().getLocation());
-                    if (blockMenu == null) {
-                        return;
+                        for (int testitemslot : getTestSlots()) {
+                            blockMenu.dropItems(blockMenu.getLocation(), testitemslot);
+                        }
+                        for (int outputitemslot : getOutputSlots()) {
+                            blockMenu.dropItems(blockMenu.getLocation(), outputitemslot);
+                        }
                     }
-
-                    for (int testitemslot : getTestSlots()) {
-                        blockMenu.dropItems(blockMenu.getLocation(), testitemslot);
-                    }
-                    for (int outputitemslot : getOutputSlots()) {
-                        blockMenu.dropItems(blockMenu.getLocation(), outputitemslot);
-                    }
-                }
-            });
+                });
     }
 
     private void tryFetchItem(@NotNull BlockMenu blockMenu) {
@@ -173,11 +171,11 @@ public class AdvancedExport extends NetworkObject implements RecipeDisplayItem {
     }
 
     private void placeItems(
-        @NotNull NetworkRoot root,
-        @NotNull BlockMenu blockMenu,
-        @NotNull ItemStack itemStack,
-        int itemAmount,
-        int[] outputSlots) {
+            @NotNull NetworkRoot root,
+            @NotNull BlockMenu blockMenu,
+            @NotNull ItemStack itemStack,
+            int itemAmount,
+            int[] outputSlots) {
         BlockMenuUtil.pushItem(blockMenu, itemStack, outputSlots);
 
         if (itemStack.getAmount() > 0) {
@@ -208,9 +206,9 @@ public class AdvancedExport extends NetworkObject implements RecipeDisplayItem {
             @Override
             public boolean canOpen(@NotNull Block block, @NotNull Player player) {
                 return player.hasPermission("slimefun.inventory.bypass")
-                    || (ExpansionItems.ADVANCED_EXPORT.canUse(player, false)
-                    && Slimefun.getProtectionManager()
-                    .hasPermission(player, block.getLocation(), Interaction.INTERACT_BLOCK));
+                        || (ExpansionItems.ADVANCED_EXPORT.canUse(player, false)
+                                && Slimefun.getProtectionManager()
+                                        .hasPermission(player, block.getLocation(), Interaction.INTERACT_BLOCK));
             }
 
             @Override
@@ -231,8 +229,7 @@ public class AdvancedExport extends NetworkObject implements RecipeDisplayItem {
         return OUTPUT_ITEM_SLOTS;
     }
 
-    @NotNull
-    @Override
+    @NotNull @Override
     public List<ItemStack> getDisplayRecipes() {
         List<ItemStack> displayRecipes = new ArrayList<>();
         displayRecipes.add(Lang.getMechanism("export"));

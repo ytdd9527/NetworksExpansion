@@ -2,7 +2,6 @@ package com.balugaq.netex.api.algorithm;
 
 import java.util.Comparator;
 import java.util.function.Function;
-
 import org.jetbrains.annotations.NotNull;
 
 /**

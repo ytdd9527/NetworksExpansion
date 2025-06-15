@@ -24,11 +24,9 @@ import io.github.thebusybiscuit.slimefun4.implementation.Slimefun;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.items.CustomItemStack;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.protection.Interaction;
 import io.github.thebusybiscuit.slimefun4.utils.ChestMenuUtils;
-
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-
 import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.ClickAction;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenuPreset;
@@ -70,16 +68,15 @@ public class NetworkCraftingGridNewStyle extends AbstractGridNewStyle implements
     private static final Map<Location, GridCache> CACHE_MAP = new HashMap<>();
 
     public NetworkCraftingGridNewStyle(
-        @NotNull ItemGroup itemGroup,
-        @NotNull SlimefunItemStack item,
-        @NotNull RecipeType recipeType,
-        ItemStack[] recipe) {
+            @NotNull ItemGroup itemGroup,
+            @NotNull SlimefunItemStack item,
+            @NotNull RecipeType recipeType,
+            ItemStack[] recipe) {
         super(itemGroup, item, recipeType, recipe);
     }
 
     @Override
-    @NotNull
-    protected BlockMenuPreset getPreset() {
+    @NotNull protected BlockMenuPreset getPreset() {
         return new BlockMenuPreset(this.getId(), this.getItemName()) {
 
             @Override
@@ -92,9 +89,9 @@ public class NetworkCraftingGridNewStyle extends AbstractGridNewStyle implements
             @Override
             public boolean canOpen(@NotNull Block block, @NotNull Player player) {
                 return player.hasPermission("slimefun.inventory.bypass")
-                    || (ExpansionItems.NETWORK_CRAFTING_GRID_NEW_STYLE.canUse(player, false)
-                    && Slimefun.getProtectionManager()
-                    .hasPermission(player, block.getLocation(), Interaction.INTERACT_BLOCK));
+                        || (ExpansionItems.NETWORK_CRAFTING_GRID_NEW_STYLE.canUse(player, false)
+                                && Slimefun.getProtectionManager()
+                                        .hasPermission(player, block.getLocation(), Interaction.INTERACT_BLOCK));
             }
 
             @Override
@@ -119,9 +116,9 @@ public class NetworkCraftingGridNewStyle extends AbstractGridNewStyle implements
                 menu.addMenuClickHandler(getPageNext(), (p, slot, item, action) -> {
                     GridCache gridCache = getCacheMap().get(menu.getLocation());
                     gridCache.setPage(
-                        gridCache.getPage() >= gridCache.getMaxPages()
-                            ? gridCache.getMaxPages()
-                            : gridCache.getPage() + 1);
+                            gridCache.getPage() >= gridCache.getMaxPages()
+                                    ? gridCache.getMaxPages()
+                                    : gridCache.getPage() + 1);
                     getCacheMap().put(menu.getLocation(), gridCache);
                     updateDisplay(menu);
                     return false;
@@ -175,8 +172,8 @@ public class NetworkCraftingGridNewStyle extends AbstractGridNewStyle implements
 
                 ItemStack exist = menu.getItemInSlot(getAutoFilterSlot());
                 if (exist != null
-                    && exist.getType() != Material.AIR
-                    && !StackUtils.itemsMatch(exist, ChestMenuUtils.getBackground())) {
+                        && exist.getType() != Material.AIR
+                        && !StackUtils.itemsMatch(exist, ChestMenuUtils.getBackground())) {
                     // drop item
                     menu.getLocation().getWorld().dropItemNaturally(menu.getLocation(), exist);
                 }
@@ -201,8 +198,7 @@ public class NetworkCraftingGridNewStyle extends AbstractGridNewStyle implements
         };
     }
 
-    @NotNull
-    public Map<Location, GridCache> getCacheMap() {
+    @NotNull public Map<Location, GridCache> getCacheMap() {
         return CACHE_MAP;
     }
 
@@ -273,7 +269,7 @@ public class NetworkCraftingGridNewStyle extends AbstractGridNewStyle implements
 
         // Go through each slimefun recipe, test and set the ItemStack if found
         for (Map.Entry<ItemStack[], ItemStack> entry :
-            SupportedCraftingTableRecipes.getRecipes().entrySet()) {
+                SupportedCraftingTableRecipes.getRecipes().entrySet()) {
             if (SupportedCraftingTableRecipes.testRecipe(inputs, entry.getKey())) {
                 crafted = entry.getValue().clone();
                 matched = entry;
@@ -284,8 +280,8 @@ public class NetworkCraftingGridNewStyle extends AbstractGridNewStyle implements
         // If no slimefun recipe found, try a vanilla one
         if (crafted == null) {
             ItemStack[] _inputs = Arrays.stream(inputs.clone())
-                .map(itemStack -> itemStack != null ? StackUtils.getAsQuantity(itemStack, 1) : null)
-                .toArray(ItemStack[]::new);
+                    .map(itemStack -> itemStack != null ? StackUtils.getAsQuantity(itemStack, 1) : null)
+                    .toArray(ItemStack[]::new);
             crafted = Bukkit.craftItem(_inputs.clone(), player.getWorld(), player);
             Map<ItemStack[], ItemStack> v = new HashMap<>();
             v.put(_inputs, crafted);
@@ -361,20 +357,20 @@ public class NetworkCraftingGridNewStyle extends AbstractGridNewStyle implements
             if (StackUtils.itemsMatch(itemStack, new ItemStack(itemStack.getType()))) {
                 switch (itemStack.getType()) {
                     case WATER_BUCKET,
-                         LAVA_BUCKET,
-                         MILK_BUCKET,
-                         COD_BUCKET,
-                         SALMON_BUCKET,
-                         PUFFERFISH_BUCKET,
-                         TROPICAL_FISH_BUCKET,
-                         AXOLOTL_BUCKET,
-                         POWDER_SNOW_BUCKET,
-                         TADPOLE_BUCKET -> root.addItemStack0(
-                        menu.getLocation(), new ItemStack(Material.BUCKET, entry.getValue()));
+                            LAVA_BUCKET,
+                            MILK_BUCKET,
+                            COD_BUCKET,
+                            SALMON_BUCKET,
+                            PUFFERFISH_BUCKET,
+                            TROPICAL_FISH_BUCKET,
+                            AXOLOTL_BUCKET,
+                            POWDER_SNOW_BUCKET,
+                            TADPOLE_BUCKET -> root.addItemStack0(
+                            menu.getLocation(), new ItemStack(Material.BUCKET, entry.getValue()));
                     case POTION, SPLASH_POTION, LINGERING_POTION, HONEY_BOTTLE, DRAGON_BREATH -> root.addItemStack0(
-                        menu.getLocation(), new ItemStack(Material.GLASS_BOTTLE, entry.getValue()));
+                            menu.getLocation(), new ItemStack(Material.GLASS_BOTTLE, entry.getValue()));
                     case MUSHROOM_STEW, BEETROOT_SOUP, RABBIT_STEW, SUSPICIOUS_STEW -> root.addItemStack0(
-                        menu.getLocation(), new ItemStack(Material.BOWL, entry.getValue()));
+                            menu.getLocation(), new ItemStack(Material.BOWL, entry.getValue()));
                 }
             }
         }
@@ -394,13 +390,13 @@ public class NetworkCraftingGridNewStyle extends AbstractGridNewStyle implements
         if (crafted != null) {
             BlockMenuUtil.pushItem(menu, crafted, OUTPUT_SLOT);
             menu.replaceExistingItem(
-                CRAFT_BUTTON_SLOT,
-                ItemStackUtil.getCleanItem(new CustomItemStack(
-                    Icon.CRAFT_BUTTON_NEW_STYLE,
-                    String.format(
-                        Lang.getString("messages.normal-operation.grid_new_style.crafted"),
-                        ItemStackHelper.getDisplayName(crafted),
-                        outputAmount))));
+                    CRAFT_BUTTON_SLOT,
+                    ItemStackUtil.getCleanItem(new CustomItemStack(
+                            Icon.CRAFT_BUTTON_NEW_STYLE,
+                            String.format(
+                                    Lang.getString("messages.normal-operation.grid_new_style.crafted"),
+                                    ItemStackHelper.getDisplayName(crafted),
+                                    outputAmount))));
         }
     }
 

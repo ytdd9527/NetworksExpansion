@@ -21,24 +21,21 @@ import org.jetbrains.annotations.NotNull;
 public class PersistentCraftingBlueprintType implements PersistentDataType<PersistentDataContainer, BlueprintInstance> {
 
     public static final PersistentDataType<PersistentDataContainer, BlueprintInstance> TYPE =
-        new PersistentCraftingBlueprintType();
+            new PersistentCraftingBlueprintType();
 
     @Override
-    @NotNull
-    public Class<PersistentDataContainer> getPrimitiveType() {
+    @NotNull public Class<PersistentDataContainer> getPrimitiveType() {
         return PersistentDataContainer.class;
     }
 
     @Override
-    @NotNull
-    public Class<BlueprintInstance> getComplexType() {
+    @NotNull public Class<BlueprintInstance> getComplexType() {
         return BlueprintInstance.class;
     }
 
     @Override
-    @NotNull
-    public PersistentDataContainer toPrimitive(
-        @NotNull BlueprintInstance complex, @NotNull PersistentDataAdapterContext context) {
+    @NotNull public PersistentDataContainer toPrimitive(
+            @NotNull BlueprintInstance complex, @NotNull PersistentDataAdapterContext context) {
         final PersistentDataContainer container = context.newPersistentDataContainer();
 
         container.set(Keys.RECIPE, DataType.ITEM_STACK_ARRAY, complex.getRecipeItems());
@@ -49,9 +46,8 @@ public class PersistentCraftingBlueprintType implements PersistentDataType<Persi
     }
 
     @Override
-    @NotNull
-    public BlueprintInstance fromPrimitive(
-        @NotNull PersistentDataContainer primitive, @NotNull PersistentDataAdapterContext context) {
+    @NotNull public BlueprintInstance fromPrimitive(
+            @NotNull PersistentDataContainer primitive, @NotNull PersistentDataAdapterContext context) {
         ItemStack[] recipe = primitive.get(Keys.RECIPE, DataType.ITEM_STACK_ARRAY);
         if (recipe == null) {
             recipe = primitive.get(Keys.RECIPE2, DataType.ITEM_STACK_ARRAY);

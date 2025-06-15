@@ -13,16 +13,14 @@ public class BlueprintInstance extends ItemStackCache {
     @Getter
     private final ItemStack[] recipeItems;
 
-    @Nullable
-    private Recipe recipe = null;
+    @Nullable private Recipe recipe = null;
 
     public BlueprintInstance(@NotNull ItemStack[] recipeItems, @NotNull ItemStack expectedOutput) {
         super(expectedOutput);
         this.recipeItems = recipeItems;
     }
 
-    @Nullable
-    public Recipe getRecipe() {
+    @Nullable public Recipe getRecipe() {
         return recipe;
     }
 

@@ -1,9 +1,7 @@
 package com.balugaq.netex.api.data;
 
 import io.github.sefiraat.networks.utils.StackUtils;
-
 import java.util.List;
-
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.RecipeChoice;
 import org.jetbrains.annotations.NotNull;

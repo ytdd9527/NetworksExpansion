@@ -19,9 +19,7 @@ import io.github.thebusybiscuit.slimefun4.core.handlers.ItemUseHandler;
 import io.github.thebusybiscuit.slimefun4.implementation.Slimefun;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.data.persistent.PersistentDataAPI;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.protection.Interaction;
-
 import java.util.Optional;
-
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -33,10 +31,10 @@ import org.jetbrains.annotations.NotNull;
 public class NetworkConfigurator extends SpecialSlimefunItem {
 
     public NetworkConfigurator(
-        @NotNull ItemGroup itemGroup,
-        @NotNull SlimefunItemStack item,
-        @NotNull RecipeType recipeType,
-        ItemStack[] recipe) {
+            @NotNull ItemGroup itemGroup,
+            @NotNull SlimefunItemStack item,
+            @NotNull RecipeType recipeType,
+            ItemStack[] recipe) {
         super(itemGroup, item, recipeType, recipe);
         addItemHandler((ItemUseHandler) e -> {
             final Player player = e.getPlayer();
@@ -57,17 +55,17 @@ public class NetworkConfigurator extends SpecialSlimefunItem {
                                 int amount = advancedDirectional.getLimitQuantity(blockMenu.getLocation());
                                 DataTypeMethods.setCustom(itemMeta, Keys.AMOUNT, DataType.INTEGER, amount);
                                 player.sendMessage(String.format(
-                                    Lang.getString(
-                                        "messages.completed-operation.configurator.copied_limit_quantity"),
-                                    amount));
+                                        Lang.getString(
+                                                "messages.completed-operation.configurator.copied_limit_quantity"),
+                                        amount));
                                 TransportMode transportMode =
-                                    advancedDirectional.getCurrentTransportMode(blockMenu.getLocation());
+                                        advancedDirectional.getCurrentTransportMode(blockMenu.getLocation());
                                 DataTypeMethods.setCustom(
-                                    itemMeta, Keys.TRANSFER_MODE, DataType.STRING, String.valueOf(transportMode));
+                                        itemMeta, Keys.TRANSFER_MODE, DataType.STRING, String.valueOf(transportMode));
                                 player.sendMessage(String.format(
-                                    Lang.getString(
-                                        "messages.completed-operation.configurator.copied_transport_mode"),
-                                    transportMode));
+                                        Lang.getString(
+                                                "messages.completed-operation.configurator.copied_transport_mode"),
+                                        transportMode));
                                 e.getItem().setItemMeta(itemMeta);
                             }
                             setConfigurator(directional, e.getItem(), blockMenu, player);
@@ -78,15 +76,15 @@ public class NetworkConfigurator extends SpecialSlimefunItem {
                                 if (amount != null) {
                                     advancedDirectional.setLimitQuantity(blockMenu.getLocation(), amount);
                                     player.sendMessage(Lang.getString(
-                                        "messages.completed-operation.configurator.pasted_limit_quantity"));
+                                            "messages.completed-operation.configurator.pasted_limit_quantity"));
                                 }
                                 String transportMode =
-                                    DataTypeMethods.getCustom(itemMeta, Keys.TRANSFER_MODE, DataType.STRING);
+                                        DataTypeMethods.getCustom(itemMeta, Keys.TRANSFER_MODE, DataType.STRING);
                                 if (transportMode != null) {
                                     advancedDirectional.setTransportMode(
-                                        blockMenu.getLocation(), TransportMode.valueOf(transportMode));
+                                            blockMenu.getLocation(), TransportMode.valueOf(transportMode));
                                     player.sendMessage(Lang.getString(
-                                        "messages.completed-operation.configurator.pasted_transport_mode"));
+                                            "messages.completed-operation.configurator.pasted_transport_mode"));
                                 }
                                 advancedDirectional.updateShowIcon(blockMenu.getLocation());
                                 advancedDirectional.updateTransportModeIcon(blockMenu.getLocation());
@@ -95,7 +93,7 @@ public class NetworkConfigurator extends SpecialSlimefunItem {
                         }
                     } else {
                         player.sendMessage(
-                            Lang.getString("messages.unsupported-operation.configurator.not_a_pasteable_block"));
+                                Lang.getString("messages.unsupported-operation.configurator.not_a_pasteable_block"));
                     }
                 }
             }
@@ -104,10 +102,10 @@ public class NetworkConfigurator extends SpecialSlimefunItem {
     }
 
     private void setConfigurator(
-        @NotNull NetworkDirectional directional,
-        @NotNull ItemStack itemStack,
-        @NotNull BlockMenu blockMenu,
-        @NotNull Player player) {
+            @NotNull NetworkDirectional directional,
+            @NotNull ItemStack itemStack,
+            @NotNull BlockMenu blockMenu,
+            @NotNull Player player) {
         BlockFace blockFace = NetworkDirectional.getSelectedFace(blockMenu.getLocation());
         if (blockFace == null) {
             blockFace = AdvancedDirectional.getSelectedFace(blockMenu.getLocation());

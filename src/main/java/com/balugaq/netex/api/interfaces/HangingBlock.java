@@ -8,14 +8,14 @@ import io.github.sefiraat.networks.slimefun.network.NetworkObject;
 import io.github.sefiraat.networks.utils.Keys;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
 import io.papermc.paper.event.player.PlayerItemFrameChangeEvent;
-
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Function;
 import javax.annotation.OverridingMethodsMustInvokeSuper;
-
+import javax.annotation.ParametersAreNonnullByDefault;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
@@ -23,12 +23,28 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.ItemFrame;
 import org.bukkit.event.hanging.HangingPlaceEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public interface HangingBlock {
+    Map<BlockFace, Function<Location, Location>> locationFixer = new HashMap<>() {
+        {
+            put(BlockFace.NORTH, loc -> loc.clone().setDirection(BlockFace.NORTH.getDirection()));
+            put(BlockFace.SOUTH, loc -> loc.clone().setDirection(BlockFace.SOUTH.getDirection()));
+            put(BlockFace.EAST, loc -> loc.clone().setDirection(BlockFace.EAST.getDirection()));
+            put(BlockFace.WEST, loc -> loc.clone().setDirection(BlockFace.WEST.getDirection()));
+            put(BlockFace.UP, loc -> loc.clone().setDirection(BlockFace.UP.getDirection()));
+            put(BlockFace.DOWN, loc -> loc.clone().setDirection(BlockFace.DOWN.getDirection()));
+        }
+    };
+
+    default Location getFixedLocation(@NotNull Location location, @NotNull BlockFace attachSide) {
+        return locationFixer.get(attachSide).apply(location);
+    }
+
     Map<String, HangingBlock> REGISTRY = new HashMap<>();
     Map<Location, Map<BlockFace, HangingBlock>> hangingBlocks = new HashMap<>();
     String BS_NORTH = "netex-hanging-north";
@@ -37,7 +53,6 @@ public interface HangingBlock {
     String BS_WEST = "netex-hanging-west";
     String BS_UP = "netex-hanging-up";
     String BS_DOWN = "netex-hanging-down";
-    String HANGING_attachon_BLOCK_ID = "NTW_EXPANSION_HANGING_attachon_BLOCK";
     NamespacedKey NETEX_HANGING_KEY = Keys.newKey("netex_hanging");
     double CENTER_OFFSET = 0.5D;
     double ITEM_FRAME_OFFSET = 0.675D;
@@ -60,7 +75,7 @@ public interface HangingBlock {
 
     static @Nullable HangingBlock getByItemFrame(@NotNull ItemFrame itemFrame) {
         return getHangingBlock(
-            itemFrame.getPersistentDataContainer().get(NETEX_HANGING_KEY, PersistentDataType.STRING));
+                itemFrame.getPersistentDataContainer().get(NETEX_HANGING_KEY, PersistentDataType.STRING));
     }
 
     static void tickHangingBlocks(@NotNull Block attachon) {
@@ -68,7 +83,7 @@ public interface HangingBlock {
         Map<BlockFace, HangingBlock> hs = getHangingBlocks(loc);
         getHangingBlocks(loc, hs.keySet()).forEach((attachSide, itemFrame) -> {
             try {
-                hs.get(attachSide).onTick(loc, itemFrame);
+                hs.get(attachSide).onTick(loc, attachSide, itemFrame);
             } catch (Exception e) {
                 Debug.trace(e);
             }
@@ -86,7 +101,7 @@ public interface HangingBlock {
     }
 
     static @NotNull Map<BlockFace, ItemFrame> getHangingBlocks(
-        @NotNull Location attachon, @NotNull Set<BlockFace> attachSides) {
+            @NotNull Location attachon, @NotNull Set<BlockFace> attachSides) {
         Map<BlockFace, ItemFrame> hangingBlocks = new HashMap<>();
         for (BlockFace attachSide : attachSides) {
             ItemFrame v = getItemFrame(attachon, attachSide);
@@ -115,10 +130,10 @@ public interface HangingBlock {
     }
 
     static <T extends HangingBlock> void placeHangingBlock(
-        @NotNull SlimefunBlockData attachon,
-        @NotNull ItemFrame entityBlock,
-        @NotNull BlockFace attachSide,
-        @NotNull T hangingBlock) {
+            @NotNull SlimefunBlockData attachon,
+            @NotNull ItemFrame entityBlock,
+            @NotNull BlockFace attachSide,
+            @NotNull T hangingBlock) {
         switch (attachSide) {
             case NORTH -> attachon.setData(BS_NORTH, hangingBlock.getId());
             case SOUTH -> attachon.setData(BS_SOUTH, hangingBlock.getId());
@@ -137,15 +152,14 @@ public interface HangingBlock {
         tagItemFrame(entityBlock, hangingBlock.getId());
     }
 
-    @NotNull
-    static Map<BlockFace, HangingBlock> getHangingBlocks(Location attachon) {
+    @NotNull static Map<BlockFace, HangingBlock> getHangingBlocks(Location attachon) {
         return Optional.ofNullable(hangingBlocks.get(attachon)).orElse(new HashMap<>());
     }
 
-    @Nullable
-    static ItemFrame getItemFrame(@NotNull Location attachon, BlockFace attachSide) {
+    @Nullable static ItemFrame getItemFrame(@NotNull Location attachon, BlockFace attachSide) {
         Location center = attachon.toBlockLocation().add(CENTER_OFFSET, CENTER_OFFSET, CENTER_OFFSET);
-        Collection<Entity> es = center.getWorld().getNearbyEntities(center, ITEM_FRAME_OFFSET, ITEM_FRAME_OFFSET, ITEM_FRAME_OFFSET);
+        Collection<Entity> es =
+                center.getWorld().getNearbyEntities(center, ITEM_FRAME_OFFSET, ITEM_FRAME_OFFSET, ITEM_FRAME_OFFSET);
         for (Entity e : es) {
             if (e instanceof ItemFrame itemFrame) {
                 if (itemFrame.getAttachedFace() == attachSide) {
@@ -159,10 +173,10 @@ public interface HangingBlock {
 
     @OverridingMethodsMustInvokeSuper
     default void onPlace(
-        @NotNull HangingPlaceEvent event,
-        @NotNull Location attachon,
-        @NotNull ItemFrame entityBlock,
-        @NotNull BlockFace attachSide) {
+            @NotNull HangingPlaceEvent event,
+            @NotNull Location attachon,
+            @NotNull ItemFrame entityBlock,
+            @NotNull BlockFace attachSide) {
         SlimefunBlockData data = StorageCacheUtils.getBlock(attachon);
         if (data == null) {
             event.setCancelled(true);
@@ -185,11 +199,46 @@ public interface HangingBlock {
         }
     }
 
-    <T extends HangingBlock> void onBreak(Location attachon, ItemFrame entityBlock, T hangingBlock);
+    static void doFirstTick(SlimefunBlockData attachon) {
+        Location loc = attachon.getLocation();
+        Map<BlockFace, HangingBlock> hs = getHangingBlocks(loc);
+        getHangingBlocks(loc, hs.keySet()).forEach((attachSide, itemFrame) -> {
+            try {
+                hs.get(attachSide).onFirstTick(loc, attachon, attachSide, itemFrame);
+            } catch (Exception e) {
+                Debug.trace(e);
+            }
+        });
+    }
 
+    @OverridingMethodsMustInvokeSuper
+    @ParametersAreNonnullByDefault
+    default <T extends HangingBlock> void onBreak(Location attachon, ItemFrame entityBlock, T hangingBlock) {
+        Map<BlockFace, HangingBlock> e = hangingBlocks.get(attachon);
+        if (e != null) {
+            e.remove(entityBlock.getAttachedFace());
+            if (e.isEmpty()) {
+                hangingBlocks.remove(attachon);
+            }
+        }
+        ItemStack item = entityBlock.getItem();
+        Location location = entityBlock.getLocation();
+        entityBlock.remove();
+        SlimefunBlockData data = StorageCacheUtils.getBlock(attachon);
+        if (data != null) {
+            data.removeData(getHangingBlockKey(entityBlock.getAttachedFace()));
+        }
+    }
+
+    @ParametersAreNonnullByDefault
     void onInteract(Location attachon, PlayerItemFrameChangeEvent event);
 
-    void onTick(Location attachon, ItemFrame entityBlock);
+    @ParametersAreNonnullByDefault
+    void onTick(Location attachon, BlockFace attachSide, ItemFrame entityBlock);
 
-    String getId();
+    @ParametersAreNonnullByDefault
+    default void onFirstTick(
+            Location attachon, SlimefunBlockData attachonData, BlockFace attachSide, ItemFrame entityBlock) {}
+
+    @NotNull String getId();
 }

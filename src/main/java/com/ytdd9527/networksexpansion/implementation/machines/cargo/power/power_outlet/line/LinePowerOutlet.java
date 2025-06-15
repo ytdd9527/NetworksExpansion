@@ -27,10 +27,10 @@ public class LinePowerOutlet extends NetworkDirectional implements Configurable 
     private int rate;
 
     public LinePowerOutlet(
-        @NotNull ItemGroup itemGroup,
-        @NotNull SlimefunItemStack item,
-        @NotNull RecipeType recipeType,
-        @NotNull ItemStack[] recipe) {
+            @NotNull ItemGroup itemGroup,
+            @NotNull SlimefunItemStack item,
+            @NotNull RecipeType recipeType,
+            @NotNull ItemStack[] recipe) {
         super(itemGroup, item, recipeType, recipe, NodeType.LINE_POWER_OUTLET);
         loadConfigurations();
     }
@@ -65,11 +65,11 @@ public class LinePowerOutlet extends NetworkDirectional implements Configurable 
         final NetworkRoot root = definition.getNode().getRoot();
         final BlockFace blockFace = getCurrentDirection(blockMenu);
         LineOperationUtil.doEnergyOperation(
-            blockMenu.getLocation(),
-            blockFace,
-            this.maxDistance,
-            true,
-            false,
-            (location) -> LineOperationUtil.outPower(location, root, this.rate));
+                blockMenu.getLocation(),
+                blockFace,
+                this.maxDistance,
+                true,
+                false,
+                (location) -> LineOperationUtil.outPower(location, root, this.rate));
     }
 }

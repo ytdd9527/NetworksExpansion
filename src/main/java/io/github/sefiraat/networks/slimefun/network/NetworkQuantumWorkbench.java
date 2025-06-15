@@ -18,12 +18,10 @@ import io.github.thebusybiscuit.slimefun4.core.handlers.BlockBreakHandler;
 import io.github.thebusybiscuit.slimefun4.implementation.Slimefun;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.protection.Interaction;
 import io.github.thebusybiscuit.slimefun4.utils.SlimefunUtils;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.ParametersAreNonnullByDefault;
-
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenuPreset;
 import me.mrCookieSlime.Slimefun.api.item_transport.ItemTransportFlow;
@@ -48,13 +46,13 @@ public class NetworkQuantumWorkbench extends SpecialSlimefunItem {
     private static final Map<ItemStack[], ItemStack> RECIPES = new HashMap<>();
 
     public static final RecipeType TYPE = new RecipeType(
-        Keys.newKey("quantum-workbench"),
-        Icon.RECIPE_TYPE_ITEMSTACK_QUANTUM_WORKBENCH,
-        NetworkQuantumWorkbench::addRecipe);
+            Keys.newKey("quantum-workbench"),
+            Icon.RECIPE_TYPE_ITEMSTACK_QUANTUM_WORKBENCH,
+            NetworkQuantumWorkbench::addRecipe);
 
     @ParametersAreNonnullByDefault
     public NetworkQuantumWorkbench(
-        ItemGroup itemGroup, SlimefunItemStack item, RecipeType recipeType, ItemStack[] recipe) {
+            ItemGroup itemGroup, SlimefunItemStack item, RecipeType recipeType, ItemStack[] recipe) {
         super(itemGroup, item, recipeType, recipe);
     }
 
@@ -79,15 +77,15 @@ public class NetworkQuantumWorkbench extends SpecialSlimefunItem {
             @Override
             public boolean canOpen(@NotNull Block block, @NotNull Player player) {
                 return player.hasPermission("slimefun.inventory.bypass")
-                    || (this.getSlimefunItem().canUse(player, false)
-                    && Slimefun.getProtectionManager()
-                    .hasPermission(player, block.getLocation(), Interaction.INTERACT_BLOCK));
+                        || (this.getSlimefunItem().canUse(player, false)
+                                && Slimefun.getProtectionManager()
+                                        .hasPermission(player, block.getLocation(), Interaction.INTERACT_BLOCK));
             }
 
             @Override
             public int[] getSlotsAccessedByItemTransport(ItemTransportFlow flow) {
                 if (flow == ItemTransportFlow.WITHDRAW) {
-                    return new int[]{OUTPUT_SLOT};
+                    return new int[] {OUTPUT_SLOT};
                 }
                 return new int[0];
             }
@@ -136,28 +134,28 @@ public class NetworkQuantumWorkbench extends SpecialSlimefunItem {
                 }
 
                 QuantumCache oldCache = DataTypeMethods.getCustom(
-                    oldMeta, Keys.QUANTUM_STORAGE_INSTANCE, PersistentQuantumStorageType.TYPE);
+                        oldMeta, Keys.QUANTUM_STORAGE_INSTANCE, PersistentQuantumStorageType.TYPE);
 
                 if (oldCache == null) {
                     oldCache = DataTypeMethods.getCustom(
-                        oldMeta, Keys.QUANTUM_STORAGE_INSTANCE2, PersistentQuantumStorageType.TYPE);
+                            oldMeta, Keys.QUANTUM_STORAGE_INSTANCE2, PersistentQuantumStorageType.TYPE);
                 }
 
                 if (oldCache == null) {
                     oldCache = DataTypeMethods.getCustom(
-                        oldMeta, Keys.QUANTUM_STORAGE_INSTANCE3, PersistentQuantumStorageType.TYPE);
+                            oldMeta, Keys.QUANTUM_STORAGE_INSTANCE3, PersistentQuantumStorageType.TYPE);
                 }
 
                 if (oldCache != null) {
                     ItemStack itemStack = oldCache.getItemStack();
                     final QuantumCache newCache = new QuantumCache(
-                        itemStack != null ? itemStack.clone() : null,
-                        oldCache.getAmount(),
-                        newQuantum.getMaxAmount(),
-                        oldCache.isVoidExcess(),
-                        newQuantum.supportsCustomMaxAmount());
+                            itemStack != null ? itemStack.clone() : null,
+                            oldCache.getAmount(),
+                            newQuantum.getMaxAmount(),
+                            oldCache.isVoidExcess(),
+                            newQuantum.supportsCustomMaxAmount());
                     DataTypeMethods.setCustom(
-                        newMeta, Keys.QUANTUM_STORAGE_INSTANCE, PersistentQuantumStorageType.TYPE, newCache);
+                            newMeta, Keys.QUANTUM_STORAGE_INSTANCE, PersistentQuantumStorageType.TYPE, newCache);
                     newCache.addMetaLore(newMeta);
                     crafted.setItemMeta(newMeta);
                 }
@@ -200,7 +198,7 @@ public class NetworkQuantumWorkbench extends SpecialSlimefunItem {
         return new BlockBreakHandler(false, false) {
             @Override
             public void onPlayerBreak(
-                @NotNull BlockBreakEvent event, @NotNull ItemStack itemStack, @NotNull List<ItemStack> drops) {
+                    @NotNull BlockBreakEvent event, @NotNull ItemStack itemStack, @NotNull List<ItemStack> drops) {
                 BlockMenu menu = StorageCacheUtils.getMenu(event.getBlock().getLocation());
                 if (menu == null) {
                     return;

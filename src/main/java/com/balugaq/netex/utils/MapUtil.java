@@ -1,12 +1,10 @@
 package com.balugaq.netex.utils;
 
 import io.github.bakedlibs.dough.collections.Pair;
-
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.Map;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -49,7 +47,6 @@ public class MapUtil {
             view.addRenderer(new MapRenderer() {
                 @Override
                 public void render(@NotNull MapView mapView, @NotNull MapCanvas mapCanvas, @NotNull Player player) {
-                    // mapCanvas.setPixelColor(0, 0, Color.red);
                     mapCanvas.drawImage(0, 0, finalImage);
                 }
             });

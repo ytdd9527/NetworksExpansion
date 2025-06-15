@@ -15,11 +15,9 @@ import io.github.sefiraat.networks.network.stackcaches.ItemRequest;
 import io.github.sefiraat.networks.utils.StackUtils;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
 import io.github.thebusybiscuit.slimefun4.core.guide.SlimefunGuideMode;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -77,7 +75,7 @@ public interface RecipeCompletableWithGuide {
     }
 
     default void completeRecipeWithGuide(
-        @NotNull BlockMenu blockMenu, @NotNull NetworkRoot root, GuideEvents.@NotNull ItemButtonClickEvent event) {
+            @NotNull BlockMenu blockMenu, @NotNull NetworkRoot root, GuideEvents.@NotNull ItemButtonClickEvent event) {
         Player player = event.getPlayer();
 
         ItemStack clickedItem = event.getClickedItem();
@@ -118,7 +116,7 @@ public interface RecipeCompletableWithGuide {
 
             if (choice instanceof RecipeChoice.MaterialChoice materialChoice) {
                 List<ItemStack> itemStacks =
-                    materialChoice.getChoices().stream().map(ItemStack::new).toList();
+                        materialChoice.getChoices().stream().map(ItemStack::new).toList();
                 for (ItemStack itemStack : itemStacks) {
                     ItemStack received = getItemStack(root, player, itemStack);
                     if (received != null && received.getType() != Material.AIR) {
@@ -140,13 +138,12 @@ public interface RecipeCompletableWithGuide {
 
     int[] getIngredientSlots();
 
-    @Nullable
-    default List<RecipeChoice> getRecipe(@NotNull ItemStack itemStack) {
+    @Nullable default List<RecipeChoice> getRecipe(@NotNull ItemStack itemStack) {
         SlimefunItem sf = SlimefunItem.getByItem(itemStack);
         if (sf != null) {
             List<RecipeChoice> raw = new ArrayList<>(Arrays.stream(sf.getRecipe())
-                .map(item -> item == null ? null : new SimpleRecipeChoice(item))
-                .toList());
+                    .map(item -> item == null ? null : new SimpleRecipeChoice(item))
+                    .toList());
             if (raw.size() < 9) {
                 for (int i = raw.size(); i < 9; i++) {
                     raw.add(null);
@@ -196,8 +193,7 @@ public interface RecipeCompletableWithGuide {
     }
 
     @SuppressWarnings("deprecation")
-    @Nullable
-    default ItemStack getItemStack(@NotNull NetworkRoot root, @NotNull Player player, @NotNull ItemStack itemStack) {
+    @Nullable default ItemStack getItemStack(@NotNull NetworkRoot root, @NotNull Player player, @NotNull ItemStack itemStack) {
         // get from root
         ItemStack item = root.getItemStack0(player.getLocation(), new ItemRequest(itemStack, 1));
         if (item != null) {

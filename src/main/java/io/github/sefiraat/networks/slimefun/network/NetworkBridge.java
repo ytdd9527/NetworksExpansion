@@ -9,12 +9,10 @@ import io.github.sefiraat.networks.network.NodeType;
 import io.github.thebusybiscuit.slimefun4.api.items.ItemGroup;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
 import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import java.util.function.Function;
-
 import lombok.Setter;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -35,21 +33,21 @@ public class NetworkBridge extends NetworkObject {
     private @Nullable Function<Location, DisplayGroup> displayGroupGenerator;
 
     public NetworkBridge(
-        ItemGroup itemGroup,
-        SlimefunItemStack item,
-        RecipeType recipeType,
-        ItemStack[] recipe,
-        ItemStack recipeOutput) {
+            ItemGroup itemGroup,
+            SlimefunItemStack item,
+            RecipeType recipeType,
+            ItemStack[] recipe,
+            ItemStack recipeOutput) {
         super(itemGroup, item, recipeType, recipe, recipeOutput, NodeType.BRIDGE);
     }
 
     public NetworkBridge(
-        ItemGroup itemGroup,
-        SlimefunItemStack item,
-        RecipeType recipeType,
-        ItemStack[] recipe,
-        ItemStack recipeOutput,
-        String itemId) {
+            ItemGroup itemGroup,
+            SlimefunItemStack item,
+            RecipeType recipeType,
+            ItemStack[] recipe,
+            ItemStack recipeOutput,
+            String itemId) {
         super(itemGroup, item, recipeType, recipe, recipeOutput, NodeType.BRIDGE);
         loadConfigurations(itemId);
     }
@@ -60,7 +58,7 @@ public class NetworkBridge extends NetworkObject {
         boolean defaultUseSpecialModel = false;
 
         this.useSpecialModel =
-            config.getBoolean("items." + itemId + ".use-special-model.enable", defaultUseSpecialModel);
+                config.getBoolean("items." + itemId + ".use-special-model.enable", defaultUseSpecialModel);
 
         Map<String, Function<Location, DisplayGroup>> generatorMap = new HashMap<>();
         generatorMap.put("bridge_1", DisplayGroupGenerators::generateBridge1);
@@ -73,9 +71,9 @@ public class NetworkBridge extends NetworkObject {
             this.displayGroupGenerator = generatorMap.get(generatorKey);
             if (this.displayGroupGenerator == null) {
                 Networks.getInstance()
-                    .getLogger()
-                    .warning(String.format(
-                        Lang.getString("messages.unsupported-operation.display.unknown_type"), generatorKey));
+                        .getLogger()
+                        .warning(String.format(
+                                Lang.getString("messages.unsupported-operation.display.unknown_type"), generatorKey));
                 this.useSpecialModel = false;
             }
         }
@@ -101,9 +99,9 @@ public class NetworkBridge extends NetworkObject {
     private void setupDisplay(@NotNull Location location) {
         if (this.displayGroupGenerator != null) {
             DisplayGroup displayGroup =
-                this.displayGroupGenerator.apply(location.clone().add(0.5, 0, 0.5));
+                    this.displayGroupGenerator.apply(location.clone().add(0.5, 0, 0.5));
             StorageCacheUtils.setData(
-                location, KEY_UUID, displayGroup.getParentUUID().toString());
+                    location, KEY_UUID, displayGroup.getParentUUID().toString());
         }
     }
 
@@ -114,8 +112,7 @@ public class NetworkBridge extends NetworkObject {
         }
     }
 
-    @Nullable
-    private UUID getDisplayGroupUUID(@NotNull Location location) {
+    @Nullable private UUID getDisplayGroupUUID(@NotNull Location location) {
         String uuid = StorageCacheUtils.getData(location, KEY_UUID);
         if (uuid == null) {
             return null;
@@ -123,8 +120,7 @@ public class NetworkBridge extends NetworkObject {
         return UUID.fromString(uuid);
     }
 
-    @Nullable
-    private DisplayGroup getDisplayGroup(@NotNull Location location) {
+    @Nullable private DisplayGroup getDisplayGroup(@NotNull Location location) {
         UUID uuid = getDisplayGroupUUID(location);
         if (uuid == null) {
             return null;

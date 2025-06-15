@@ -21,10 +21,8 @@ import io.github.thebusybiscuit.slimefun4.core.handlers.BlockBreakHandler;
 import io.github.thebusybiscuit.slimefun4.implementation.Slimefun;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.protection.Interaction;
 import io.github.thebusybiscuit.slimefun4.utils.ChestMenuUtils;
-
 import java.util.List;
 import java.util.Map;
-
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenuPreset;
 import me.mrCookieSlime.Slimefun.api.item_transport.ItemTransportFlow;
@@ -43,10 +41,10 @@ public class NetworkBlueprintDecoder extends NetworkObject {
     private static final int DECODE_SLOT = 13;
 
     public NetworkBlueprintDecoder(
-        @NotNull ItemGroup itemGroup,
-        @NotNull SlimefunItemStack item,
-        @NotNull RecipeType recipeType,
-        ItemStack[] recipe) {
+            @NotNull ItemGroup itemGroup,
+            @NotNull SlimefunItemStack item,
+            @NotNull RecipeType recipeType,
+            ItemStack[] recipe) {
         super(itemGroup, item, recipeType, recipe, NodeType.DECODER);
     }
 
@@ -71,11 +69,11 @@ public class NetworkBlueprintDecoder extends NetworkObject {
         addItemHandler(new BlockBreakHandler(false, false) {
             @Override
             public void onPlayerBreak(
-                @NotNull BlockBreakEvent blockBreakEvent,
-                @NotNull ItemStack itemStack,
-                @NotNull List<ItemStack> list) {
+                    @NotNull BlockBreakEvent blockBreakEvent,
+                    @NotNull ItemStack itemStack,
+                    @NotNull List<ItemStack> list) {
                 BlockMenu blockMenu =
-                    StorageCacheUtils.getMenu(blockBreakEvent.getBlock().getLocation());
+                        StorageCacheUtils.getMenu(blockBreakEvent.getBlock().getLocation());
                 if (blockMenu == null) {
                     return;
                 }
@@ -119,15 +117,15 @@ public class NetworkBlueprintDecoder extends NetworkObject {
             @Override
             public boolean canOpen(@NotNull Block block, @NotNull Player player) {
                 return player.hasPermission("slimefun.inventory.bypass")
-                    || (ExpansionItems.ADVANCED_EXPORT.canUse(player, false)
-                    && Slimefun.getProtectionManager()
-                    .hasPermission(player, block.getLocation(), Interaction.INTERACT_BLOCK));
+                        || (ExpansionItems.ADVANCED_EXPORT.canUse(player, false)
+                                && Slimefun.getProtectionManager()
+                                        .hasPermission(player, block.getLocation(), Interaction.INTERACT_BLOCK));
             }
 
             @Override
             public int[] getSlotsAccessedByItemTransport(ItemTransportFlow flow) {
                 if (flow == ItemTransportFlow.INSERT) {
-                    return new int[]{getInputSlot()};
+                    return new int[] {getInputSlot()};
                 }
 
                 return getOutputSlots();
@@ -158,14 +156,14 @@ public class NetworkBlueprintDecoder extends NetworkObject {
         }
 
         BlueprintInstance blueprintInstance =
-            DataTypeMethods.getCustom(meta, Keys.BLUEPRINT_INSTANCE, PersistentCraftingBlueprintType.TYPE);
+                DataTypeMethods.getCustom(meta, Keys.BLUEPRINT_INSTANCE, PersistentCraftingBlueprintType.TYPE);
         if (blueprintInstance == null) {
             blueprintInstance =
-                DataTypeMethods.getCustom(meta, Keys.BLUEPRINT_INSTANCE2, PersistentCraftingBlueprintType.TYPE);
+                    DataTypeMethods.getCustom(meta, Keys.BLUEPRINT_INSTANCE2, PersistentCraftingBlueprintType.TYPE);
         }
         if (blueprintInstance == null) {
             blueprintInstance =
-                DataTypeMethods.getCustom(meta, Keys.BLUEPRINT_INSTANCE3, PersistentCraftingBlueprintType.TYPE);
+                    DataTypeMethods.getCustom(meta, Keys.BLUEPRINT_INSTANCE3, PersistentCraftingBlueprintType.TYPE);
         }
         if (blueprintInstance == null) {
             player.sendMessage(Lang.getString("messages.unsupported-operation.decoder.invalid_blueprint"));

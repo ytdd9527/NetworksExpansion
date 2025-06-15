@@ -5,12 +5,10 @@ import com.balugaq.netex.api.data.ItemWrapper;
 import io.github.sefiraat.networks.utils.StackUtils;
 import io.github.thebusybiscuit.slimefun4.core.handlers.BlockBreakHandler;
 import io.github.thebusybiscuit.slimefun4.core.handlers.BlockPlaceHandler;
-
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-
 import lombok.experimental.UtilityClass;
 import me.mrCookieSlime.Slimefun.api.BlockStorage;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
@@ -30,13 +28,11 @@ import org.jetbrains.annotations.NotNull;
 public final class MachineUtil {
     public static final BlockPlaceHandler BLOCK_PLACE_HANDLER_PLACER_ALLOW = new BlockPlaceHandler(true) {
         @Override
-        public void onPlayerPlace(@NotNull BlockPlaceEvent blockPlaceEvent) {
-        }
+        public void onPlayerPlace(@NotNull BlockPlaceEvent blockPlaceEvent) {}
     };
     public static final BlockPlaceHandler BLOCK_PLACE_HANDLER_PLACER_DENY = new BlockPlaceHandler(false) {
         @Override
-        public void onPlayerPlace(@NotNull BlockPlaceEvent blockPlaceEvent) {
-        }
+        public void onPlayerPlace(@NotNull BlockPlaceEvent blockPlaceEvent) {}
     };
     public static final BlockPlaceHandler BLOCK_PLACE_HANDLER_DENY = new BlockPlaceHandler(false) {
         @Override
@@ -49,10 +45,9 @@ public final class MachineUtil {
         return new BlockBreakHandler(false, true) {
             @Override
             public void onPlayerBreak(
-                @NotNull BlockBreakEvent blockBreakEvent,
-                @NotNull ItemStack itemStack,
-                @NotNull List<ItemStack> list) {
-            }
+                    @NotNull BlockBreakEvent blockBreakEvent,
+                    @NotNull ItemStack itemStack,
+                    @NotNull List<ItemStack> list) {}
         };
     }
 
@@ -60,9 +55,9 @@ public final class MachineUtil {
         return new BlockBreakHandler(false, true) {
             @Override
             public void onPlayerBreak(
-                @NotNull BlockBreakEvent blockBreakEvent,
-                @NotNull ItemStack itemStack,
-                @NotNull List<ItemStack> list) {
+                    @NotNull BlockBreakEvent blockBreakEvent,
+                    @NotNull ItemStack itemStack,
+                    @NotNull List<ItemStack> list) {
                 Location location = blockBreakEvent.getBlock().getLocation();
                 BlockMenu blockMenu = BlockStorage.getInventory(location);
                 blockMenu.dropItems(location, slot);
@@ -151,7 +146,7 @@ public final class MachineUtil {
      * @return Get the Map of ItemWrapper by specified slots.
      */
     public static @NotNull Map<Integer, ItemWrapper> getSlotItemWrapperMap(
-        @NotNull Inventory inventory, int @NotNull [] slots) {
+            @NotNull Inventory inventory, int @NotNull [] slots) {
         Map<Integer, ItemWrapper> itemMap = new LinkedHashMap<>(slots.length);
         for (int slot : slots) {
             ItemStack item = inventory.getItem(slot);
@@ -166,7 +161,7 @@ public final class MachineUtil {
      * @return Get the List of ItemWrapper and its amount by specified slots. The ItemStack in return list is not the same of ItemStack in the Inventory.
      */
     public static @NotNull List<ItemAmountWrapper> calItemListWithAmount(
-        @NotNull Inventory inventory, int @NotNull [] slots) {
+            @NotNull Inventory inventory, int @NotNull [] slots) {
         List<ItemAmountWrapper> itemAmountWrapperList = new ArrayList<>(slots.length);
         ItemAmountWrapper itemAmountWrapper = new ItemAmountWrapper();
         for (int slot : slots) {
@@ -191,9 +186,9 @@ public final class MachineUtil {
     }
 
     public static int calMaxMatch(
-        @NotNull Inventory inventory,
-        int @NotNull [] slots,
-        @NotNull List<ItemAmountWrapper> itemAmountWrapperList) {
+            @NotNull Inventory inventory,
+            int @NotNull [] slots,
+            @NotNull List<ItemAmountWrapper> itemAmountWrapperList) {
         List<Integer> countList = new ArrayList<>(itemAmountWrapperList.size());
         List<Integer> stackList = new ArrayList<>(itemAmountWrapperList.size());
         int[] counts = new int[itemAmountWrapperList.size()];
@@ -216,7 +211,7 @@ public final class MachineUtil {
             itemWrapper.newWrap(item);
             for (int i = 0; i < itemAmountWrapperList.size(); i++) {
                 if (StackUtils.itemsMatch(
-                    itemWrapper.getItemStack(), itemAmountWrapperList.get(i).getItemStack())) {
+                        itemWrapper.getItemStack(), itemAmountWrapperList.get(i).getItemStack())) {
                     counts[i] = counts[i] + item.getMaxStackSize() - item.getAmount();
                     stacks[i] = counts[i] / itemAmountWrapperList.get(i).getAmount();
                     break;
@@ -234,20 +229,20 @@ public final class MachineUtil {
                 }
             }
             counts[minStackP] = counts[minStackP]
-                + itemAmountWrapperList.get(minStackP).getItemStack().getMaxStackSize();
+                    + itemAmountWrapperList.get(minStackP).getItemStack().getMaxStackSize();
             countList.set(
-                minStackP,
-                countList.get(minStackP)
-                    + itemAmountWrapperList
-                    .get(minStackP)
-                    .getItemStack()
-                    .getMaxStackSize());
+                    minStackP,
+                    countList.get(minStackP)
+                            + itemAmountWrapperList
+                                    .get(minStackP)
+                                    .getItemStack()
+                                    .getMaxStackSize());
             stacks[minStackP] =
-                counts[minStackP] / itemAmountWrapperList.get(minStackP).getAmount();
+                    counts[minStackP] / itemAmountWrapperList.get(minStackP).getAmount();
             stackList.set(
-                minStackP,
-                countList.get(minStackP)
-                    / itemAmountWrapperList.get(minStackP).getAmount());
+                    minStackP,
+                    countList.get(minStackP)
+                            / itemAmountWrapperList.get(minStackP).getAmount());
             emptySlot--;
         }
 
@@ -259,9 +254,9 @@ public final class MachineUtil {
     }
 
     public static int calMaxMatch(
-        @NotNull Inventory inventory,
-        int @NotNull [] slots,
-        @NotNull ItemAmountWrapper @NotNull [] itemAmountWrapperList) {
+            @NotNull Inventory inventory,
+            int @NotNull [] slots,
+            @NotNull ItemAmountWrapper @NotNull [] itemAmountWrapperList) {
         List<Integer> countList = new ArrayList<>(itemAmountWrapperList.length);
         List<Integer> stackList = new ArrayList<>(itemAmountWrapperList.length);
         for (int i = 0; i < itemAmountWrapperList.length; i++) {
@@ -299,9 +294,9 @@ public final class MachineUtil {
                 }
             }
             countList.set(
-                minStackP,
-                countList.get(minStackP)
-                    + itemAmountWrapperList[minStackP].getItemStack().getMaxStackSize());
+                    minStackP,
+                    countList.get(minStackP)
+                            + itemAmountWrapperList[minStackP].getItemStack().getMaxStackSize());
             stackList.set(minStackP, countList.get(minStackP) / itemAmountWrapperList[minStackP].getAmount());
             emptySlot--;
         }
@@ -314,7 +309,7 @@ public final class MachineUtil {
     }
 
     public static int calMaxMatch(
-        @NotNull Inventory inventory, int @NotNull [] slots, @NotNull ItemAmountWrapper itemAmountWrapper) {
+            @NotNull Inventory inventory, int @NotNull [] slots, @NotNull ItemAmountWrapper itemAmountWrapper) {
         int count = 0;
         int maxStack = itemAmountWrapper.getItemStack().getMaxStackSize();
         for (int slot : slots) {

@@ -9,11 +9,9 @@ import org.jetbrains.annotations.NotNull;
  * @since 2.0
  */
 public class AdvancedMachineRecipe {
-    @NotNull
-    private final ItemAmountWrapper[] inputs;
+    @NotNull private final ItemAmountWrapper[] inputs;
 
-    @NotNull
-    private final AdvancedRandomOutput[] randomOutputs;
+    @NotNull private final AdvancedRandomOutput[] randomOutputs;
 
     private final int @NotNull [] weightBeginValues;
 
@@ -21,7 +19,7 @@ public class AdvancedMachineRecipe {
     private int weightSum = 0;
 
     public AdvancedMachineRecipe(
-        @NotNull ItemAmountWrapper[] inputs, @NotNull AdvancedRandomOutput @NotNull [] randomOutputs) {
+            @NotNull ItemAmountWrapper[] inputs, @NotNull AdvancedRandomOutput @NotNull [] randomOutputs) {
         this.inputs = inputs;
         this.randomOutputs = randomOutputs;
         this.weightBeginValues = new int[randomOutputs.length];
@@ -31,19 +29,16 @@ public class AdvancedMachineRecipe {
         }
     }
 
-    @NotNull
-    public ItemAmountWrapper[] getInput() {
+    @NotNull public ItemAmountWrapper[] getInput() {
         return this.inputs;
     }
 
-    @NotNull
-    public ItemAmountWrapper[] getOutput() {
+    @NotNull public ItemAmountWrapper[] getOutput() {
         int r = (int) (Math.random() * this.weightSum);
         return this.randomOutputs[CompareUtil.getIntSmallFuzzyIndex(this.weightBeginValues, r)].outputItem;
     }
 
-    @NotNull
-    public AdvancedRandomOutput[] getOutputs() {
+    @NotNull public AdvancedRandomOutput[] getOutputs() {
         return this.randomOutputs;
     }
 
@@ -53,8 +48,7 @@ public class AdvancedMachineRecipe {
 
     public record AdvancedRandomOutput(@NotNull ItemAmountWrapper[] outputItem, int weight) {
 
-        @NotNull
-        public ItemAmountWrapper[] getOutputItem() {
+        @NotNull public ItemAmountWrapper[] getOutputItem() {
             return outputItem;
         }
     }

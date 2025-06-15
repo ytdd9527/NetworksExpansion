@@ -17,13 +17,11 @@ import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
 import io.github.thebusybiscuit.slimefun4.core.handlers.ItemUseHandler;
 import io.github.thebusybiscuit.slimefun4.implementation.Slimefun;
 import io.github.thebusybiscuit.slimefun4.utils.SlimefunUtils;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
 import net.guizhanss.guizhanlib.minecraft.helper.inventory.ItemStackHelper;
 import org.bukkit.Location;
@@ -45,10 +43,10 @@ public class CargoNodeQuickTool extends SpecialSlimefunItem {
     private final Gson gson = new Gson();
 
     public CargoNodeQuickTool(
-        @NotNull ItemGroup itemGroup,
-        @NotNull SlimefunItemStack item,
-        @NotNull RecipeType recipeType,
-        ItemStack @NotNull [] recipe) {
+            @NotNull ItemGroup itemGroup,
+            @NotNull SlimefunItemStack item,
+            @NotNull RecipeType recipeType,
+            ItemStack @NotNull [] recipe) {
         super(itemGroup, item, recipeType, recipe);
         listKey = Keys.newKey("item_list");
         configKey = Keys.newKey("config");
@@ -106,20 +104,20 @@ public class CargoNodeQuickTool extends SpecialSlimefunItem {
                         SlimefunItem sf = SlimefunItem.getById(blockData.getSfId());
                         if (sf != null) {
                             lore.set(
-                                lore.size() - 1,
-                                String.format(
-                                    Lang.getString(
-                                        "messages.completed-operation.cargo_node_quick_tool.node_set"),
-                                    sf.getItemName()));
+                                    lore.size() - 1,
+                                    String.format(
+                                            Lang.getString(
+                                                    "messages.completed-operation.cargo_node_quick_tool.node_set"),
+                                            sf.getItemName()));
                         }
                         meta.setLore(lore);
                         tool.setItemMeta(meta);
                         p.sendMessage(
-                            Lang.getString("messages.completed-operation.cargo_node_quick_tool.config_saved"));
+                                Lang.getString("messages.completed-operation.cargo_node_quick_tool.config_saved"));
                         return;
                     default:
                         p.sendMessage(
-                            Lang.getString("messages.unsupported-operation.cargo_node_quick_tool.invalid_node"));
+                                Lang.getString("messages.unsupported-operation.cargo_node_quick_tool.invalid_node"));
                 }
             } else {
                 // process to set config to target
@@ -130,7 +128,7 @@ public class CargoNodeQuickTool extends SpecialSlimefunItem {
                 }
                 if (!storedId.equalsIgnoreCase(blockData.getSfId())) {
                     p.sendMessage(
-                        Lang.getString("messages.unsupported-operation.cargo_node_quick_tool.nod-type-not-same"));
+                            Lang.getString("messages.unsupported-operation.cargo_node_quick_tool.nod-type-not-same"));
                     return;
                 }
                 BlockMenu inv = blockData.getBlockMenu();
@@ -180,9 +178,9 @@ public class CargoNodeQuickTool extends SpecialSlimefunItem {
                                         if (SlimefunUtils.isItemSimilar(itemInTarget, item, true, false)) {
                                             if (itemInTarget.getAmount() < item.getAmount()) {
                                                 itemInInv.setAmount(Math.max(
-                                                    itemInInv.getAmount()
-                                                        - (item.getAmount() - itemInTarget.getAmount()),
-                                                    0));
+                                                        itemInInv.getAmount()
+                                                                - (item.getAmount() - itemInTarget.getAmount()),
+                                                        0));
                                             }
                                         } else {
                                             itemInInv.setAmount(Math.max(itemInInv.getAmount() - item.getAmount(), 0));
@@ -195,11 +193,11 @@ public class CargoNodeQuickTool extends SpecialSlimefunItem {
                                 }
                             } else {
                                 p.sendMessage(Lang.getString(
-                                    "messages.unsupported-operation.cargo_node_quick_tool.not_enough_items"));
+                                        "messages.unsupported-operation.cargo_node_quick_tool.not_enough_items"));
                                 for (ItemStack item : itemList.keySet()) {
                                     if (!itemList.get(item)) {
                                         p.sendMessage(TextUtil.color("- &e" + ItemStackHelper.getDisplayName(item) + "x"
-                                            + item.getAmount()));
+                                                + item.getAmount()));
                                     } else {
                                         for (int slot : listSlots) {
                                             inv.replaceExistingItem(slot, null);
@@ -212,19 +210,18 @@ public class CargoNodeQuickTool extends SpecialSlimefunItem {
 
                     case "CARGO_NODE_OUTPUT":
                         Map<String, String> config = gson.fromJson(
-                            container.get(configKey, PersistentDataType.STRING),
-                            new TypeToken<Map<String, String>>() {
-                            }.getType());
+                                container.get(configKey, PersistentDataType.STRING),
+                                new TypeToken<Map<String, String>>() {}.getType());
                         if (config != null) {
                             config.forEach(blockData::setData);
                         }
                         inv.getPreset().newInstance(inv, bLoc);
                         p.sendMessage(
-                            Lang.getString("messages.completed-operation.cargo_node_quick_tool.pasted_config"));
+                                Lang.getString("messages.completed-operation.cargo_node_quick_tool.pasted_config"));
                         return;
                     default:
                         p.sendMessage(
-                            Lang.getString("messages.unsupported-operation.cargo_node_quick_tool.invalid_node"));
+                                Lang.getString("messages.unsupported-operation.cargo_node_quick_tool.invalid_node"));
                 }
             }
         });
@@ -233,8 +230,8 @@ public class CargoNodeQuickTool extends SpecialSlimefunItem {
     private @Nullable ItemStack isInclude(@Nullable ItemStack item, @NotNull Map<ItemStack, Boolean> checkList) {
         for (ItemStack each : checkList.keySet()) {
             if (item != null
-                && StackUtils.itemsMatch(each, item, true, false)
-                && item.getAmount() >= each.getAmount()) {
+                    && StackUtils.itemsMatch(each, item, true, false)
+                    && item.getAmount() >= each.getAmount()) {
                 checkList.put(each, true);
                 return each;
             }
@@ -257,7 +254,7 @@ public class CargoNodeQuickTool extends SpecialSlimefunItem {
                 PersistentDataContainer container = tool.getItemMeta().getPersistentDataContainer();
                 if (container.has(idKey, PersistentDataType.STRING)) {
                     return getId().equalsIgnoreCase(container.get(idKey, PersistentDataType.STRING))
-                        && (tool.getAmount() == 1);
+                            && (tool.getAmount() == 1);
                 }
             }
         }

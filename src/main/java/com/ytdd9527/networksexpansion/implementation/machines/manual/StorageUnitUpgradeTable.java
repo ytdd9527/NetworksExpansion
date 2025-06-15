@@ -25,11 +25,9 @@ import io.github.thebusybiscuit.slimefun4.libraries.dough.items.CustomItemStack;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.protection.Interaction;
 import io.github.thebusybiscuit.slimefun4.utils.ChestMenuUtils;
 import io.github.thebusybiscuit.slimefun4.utils.SlimefunUtils;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.ClickAction;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenuPreset;
@@ -49,9 +47,9 @@ import org.jetbrains.annotations.Nullable;
 public class StorageUnitUpgradeTable extends SpecialSlimefunItem implements AdminDebuggable {
     private static final Map<ItemStack[], ItemStack> recipes = new HashMap<>();
     public static final RecipeType TYPE = new RecipeType(
-        Keys.STORAGE_UNIT_UPGRADE_TABLE,
-        ExpansionItemStacks.STORAGE_UNIT_UPGRADE_TABLE,
-        StorageUnitUpgradeTable::addRecipe);
+            Keys.STORAGE_UNIT_UPGRADE_TABLE,
+            ExpansionItemStacks.STORAGE_UNIT_UPGRADE_TABLE,
+            StorageUnitUpgradeTable::addRecipe);
     private final int[] border = {0, 8, 9, 17, 18, 26};
     private final int[] innerBorder = {1, 5, 6, 7, 10, 14, 16, 19, 23, 24, 25};
     private final int[] inputSlots = {2, 3, 4, 11, 12, 13, 20, 21, 22};
@@ -59,10 +57,10 @@ public class StorageUnitUpgradeTable extends SpecialSlimefunItem implements Admi
     private final int actionBtnSlot = 17;
 
     public StorageUnitUpgradeTable(
-        @NotNull ItemGroup itemGroup,
-        @NotNull SlimefunItemStack item,
-        @NotNull RecipeType recipeType,
-        ItemStack @NotNull [] recipe) {
+            @NotNull ItemGroup itemGroup,
+            @NotNull SlimefunItemStack item,
+            @NotNull RecipeType recipeType,
+            ItemStack @NotNull [] recipe) {
         super(itemGroup, item, recipeType, recipe);
 
         new BlockMenuPreset(this.getId(), this.getItemName()) {
@@ -79,14 +77,14 @@ public class StorageUnitUpgradeTable extends SpecialSlimefunItem implements Admi
                 addItem(outputSlot, null, new AdvancedMenuClickHandler() {
                     @Override
                     public boolean onClick(
-                        @NotNull InventoryClickEvent e,
-                        Player p,
-                        int slot,
-                        @Nullable ItemStack cursor,
-                        ClickAction action) {
+                            @NotNull InventoryClickEvent e,
+                            Player p,
+                            int slot,
+                            @Nullable ItemStack cursor,
+                            ClickAction action) {
                         ItemStack itemInSlot = e.getInventory().getItem(slot);
                         return (cursor == null || cursor.getType() == Material.AIR)
-                            && (itemInSlot == null || itemInSlot.getType() != Material.BARRIER);
+                                && (itemInSlot == null || itemInSlot.getType() != Material.BARRIER);
                     }
 
                     @Override
@@ -108,8 +106,8 @@ public class StorageUnitUpgradeTable extends SpecialSlimefunItem implements Admi
             @Override
             public boolean canOpen(@NotNull Block b, @NotNull Player p) {
                 return p.hasPermission("slimefun.inventory.bypass")
-                    || (canUse(p, false)
-                    && Slimefun.getProtectionManager().hasPermission(p, b, Interaction.INTERACT_BLOCK));
+                        || (canUse(p, false)
+                                && Slimefun.getProtectionManager().hasPermission(p, b, Interaction.INTERACT_BLOCK));
             }
 
             @Override
@@ -137,7 +135,7 @@ public class StorageUnitUpgradeTable extends SpecialSlimefunItem implements Admi
                     if (DataStorage.isContainerLoaded(id)) {
                         if (DataStorage.getCachedStorageData(id).isPresent()) {
                             StorageUnitData data =
-                                DataStorage.getCachedStorageData(id).get();
+                                    DataStorage.getCachedStorageData(id).get();
                             upgrade(data);
                         }
                     } else {
@@ -146,14 +144,14 @@ public class StorageUnitUpgradeTable extends SpecialSlimefunItem implements Admi
                         Networks.getQueryQueue().scheduleQuery(() -> {
                             if (DataStorage.getCachedStorageData(id).isPresent()) {
                                 StorageUnitData data =
-                                    DataStorage.getCachedStorageData(id).get();
+                                        DataStorage.getCachedStorageData(id).get();
                                 upgrade(data);
                             }
                             return true;
                         });
                     }
                     out = NetworksDrawer.bindIdNew(
-                        out, id, NetworksDrawer.isLocked(id), NetworksDrawer.isVoidExcess(id));
+                            out, id, NetworksDrawer.isLocked(id), NetworksDrawer.isVoidExcess(id));
                 }
                 SlimefunItemStack sfis = (SlimefunItemStack) out;
                 SlimefunItem sfi = SlimefunItem.getById(sfis.getItemId());
@@ -234,7 +232,7 @@ public class StorageUnitUpgradeTable extends SpecialSlimefunItem implements Admi
         return new BlockBreakHandler(false, false) {
             @Override
             public void onPlayerBreak(
-                @NotNull BlockBreakEvent event, @NotNull ItemStack itemStack, @NotNull List<ItemStack> drops) {
+                    @NotNull BlockBreakEvent event, @NotNull ItemStack itemStack, @NotNull List<ItemStack> drops) {
                 Location l = event.getBlock().getLocation();
                 BlockMenu menu = StorageCacheUtils.getMenu(l);
                 if (menu != null) {

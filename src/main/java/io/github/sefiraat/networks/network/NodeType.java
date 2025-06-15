@@ -44,9 +44,12 @@ public enum NodeType {
     ADVANCED_VACUUM,
 
     // Hanging blocks
+    @Deprecated
     HANGING_PLACEHOLDER,
     // will NOT count as a node
-    SWITCHING_MONITOR, // todo: not finish yet
+    SWITCHING_MONITOR,
+    // will NOT count as a node
+    HANGING_GRID,
 
     // from foreign addons
     // For SlimeAEPlugin

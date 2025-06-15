@@ -2,12 +2,10 @@ package com.balugaq.netex.utils;
 
 import io.github.sefiraat.networks.utils.StackUtils;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.items.CustomItemStack;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import lombok.experimental.UtilityClass;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
 import org.bukkit.Material;
@@ -17,8 +15,7 @@ import org.jetbrains.annotations.Nullable;
 
 @UtilityClass
 public class BlockMenuUtil {
-    @Nullable
-    public static ItemStack pushItem(@NotNull BlockMenu blockMenu, @NotNull ItemStack item, int @NotNull ... slots) {
+    @Nullable public static ItemStack pushItem(@NotNull BlockMenu blockMenu, @NotNull ItemStack item, int @NotNull ... slots) {
         if (item == null || item.getType() == Material.AIR) {
             throw new IllegalArgumentException("Cannot push null or AIR");
         }
@@ -61,9 +58,8 @@ public class BlockMenuUtil {
         }
     }
 
-    @NotNull
-    public static Map<ItemStack, Integer> pushItem(
-        @NotNull BlockMenu blockMenu, @NotNull ItemStack @NotNull [] items, int... slots) {
+    @NotNull public static Map<ItemStack, Integer> pushItem(
+            @NotNull BlockMenu blockMenu, @NotNull ItemStack @NotNull [] items, int... slots) {
         if (items == null || items.length == 0) {
             throw new IllegalArgumentException("Cannot push null or empty array");
         }
@@ -78,9 +74,8 @@ public class BlockMenuUtil {
         return pushItem(blockMenu, listItems, slots);
     }
 
-    @NotNull
-    public static Map<ItemStack, Integer> pushItem(
-        @NotNull BlockMenu blockMenu, @NotNull List<ItemStack> items, int... slots) {
+    @NotNull public static Map<ItemStack, Integer> pushItem(
+            @NotNull BlockMenu blockMenu, @NotNull List<ItemStack> items, int... slots) {
         if (items == null || items.isEmpty()) {
             throw new IllegalArgumentException("Cannot push null or empty list");
         }

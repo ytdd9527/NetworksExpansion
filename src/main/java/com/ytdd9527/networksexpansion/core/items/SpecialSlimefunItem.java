@@ -11,13 +11,11 @@ import io.github.thebusybiscuit.slimefun4.api.items.ItemGroup;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
 import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
-
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -37,28 +35,28 @@ public abstract class SpecialSlimefunItem extends SlimefunItem {
     protected static final Map<UUID, Set<Location>> subscribedLocations = new HashMap<>();
 
     public SpecialSlimefunItem(
-        @NotNull ItemGroup itemGroup,
-        @NotNull SlimefunItemStack item,
-        @NotNull RecipeType recipeType,
-        @NotNull ItemStack @NotNull [] recipe) {
+            @NotNull ItemGroup itemGroup,
+            @NotNull SlimefunItemStack item,
+            @NotNull RecipeType recipeType,
+            @NotNull ItemStack @NotNull [] recipe) {
         super(itemGroup, item, recipeType, recipe);
     }
 
     public SpecialSlimefunItem(
-        @NotNull ItemGroup itemGroup,
-        @NotNull SlimefunItemStack item,
-        @NotNull RecipeType recipeType,
-        @NotNull ItemStack @NotNull [] recipe,
-        @Nullable ItemStack recipeOutput) {
+            @NotNull ItemGroup itemGroup,
+            @NotNull SlimefunItemStack item,
+            @NotNull RecipeType recipeType,
+            @NotNull ItemStack @NotNull [] recipe,
+            @Nullable ItemStack recipeOutput) {
         super(itemGroup, item, recipeType, recipe, recipeOutput);
     }
 
     protected SpecialSlimefunItem(
-        @NotNull ItemGroup itemGroup,
-        @NotNull ItemStack item,
-        @NotNull String id,
-        @NotNull RecipeType recipeType,
-        @NotNull ItemStack @NotNull [] recipe) {
+            @NotNull ItemGroup itemGroup,
+            @NotNull ItemStack item,
+            @NotNull String id,
+            @NotNull RecipeType recipeType,
+            @NotNull ItemStack @NotNull [] recipe) {
         super(itemGroup, item, id, recipeType, recipe);
     }
 
@@ -92,16 +90,16 @@ public abstract class SpecialSlimefunItem extends SlimefunItem {
             int delay = recipeItem.getRegisterRecipeDelay();
             if (delay > 0) {
                 this.getAddon()
-                    .getJavaPlugin()
-                    .getServer()
-                    .getScheduler()
-                    .runTaskLater(
-                        (Plugin) addon,
-                        () -> {
-                            (recipeItem).registerDefaultRecipes();
-                            MachineRecipeFactory.getInstance().initAdvancedRecipeMap(this.getId());
-                        },
-                        delay);
+                        .getJavaPlugin()
+                        .getServer()
+                        .getScheduler()
+                        .runTaskLater(
+                                (Plugin) addon,
+                                () -> {
+                                    (recipeItem).registerDefaultRecipes();
+                                    MachineRecipeFactory.getInstance().initAdvancedRecipeMap(this.getId());
+                                },
+                                delay);
             } else {
                 (recipeItem).registerDefaultRecipes();
                 MachineRecipeFactory.getInstance().initAdvancedRecipeMap(this.getId());
@@ -109,8 +107,7 @@ public abstract class SpecialSlimefunItem extends SlimefunItem {
         }
     }
 
-    @NotNull
-    public SpecialSlimefunItem registerThis() {
+    @NotNull public SpecialSlimefunItem registerThis() {
         this.register(Networks.getInstance());
         return this;
     }
@@ -128,6 +125,6 @@ public abstract class SpecialSlimefunItem extends SlimefunItem {
 
     public void sendFeedback(@NotNull Player player, @NotNull Location location, String message) {
         player.sendMessage(String.format(
-            Lang.getString("messages.debug.status_view"), LocationUtil.humanizeBlock(location), message));
+                Lang.getString("messages.debug.status_view"), LocationUtil.humanizeBlock(location), message));
     }
 }

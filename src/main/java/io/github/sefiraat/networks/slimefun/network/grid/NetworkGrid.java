@@ -7,10 +7,8 @@ import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
 import io.github.thebusybiscuit.slimefun4.implementation.Slimefun;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.protection.Interaction;
 import io.github.thebusybiscuit.slimefun4.utils.ChestMenuUtils;
-
 import java.util.HashMap;
 import java.util.Map;
-
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenuPreset;
 import me.mrCookieSlime.Slimefun.api.item_transport.ItemTransportFlow;
@@ -48,8 +46,7 @@ public class NetworkGrid extends AbstractGrid {
     }
 
     @Override
-    @NotNull
-    protected BlockMenuPreset getPreset() {
+    @NotNull protected BlockMenuPreset getPreset() {
         return new BlockMenuPreset(this.getId(), this.getItemName()) {
 
             @Override
@@ -62,9 +59,9 @@ public class NetworkGrid extends AbstractGrid {
             @Override
             public boolean canOpen(@NotNull Block block, @NotNull Player player) {
                 return player.hasPermission("slimefun.inventory.bypass")
-                    || (NetworkSlimefunItems.NETWORK_GRID.canUse(player, false)
-                    && Slimefun.getProtectionManager()
-                    .hasPermission(player, block.getLocation(), Interaction.INTERACT_BLOCK));
+                        || (NetworkSlimefunItems.NETWORK_GRID.canUse(player, false)
+                                && Slimefun.getProtectionManager()
+                                        .hasPermission(player, block.getLocation(), Interaction.INTERACT_BLOCK));
             }
 
             @Override
@@ -89,9 +86,9 @@ public class NetworkGrid extends AbstractGrid {
                 menu.addMenuClickHandler(getPageNext(), (p, slot, item, action) -> {
                     GridCache gridCache = getCacheMap().get(menu.getLocation());
                     gridCache.setPage(
-                        gridCache.getPage() >= gridCache.getMaxPages()
-                            ? gridCache.getMaxPages()
-                            : gridCache.getPage() + 1);
+                            gridCache.getPage() >= gridCache.getMaxPages()
+                                    ? gridCache.getMaxPages()
+                                    : gridCache.getPage() + 1);
                     getCacheMap().put(menu.getLocation(), gridCache);
                     updateDisplay(menu);
                     return false;
@@ -136,8 +133,7 @@ public class NetworkGrid extends AbstractGrid {
         };
     }
 
-    @NotNull
-    public Map<Location, GridCache> getCacheMap() {
+    @NotNull public Map<Location, GridCache> getCacheMap() {
         return CACHE_MAP;
     }
 

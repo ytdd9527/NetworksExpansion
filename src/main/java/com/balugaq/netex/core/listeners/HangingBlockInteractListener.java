@@ -4,11 +4,9 @@ import com.balugaq.netex.api.interfaces.HangingBlock;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
 import io.papermc.paper.event.player.PlayerItemFrameChangeEvent;
 import org.bukkit.Location;
-import org.bukkit.entity.Explosive;
 import org.bukkit.entity.ItemFrame;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockExplodeEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.hanging.HangingBreakEvent;
 import org.bukkit.event.hanging.HangingPlaceEvent;
@@ -27,12 +25,12 @@ public class HangingBlockInteractListener implements Listener {
         HangingBlock hangingBlock = HangingBlock.getByItemFrame(event.getItemFrame());
         if (hangingBlock != null) {
             hangingBlock.onInteract(
-                toBlockLocation(event.getItemFrame()
-                    .getLocation()
-                    .getBlock()
-                    .getRelative(event.getItemFrame().getAttachedFace())
-                    .getLocation()),
-                event);
+                    toBlockLocation(event.getItemFrame()
+                            .getLocation()
+                            .getBlock()
+                            .getRelative(event.getItemFrame().getAttachedFace())
+                            .getLocation()),
+                    event);
         }
     }
 
@@ -51,14 +49,14 @@ public class HangingBlockInteractListener implements Listener {
         SlimefunItem sf = SlimefunItem.getByItem(event.getItemStack());
         if (sf instanceof HangingBlock hangingBlock && event.getEntity() instanceof ItemFrame itemFrame) {
             hangingBlock.onPlace(
-                event,
-                toBlockLocation(itemFrame
-                    .getLocation()
-                    .getBlock()
-                    .getRelative(itemFrame.getAttachedFace())
-                    .getLocation()),
-                itemFrame,
-                itemFrame.getAttachedFace());
+                    event,
+                    toBlockLocation(itemFrame
+                            .getLocation()
+                            .getBlock()
+                            .getRelative(itemFrame.getAttachedFace())
+                            .getLocation()),
+                    itemFrame,
+                    itemFrame.getAttachedFace());
         }
     }
 

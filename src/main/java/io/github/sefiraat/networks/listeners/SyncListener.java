@@ -7,9 +7,7 @@ import io.github.sefiraat.networks.NetworkStorage;
 import io.github.sefiraat.networks.Networks;
 import io.github.sefiraat.networks.utils.NetworkUtils;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
-
 import java.text.MessageFormat;
-
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -60,11 +58,11 @@ public class SyncListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onChunkUnload(@NotNull ChunkUnloadEvent e) {
         Networks.getInstance()
-            .debug(MessageFormat.format(
-                S3,
-                e.getWorld().getName(),
-                e.getChunk().getX(),
-                e.getChunk().getZ()));
+                .debug(MessageFormat.format(
+                        S3,
+                        e.getWorld().getName(),
+                        e.getChunk().getX(),
+                        e.getChunk().getZ()));
         NetworkStorage.unregisterChunk(e.getChunk());
     }
 }

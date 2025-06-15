@@ -18,8 +18,7 @@ public class NetworkStorage extends BarrelIdentity {
     }
 
     @Override
-    @Nullable
-    public ItemStack requestItem(@NotNull ItemRequest itemRequest) {
+    @Nullable public ItemStack requestItem(@NotNull ItemRequest itemRequest) {
         final BlockMenu blockMenu = StorageCacheUtils.getMenu(this.getLocation());
 
         if (blockMenu == null) {
@@ -51,11 +50,11 @@ public class NetworkStorage extends BarrelIdentity {
 
     @Override
     public int[] getInputSlot() {
-        return new int[]{NetworkQuantumStorage.INPUT_SLOT};
+        return new int[] {NetworkQuantumStorage.INPUT_SLOT};
     }
 
     @Override
     public int[] getOutputSlot() {
-        return new int[]{NetworkQuantumStorage.OUTPUT_SLOT};
+        return new int[] {NetworkQuantumStorage.OUTPUT_SLOT};
     }
 }

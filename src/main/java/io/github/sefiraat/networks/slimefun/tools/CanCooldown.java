@@ -2,9 +2,7 @@ package io.github.sefiraat.networks.slimefun.tools;
 
 import com.balugaq.netex.utils.Lang;
 import io.github.sefiraat.networks.utils.StackUtils;
-
 import javax.annotation.ParametersAreNonnullByDefault;
-
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;

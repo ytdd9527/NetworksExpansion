@@ -4,13 +4,11 @@ import com.balugaq.jeg.api.objects.events.GuideEvents;
 import com.balugaq.jeg.utils.ReflectionUtil;
 import io.github.thebusybiscuit.slimefun4.api.player.PlayerProfile;
 import io.github.thebusybiscuit.slimefun4.core.guide.GuideHistory;
-
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiConsumer;
-
 import lombok.SneakyThrows;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -21,10 +19,10 @@ import org.jetbrains.annotations.NotNull;
 public class JEGCompatibleListener implements Listener {
     public static final Map<UUID, GuideHistory> GUIDE_HISTORY = new ConcurrentHashMap<>();
     public static final Map<UUID, BiConsumer<GuideEvents.ItemButtonClickEvent, PlayerProfile>> PROFILE_CALLBACKS =
-        new ConcurrentHashMap<>();
+            new ConcurrentHashMap<>();
 
     public static void addCallback(
-        @NotNull UUID uuid, @NotNull BiConsumer<GuideEvents.ItemButtonClickEvent, PlayerProfile> callback) {
+            @NotNull UUID uuid, @NotNull BiConsumer<GuideEvents.ItemButtonClickEvent, PlayerProfile> callback) {
         PROFILE_CALLBACKS.put(uuid, callback);
     }
 
@@ -33,8 +31,7 @@ public class JEGCompatibleListener implements Listener {
     }
 
     @SneakyThrows
-    @NotNull
-    public static PlayerProfile getPlayerProfile(@NotNull OfflinePlayer player) {
+    @NotNull public static PlayerProfile getPlayerProfile(@NotNull OfflinePlayer player) {
         // Shouldn't be null;
         return PlayerProfile.find(player).orElseThrow(() -> new RuntimeException("PlayerProfile not found"));
     }

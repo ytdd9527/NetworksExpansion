@@ -16,12 +16,10 @@ import io.github.thebusybiscuit.slimefun4.core.handlers.BlockBreakHandler;
 import io.github.thebusybiscuit.slimefun4.implementation.Slimefun;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.protection.Interaction;
 import io.github.thebusybiscuit.slimefun4.utils.ChestMenuUtils;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import me.mrCookieSlime.Slimefun.Objects.handlers.BlockTicker;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenuPreset;
@@ -48,10 +46,10 @@ public class Offsetter extends SpecialSlimefunItem implements AdminDebuggable {
     private static final int OFFSET_INCREASE_SLOT = 5;
 
     public Offsetter(
-        @NotNull ItemGroup itemGroup,
-        @NotNull SlimefunItemStack item,
-        @NotNull RecipeType recipeType,
-        @NotNull ItemStack @NotNull [] recipe) {
+            @NotNull ItemGroup itemGroup,
+            @NotNull SlimefunItemStack item,
+            @NotNull RecipeType recipeType,
+            @NotNull ItemStack @NotNull [] recipe) {
         super(itemGroup, item, recipeType, recipe);
     }
 
@@ -116,14 +114,14 @@ public class Offsetter extends SpecialSlimefunItem implements AdminDebuggable {
         }
 
         final int[] fromSlot =
-            fromMenu.getPreset().getSlotsAccessedByItemTransport(fromMenu, ItemTransportFlow.WITHDRAW, null);
+                fromMenu.getPreset().getSlotsAccessedByItemTransport(fromMenu, ItemTransportFlow.WITHDRAW, null);
         for (int i = 0; i < fromSlot.length; i++) {
             ItemStack fromItem = fromMenu.getItemInSlot(fromSlot[i]);
             if (fromItem == null || fromItem.getType() == Material.AIR) {
                 continue;
             }
             final int[] toSlot =
-                toMenu.getPreset().getSlotsAccessedByItemTransport(toMenu, ItemTransportFlow.INSERT, fromItem);
+                    toMenu.getPreset().getSlotsAccessedByItemTransport(toMenu, ItemTransportFlow.INSERT, fromItem);
             final int offset = getOffset(location);
             final int offseti = i + offset;
             if (offseti >= toSlot.length || offseti < 0) {
@@ -203,9 +201,9 @@ public class Offsetter extends SpecialSlimefunItem implements AdminDebuggable {
         addItemHandler(new BlockBreakHandler(false, false) {
             @Override
             public void onPlayerBreak(
-                @NotNull BlockBreakEvent blockBreakEvent,
-                @NotNull ItemStack itemStack,
-                @NotNull List<ItemStack> list) {
+                    @NotNull BlockBreakEvent blockBreakEvent,
+                    @NotNull ItemStack itemStack,
+                    @NotNull List<ItemStack> list) {
                 Location location = blockBreakEvent.getBlock().getLocation();
                 facingMap.remove(location);
                 offsetMap.remove(location);
@@ -242,9 +240,9 @@ public class Offsetter extends SpecialSlimefunItem implements AdminDebuggable {
             @Override
             public boolean canOpen(@NotNull Block block, @NotNull Player player) {
                 return player.hasPermission("slimefun.inventory.bypass")
-                    || (Slimefun.getPermissionsService().hasPermission(player, this.getSlimefunItem())
-                    && Slimefun.getProtectionManager()
-                    .hasPermission(player, block, Interaction.INTERACT_BLOCK));
+                        || (Slimefun.getPermissionsService().hasPermission(player, this.getSlimefunItem())
+                                && Slimefun.getProtectionManager()
+                                        .hasPermission(player, block, Interaction.INTERACT_BLOCK));
             }
 
             @Override

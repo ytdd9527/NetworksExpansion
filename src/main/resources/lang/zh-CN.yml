@@ -203,6 +203,8 @@ messages:
       set-pos2-with-blocks: "&aSet pos2 to %s (%s Blocks)"
       invalid-slot: "&c槽位号必须在0-53之间!"
   normal-operation:
+    common:
+      page: "页"
     quantum_cache:
       empty: "空"
       stored_item: "<click_info>物品: %s"
@@ -1002,9 +1004,9 @@ items:
       - "<warning> 网络拓展开发版不接受 GitHub Issues"
       - "<warning> 网络拓展开发版不接受 GitHub PR"
       - "<passive> 版本信息:"
-      - "<passive> 网络拓展版本: Special-Version-23"
+      - "<passive> 网络拓展版本: Special-Version-24"
       - "<passive> 版本状态: 稳定版"
-      - "<passive> 版本更新时间: 2025-6-14 16:32:55"
+      - "<passive> 版本更新时间: 2025-6-15 23:38:24"
       - "<passive> 开发状态: 更新中"
       - "<passive> 开发者（们）: ytdd9527, balugaq"
       - "<passive> 开发者 GitHub 页面: <click_info>https://github.com/ytdd9527"
@@ -3560,6 +3562,18 @@ items:
     name: "交换监视器"
     lore:
       - "交换物品"
+
+  NTW_EXPANSION_HANGING_GRID_NEW_STYLE:
+    name: "贴图版高级网格"
+    lore:
+      - "高级网格允许你查看网络中所有的物品"
+      - "你也可以直接放入或取出物品"
+      - "排序方式: "
+      - "&eAZ&7: &e按字母顺序排序"
+      - "&e数量&7: &e按物品数量排序"
+      - "&e数量倒序&7: &e按物品数量倒序排序"
+      - "&e附属&7: &e按物品所属附属字母顺序排序"
+      - "支持拼音搜索"
 
 displays:
   quantum_storage:

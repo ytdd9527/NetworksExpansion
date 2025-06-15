@@ -11,10 +11,10 @@ import org.jetbrains.annotations.NotNull;
 public class NetworkInputOnlyMonitor extends NetworkDirectional {
 
     public NetworkInputOnlyMonitor(
-        @NotNull ItemGroup itemGroup,
-        @NotNull SlimefunItemStack item,
-        @NotNull RecipeType recipeType,
-        ItemStack[] recipe) {
+            @NotNull ItemGroup itemGroup,
+            @NotNull SlimefunItemStack item,
+            @NotNull RecipeType recipeType,
+            ItemStack[] recipe) {
         super(itemGroup, item, recipeType, recipe, NodeType.INPUT_ONLY_MONITOR);
     }
 }

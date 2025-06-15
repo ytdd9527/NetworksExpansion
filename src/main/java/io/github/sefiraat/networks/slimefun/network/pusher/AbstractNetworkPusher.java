@@ -32,7 +32,7 @@ public abstract class AbstractNetworkPusher extends NetworkDirectional {
     private static final int DOWN_SLOT = 32;
 
     public AbstractNetworkPusher(
-        ItemGroup itemGroup, SlimefunItemStack item, RecipeType recipeType, ItemStack[] recipe) {
+            ItemGroup itemGroup, SlimefunItemStack item, RecipeType recipeType, ItemStack[] recipe) {
         super(itemGroup, item, recipeType, recipe, NodeType.PUSHER);
         for (int slot : getItemSlots()) {
             this.getSlotsToDrop().add(slot);
@@ -57,7 +57,7 @@ public abstract class AbstractNetworkPusher extends NetworkDirectional {
 
         final BlockFace direction = getCurrentDirection(blockMenu);
         final BlockMenu targetMenu = StorageCacheUtils.getMenu(
-            blockMenu.getBlock().getRelative(direction).getLocation());
+                blockMenu.getBlock().getRelative(direction).getLocation());
 
         if (targetMenu == null) {
             sendFeedback(blockMenu.getLocation(), FeedbackType.NO_TARGET_BLOCK);
@@ -76,7 +76,7 @@ public abstract class AbstractNetworkPusher extends NetworkDirectional {
             final ItemRequest itemRequest = new ItemRequest(clone, clone.getMaxStackSize());
 
             int[] slots =
-                targetMenu.getPreset().getSlotsAccessedByItemTransport(targetMenu, ItemTransportFlow.INSERT, clone);
+                    targetMenu.getPreset().getSlotsAccessedByItemTransport(targetMenu, ItemTransportFlow.INSERT, clone);
 
             for (int slot : slots) {
                 final ItemStack itemStack = targetMenu.getItemInSlot(slot);
@@ -91,7 +91,7 @@ public abstract class AbstractNetworkPusher extends NetworkDirectional {
                 }
 
                 ItemStack retrieved =
-                    definition.getNode().getRoot().getItemStack0(blockMenu.getLocation(), itemRequest);
+                        definition.getNode().getRoot().getItemStack0(blockMenu.getLocation(), itemRequest);
                 if (retrieved != null) {
                     targetMenu.pushItem(retrieved, slots);
                     sendFeedback(blockMenu.getLocation(), FeedbackType.WORKING);
@@ -141,8 +141,7 @@ public abstract class AbstractNetworkPusher extends NetworkDirectional {
         return new Particle.DustOptions(Color.MAROON, 1);
     }
 
-    @Nullable
-    @Override
+    @Nullable @Override
     protected ItemStack getOtherBackgroundStack() {
         return Icon.PUSHER_TEMPLATE_BACKGROUND_STACK;
     }

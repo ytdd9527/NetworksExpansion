@@ -3,14 +3,12 @@ package com.ytdd9527.networksexpansion.utils.registry;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
 import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
 import io.github.thebusybiscuit.slimefun4.implementation.Slimefun;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -33,8 +31,7 @@ public class RecipeTypeRegistry {
         this.init();
     }
 
-    @NotNull
-    public static RecipeTypeRegistry getInstance() {
+    @NotNull public static RecipeTypeRegistry getInstance() {
         if (instance == null) {
             synchronized (RecipeTypeRegistry.class) {
                 if (instance == null) {
@@ -86,8 +83,7 @@ public class RecipeTypeRegistry {
         }
     }
 
-    @Nullable
-    public RecipeType getRecipeTypeById(String id) {
+    @Nullable public RecipeType getRecipeTypeById(String id) {
         for (RecipeType recipeType : this.getRecipeTypeSet()) {
             if (recipeType.getKey().getKey().equals(id)) {
                 return recipeType;
@@ -96,8 +92,7 @@ public class RecipeTypeRegistry {
         return null;
     }
 
-    @NotNull
-    public List<SlimefunItem> getByRecipeType(@NotNull RecipeType recipeType) {
+    @NotNull public List<SlimefunItem> getByRecipeType(@NotNull RecipeType recipeType) {
         if (this.recipeSlimefunItemMap.containsKey(recipeType)) {
             return this.recipeSlimefunItemMap.get(recipeType);
         } else {

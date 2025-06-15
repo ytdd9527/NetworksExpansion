@@ -21,14 +21,12 @@ import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
 import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
 import io.github.thebusybiscuit.slimefun4.core.attributes.RecipeDisplayItem;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.items.CustomItemStack;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.function.Function;
-
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -47,9 +45,9 @@ public class LineTransfer extends NetworkDirectional implements RecipeDisplayIte
     public static final int DEFAULT_GRAB_ITEM_TICK = 1;
     public static final int DEFAULT_REQUIRED_POWER = 5000;
     public static final boolean DEFAULT_USE_SPECIAL_MODEL = false;
-    private static final int[] BACKGROUND_SLOTS = new int[]{0, 10, 18, 27, 28, 29, 36, 37, 38, 45, 46, 47};
-    private static final int[] TEMPLATE_BACKGROUND = new int[]{3, 12, 21, 30, 39, 48};
-    private static final int[] TEMPLATE_SLOTS = new int[]{
+    private static final int[] BACKGROUND_SLOTS = new int[] {0, 10, 18, 27, 28, 29, 36, 37, 38, 45, 46, 47};
+    private static final int[] TEMPLATE_BACKGROUND = new int[] {3, 12, 21, 30, 39, 48};
+    private static final int[] TEMPLATE_SLOTS = new int[] {
         4, 5, 6, 7, 8,
         13, 14, 15, 16, 17,
         22, 23, 24, 25, 26,
@@ -74,10 +72,10 @@ public class LineTransfer extends NetworkDirectional implements RecipeDisplayIte
     private @Nullable Function<Location, DisplayGroup> displayGroupGenerator;
 
     public LineTransfer(
-        @NotNull ItemGroup itemGroup,
-        @NotNull SlimefunItemStack item,
-        @NotNull RecipeType recipeType,
-        ItemStack[] recipe) {
+            @NotNull ItemGroup itemGroup,
+            @NotNull SlimefunItemStack item,
+            @NotNull RecipeType recipeType,
+            ItemStack[] recipe) {
         super(itemGroup, item, recipeType, recipe, NodeType.TRANSFER);
         for (int slot : TEMPLATE_SLOTS) {
             this.getSlotsToDrop().add(slot);
@@ -94,7 +92,7 @@ public class LineTransfer extends NetworkDirectional implements RecipeDisplayIte
         this.grabItemTick = config.getInt("items." + configKey + ".grabitem-tick", DEFAULT_GRAB_ITEM_TICK);
         this.requiredPower = config.getInt("items." + configKey + ".required-power", DEFAULT_REQUIRED_POWER);
         this.useSpecialModel =
-            config.getBoolean("items." + configKey + ".use-special-model.enable", DEFAULT_USE_SPECIAL_MODEL);
+                config.getBoolean("items." + configKey + ".use-special-model.enable", DEFAULT_USE_SPECIAL_MODEL);
 
         Map<String, Function<Location, DisplayGroup>> generatorMap = new HashMap<>();
         generatorMap.put("cloche", DisplayGroupGenerators::generateCloche);
@@ -107,9 +105,9 @@ public class LineTransfer extends NetworkDirectional implements RecipeDisplayIte
             this.displayGroupGenerator = generatorMap.get(generatorKey);
             if (this.displayGroupGenerator == null) {
                 Networks.getInstance()
-                    .getLogger()
-                    .warning(String.format(
-                        Lang.getString("messages.unsupported-operation.display.unknown_type"), generatorKey));
+                        .getLogger()
+                        .warning(String.format(
+                                Lang.getString("messages.unsupported-operation.display.unknown_type"), generatorKey));
                 this.useSpecialModel = false;
             }
         }
@@ -204,13 +202,13 @@ public class LineTransfer extends NetworkDirectional implements RecipeDisplayIte
 
         final boolean drawParticle = blockMenu.hasViewer();
         LineOperationUtil.doOperation(
-            blockMenu.getLocation(),
-            direction,
-            maxDistance,
-            false,
-            false,
-            (targetMenu) -> LineOperationUtil.pushItem(
-                blockMenu.getLocation(), root, targetMenu, templates, TransportMode.FIRST_STOP, 64));
+                blockMenu.getLocation(),
+                direction,
+                maxDistance,
+                false,
+                false,
+                (targetMenu) -> LineOperationUtil.pushItem(
+                        blockMenu.getLocation(), root, targetMenu, templates, TransportMode.FIRST_STOP, 64));
 
         root.removeRootPower(requiredPower);
         sendFeedback(blockMenu.getLocation(), FeedbackType.WORKING);
@@ -238,13 +236,13 @@ public class LineTransfer extends NetworkDirectional implements RecipeDisplayIte
 
         final boolean drawParticle = blockMenu.hasViewer();
         LineOperationUtil.doOperation(
-            blockMenu.getLocation(),
-            direction,
-            maxDistance,
-            false,
-            true,
-            (targetMenu) -> LineOperationUtil.grabItem(
-                blockMenu.getLocation(), root, targetMenu, TransportMode.FIRST_STOP, 64));
+                blockMenu.getLocation(),
+                direction,
+                maxDistance,
+                false,
+                true,
+                (targetMenu) -> LineOperationUtil.grabItem(
+                        blockMenu.getLocation(), root, targetMenu, TransportMode.FIRST_STOP, 64));
 
         root.removeRootPower(requiredPower);
         sendFeedback(blockMenu.getLocation(), FeedbackType.WORKING);
@@ -260,8 +258,7 @@ public class LineTransfer extends NetworkDirectional implements RecipeDisplayIte
         return TEMPLATE_BACKGROUND;
     }
 
-    @Nullable
-    @Override
+    @Nullable @Override
     protected ItemStack getOtherBackgroundStack() {
         return Icon.PUSHER_TEMPLATE_BACKGROUND_STACK;
     }
@@ -321,9 +318,9 @@ public class LineTransfer extends NetworkDirectional implements RecipeDisplayIte
     private void setupDisplay(@NotNull Location location) {
         if (this.displayGroupGenerator != null) {
             DisplayGroup displayGroup =
-                this.displayGroupGenerator.apply(location.clone().add(0.5, 0, 0.5));
+                    this.displayGroupGenerator.apply(location.clone().add(0.5, 0, 0.5));
             StorageCacheUtils.setData(
-                location, KEY_UUID, displayGroup.getParentUUID().toString());
+                    location, KEY_UUID, displayGroup.getParentUUID().toString());
         }
     }
 
@@ -334,8 +331,7 @@ public class LineTransfer extends NetworkDirectional implements RecipeDisplayIte
         }
     }
 
-    @Nullable
-    private UUID getDisplayGroupUUID(@NotNull Location location) {
+    @Nullable private UUID getDisplayGroupUUID(@NotNull Location location) {
         String uuid = StorageCacheUtils.getData(location, KEY_UUID);
         if (uuid == null) {
             return null;
@@ -343,8 +339,7 @@ public class LineTransfer extends NetworkDirectional implements RecipeDisplayIte
         return UUID.fromString(uuid);
     }
 
-    @Nullable
-    private DisplayGroup getDisplayGroup(@NotNull Location location) {
+    @Nullable private DisplayGroup getDisplayGroup(@NotNull Location location) {
         UUID uuid = getDisplayGroupUUID(location);
         if (uuid == null) {
             return null;
@@ -352,18 +347,17 @@ public class LineTransfer extends NetworkDirectional implements RecipeDisplayIte
         return DisplayGroup.fromUUID(uuid);
     }
 
-    @NotNull
-    @Override
+    @NotNull @Override
     public List<ItemStack> getDisplayRecipes() {
         List<ItemStack> displayRecipes = new ArrayList<>(6);
         displayRecipes.add(new CustomItemStack(
-            Material.BOOK,
-            Lang.getString("icons.mechanism.transfers.data_title"),
-            "",
-            String.format(Lang.getString("icons.mechanism.transfers.max_distance"), maxDistance),
-            String.format(Lang.getString("icons.mechanism.transfers.push_item_tick"), pushItemTick),
-            String.format(Lang.getString("icons.mechanism.transfers.grab_item_tick"), grabItemTick),
-            String.format(Lang.getString("icons.mechanism.transfers.required_power"), requiredPower)));
+                Material.BOOK,
+                Lang.getString("icons.mechanism.transfers.data_title"),
+                "",
+                String.format(Lang.getString("icons.mechanism.transfers.max_distance"), maxDistance),
+                String.format(Lang.getString("icons.mechanism.transfers.push_item_tick"), pushItemTick),
+                String.format(Lang.getString("icons.mechanism.transfers.grab_item_tick"), grabItemTick),
+                String.format(Lang.getString("icons.mechanism.transfers.required_power"), requiredPower)));
         return displayRecipes;
     }
 }

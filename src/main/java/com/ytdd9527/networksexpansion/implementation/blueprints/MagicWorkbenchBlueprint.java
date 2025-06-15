@@ -9,7 +9,7 @@ import org.bukkit.inventory.ItemStack;
 public class MagicWorkbenchBlueprint extends AbstractBlueprint {
 
     public MagicWorkbenchBlueprint(
-        ItemGroup itemGroup, SlimefunItemStack item, RecipeType recipeType, ItemStack[] recipe) {
+            ItemGroup itemGroup, SlimefunItemStack item, RecipeType recipeType, ItemStack[] recipe) {
         super(itemGroup, item, recipeType, recipe);
     }
 }

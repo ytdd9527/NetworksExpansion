@@ -21,7 +21,7 @@ import org.jetbrains.annotations.NotNull;
 public class PersistentCardInstanceType implements PersistentDataType<PersistentDataContainer, CardInstance> {
 
     public static final PersistentDataType<PersistentDataContainer, CardInstance> TYPE =
-        new PersistentCardInstanceType();
+            new PersistentCardInstanceType();
 
     public static final NamespacedKey ITEM = Keys.newKey("item");
     public static final NamespacedKey AMOUNT = Keys.newKey("amount");
@@ -29,21 +29,18 @@ public class PersistentCardInstanceType implements PersistentDataType<Persistent
     public static final NamespacedKey UNSTACK = Keys.newKey("time");
 
     @Override
-    @NotNull
-    public Class<PersistentDataContainer> getPrimitiveType() {
+    @NotNull public Class<PersistentDataContainer> getPrimitiveType() {
         return PersistentDataContainer.class;
     }
 
     @Override
-    @NotNull
-    public Class<CardInstance> getComplexType() {
+    @NotNull public Class<CardInstance> getComplexType() {
         return CardInstance.class;
     }
 
     @Override
-    @NotNull
-    public PersistentDataContainer toPrimitive(
-        @NotNull CardInstance complex, @NotNull PersistentDataAdapterContext context) {
+    @NotNull public PersistentDataContainer toPrimitive(
+            @NotNull CardInstance complex, @NotNull PersistentDataAdapterContext context) {
         final PersistentDataContainer container = context.newPersistentDataContainer();
 
         if (complex.getItemStack() != null) {
@@ -56,9 +53,8 @@ public class PersistentCardInstanceType implements PersistentDataType<Persistent
     }
 
     @Override
-    @NotNull
-    public CardInstance fromPrimitive(
-        @NotNull PersistentDataContainer primitive, @NotNull PersistentDataAdapterContext context) {
+    @NotNull public CardInstance fromPrimitive(
+            @NotNull PersistentDataContainer primitive, @NotNull PersistentDataAdapterContext context) {
         final ItemStack item = primitive.get(ITEM, DataType.ITEM_STACK);
         final Integer amount = primitive.get(AMOUNT, DataType.INTEGER);
         final Integer limit = primitive.get(LIMIT, DataType.INTEGER);

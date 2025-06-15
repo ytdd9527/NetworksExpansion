@@ -10,10 +10,8 @@ import io.github.thebusybiscuit.slimefun4.api.player.PlayerProfile;
 import io.github.thebusybiscuit.slimefun4.core.guide.GuideHistory;
 import io.github.thebusybiscuit.slimefun4.core.guide.SlimefunGuide;
 import io.github.thebusybiscuit.slimefun4.core.guide.SlimefunGuideMode;
-
 import java.util.HashMap;
 import java.util.Map;
-
 import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.ChestMenu;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
@@ -44,13 +42,12 @@ public class RecipeItemGroup extends FlexItemGroup {
         this.page = page;
     }
 
-    @Nullable
-    public static RecipeItemGroup getByItemStack(
-        @NotNull Player player,
-        @NotNull PlayerProfile playerProfile,
-        @NotNull SlimefunGuideMode slimefunGuideMode,
-        @Nullable ItemStack itemStack,
-        int page) {
+    @Nullable public static RecipeItemGroup getByItemStack(
+            @NotNull Player player,
+            @NotNull PlayerProfile playerProfile,
+            @NotNull SlimefunGuideMode slimefunGuideMode,
+            @Nullable ItemStack itemStack,
+            int page) {
         SlimefunItem slimefunItem = SlimefunItem.getByItem(itemStack);
         if (slimefunItem != null) {
             if (!playerProfile.hasUnlocked(slimefunItem.getResearch())) {
@@ -65,16 +62,16 @@ public class RecipeItemGroup extends FlexItemGroup {
                             return ID_MAP.get(slimefunItem.getId());
                         }
                         RecipeItemGroup recipeItemGroup = new RecipeItemGroup(
-                            Keys.newKey(
-                                "SLIMEFUN_ITEM" + slimefunItem.getId().hashCode() + "_" + page),
-                            slimefunItem);
+                                Keys.newKey(
+                                        "SLIMEFUN_ITEM" + slimefunItem.getId().hashCode() + "_" + page),
+                                slimefunItem);
                         ID_MAP.put(slimefunItem.getId(), recipeItemGroup);
                         return recipeItemGroup;
                     }
                 }
             } else {
                 return new RecipeItemGroup(
-                    Keys.newKey("SLIMEFUN_ITEM" + slimefunItem.getId().hashCode()), slimefunItem, page);
+                        Keys.newKey("SLIMEFUN_ITEM" + slimefunItem.getId().hashCode()), slimefunItem, page);
             }
         } else if (!ItemStackUtil.isItemNull(itemStack)) {
             return null;
@@ -82,22 +79,20 @@ public class RecipeItemGroup extends FlexItemGroup {
         return null;
     }
 
-    @Nullable
-    public static RecipeItemGroup getByItemStack(
-        @NotNull Player player,
-        @NotNull PlayerProfile playerProfile,
-        @NotNull SlimefunGuideMode slimefunGuideMode,
-        @Nullable ItemStack itemStack) {
+    @Nullable public static RecipeItemGroup getByItemStack(
+            @NotNull Player player,
+            @NotNull PlayerProfile playerProfile,
+            @NotNull SlimefunGuideMode slimefunGuideMode,
+            @Nullable ItemStack itemStack) {
         return RecipeItemGroup.getByItemStack(player, playerProfile, slimefunGuideMode, itemStack, 1);
     }
 
-    @Nullable
-    public static RecipeItemGroup getBySlimefunItem(
-        @NotNull Player player,
-        @NotNull PlayerProfile playerProfile,
-        @NotNull SlimefunGuideMode slimefunGuideMode,
-        @Nullable SlimefunItem slimefunItem,
-        int page) {
+    @Nullable public static RecipeItemGroup getBySlimefunItem(
+            @NotNull Player player,
+            @NotNull PlayerProfile playerProfile,
+            @NotNull SlimefunGuideMode slimefunGuideMode,
+            @Nullable SlimefunItem slimefunItem,
+            int page) {
         if (slimefunItem != null) {
             if (page == 1) {
                 if (ID_MAP.containsKey(slimefunItem.getId())) {
@@ -108,44 +103,43 @@ public class RecipeItemGroup extends FlexItemGroup {
                             return ID_MAP.get(slimefunItem.getId());
                         }
                         RecipeItemGroup recipeItemGroup = new RecipeItemGroup(
-                            Keys.newKey(
-                                "SLIMEFUN_ITEM" + slimefunItem.getId().hashCode() + "_" + page),
-                            slimefunItem);
+                                Keys.newKey(
+                                        "SLIMEFUN_ITEM" + slimefunItem.getId().hashCode() + "_" + page),
+                                slimefunItem);
                         ID_MAP.put(slimefunItem.getId(), recipeItemGroup);
                         return recipeItemGroup;
                     }
                 }
             } else {
                 return new RecipeItemGroup(
-                    Keys.newKey("SLIMEFUN_ITEM" + slimefunItem.getId().hashCode()), slimefunItem, page);
+                        Keys.newKey("SLIMEFUN_ITEM" + slimefunItem.getId().hashCode()), slimefunItem, page);
             }
         }
         return null;
     }
 
-    @Nullable
-    public static RecipeItemGroup getBySlimefunItem(
-        @NotNull Player player,
-        @NotNull PlayerProfile playerProfile,
-        @NotNull SlimefunGuideMode slimefunGuideMode,
-        @Nullable SlimefunItem slimefunItem) {
+    @Nullable public static RecipeItemGroup getBySlimefunItem(
+            @NotNull Player player,
+            @NotNull PlayerProfile playerProfile,
+            @NotNull SlimefunGuideMode slimefunGuideMode,
+            @Nullable SlimefunItem slimefunItem) {
         return RecipeItemGroup.getBySlimefunItem(player, playerProfile, slimefunGuideMode, slimefunItem, 1);
     }
 
     @Override
     public boolean isVisible(
-        @NotNull Player player,
-        @NotNull PlayerProfile playerProfile,
-        @NotNull SlimefunGuideMode slimefunGuideMode) {
+            @NotNull Player player,
+            @NotNull PlayerProfile playerProfile,
+            @NotNull SlimefunGuideMode slimefunGuideMode) {
         return false;
     }
 
     @SuppressWarnings("deprecation")
     @Override
     public void open(
-        @NotNull Player player,
-        @NotNull PlayerProfile playerProfile,
-        @NotNull SlimefunGuideMode slimefunGuideMode) {
+            @NotNull Player player,
+            @NotNull PlayerProfile playerProfile,
+            @NotNull SlimefunGuideMode slimefunGuideMode) {
         playerProfile.getGuideHistory().add(this, this.page);
         ChestMenu chestMenu = this.generateMenu(player, playerProfile, slimefunGuideMode);
         if (chestMenu != null) {
@@ -157,19 +151,18 @@ public class RecipeItemGroup extends FlexItemGroup {
     }
 
     @SuppressWarnings("deprecation")
-    @Nullable
-    private ChestMenu generateMenu(
-        @NotNull Player player,
-        @NotNull PlayerProfile playerProfile,
-        @NotNull SlimefunGuideMode slimefunGuideMode) {
+    @Nullable private ChestMenu generateMenu(
+            @NotNull Player player,
+            @NotNull PlayerProfile playerProfile,
+            @NotNull SlimefunGuideMode slimefunGuideMode) {
         SlimefunItem slimefunItem = SlimefunItem.getById(this.id);
         if (slimefunItem != null) {
             if (slimefunItem.getRecipe().length <= SMALL_LIMIT) {
                 return new SlimefunItem3x3RecipeMenu(
-                    player, playerProfile, slimefunGuideMode, slimefunItem, this, this.page);
+                        player, playerProfile, slimefunGuideMode, slimefunItem, this, this.page);
             } else if (slimefunItem.getRecipe().length <= BIG_LIMIT) {
                 return new SlimefunItem6x6RecipeMenu(
-                    player, playerProfile, slimefunGuideMode, slimefunItem, this, this.page);
+                        player, playerProfile, slimefunGuideMode, slimefunItem, this, this.page);
             } else {
                 return null;
             }

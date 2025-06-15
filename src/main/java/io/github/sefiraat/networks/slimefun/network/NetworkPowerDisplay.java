@@ -29,14 +29,14 @@ import org.jetbrains.annotations.NotNull;
 
 public class NetworkPowerDisplay extends NetworkObject {
 
-    private static final int[] BACKGROUND_SLOTS = new int[]{0, 1, 2, 3, 5, 6, 7, 8};
+    private static final int[] BACKGROUND_SLOTS = new int[] {0, 1, 2, 3, 5, 6, 7, 8};
     private static final int DISPLAY_SLOT = 4;
 
     public NetworkPowerDisplay(
-        @NotNull ItemGroup itemGroup,
-        @NotNull SlimefunItemStack item,
-        @NotNull RecipeType recipeType,
-        ItemStack[] recipe) {
+            @NotNull ItemGroup itemGroup,
+            @NotNull SlimefunItemStack item,
+            @NotNull RecipeType recipeType,
+            ItemStack[] recipe) {
         super(itemGroup, item, recipeType, recipe, NodeType.POWER_DISPLAY);
         addItemHandler(new BlockTicker() {
             @Override
@@ -57,9 +57,9 @@ public class NetworkPowerDisplay extends NetworkObject {
 
     private static @NotNull ItemStack getChargeStack(long charge) {
         return ItemStackUtil.getCleanItem(new CustomItemStack(
-            Material.GREEN_STAINED_GLASS_PANE,
-            Lang.getString("icons.power_display.status_title"),
-            String.format(Lang.getString("icons.power_display.charge"), charge)));
+                Material.GREEN_STAINED_GLASS_PANE,
+                Lang.getString("icons.power_display.status_title"),
+                String.format(Lang.getString("icons.power_display.charge"), charge)));
     }
 
     private void setDisplay(@NotNull BlockMenu blockMenu) {
@@ -92,9 +92,9 @@ public class NetworkPowerDisplay extends NetworkObject {
             @Override
             public boolean canOpen(@NotNull Block block, @NotNull Player player) {
                 return player.hasPermission("slimefun.inventory.bypass")
-                    || (NetworkSlimefunItems.NETWORK_POWER_DISPLAY.canUse(player, false)
-                    && Slimefun.getProtectionManager()
-                    .hasPermission(player, block.getLocation(), Interaction.INTERACT_BLOCK));
+                        || (NetworkSlimefunItems.NETWORK_POWER_DISPLAY.canUse(player, false)
+                                && Slimefun.getProtectionManager()
+                                        .hasPermission(player, block.getLocation(), Interaction.INTERACT_BLOCK));
             }
 
             @Override
