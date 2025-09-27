@@ -55,7 +55,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @SuppressWarnings({"deprecation", "DuplicatedCode"})
-public abstract class NetworkMultiDirectional extends NetworkDirectional {
+    public abstract class NetworkMultiDirectional extends NetworkDirectional {
 
     private static final Map<Location, Set<BlockFace>> SELECTED_DIRECTIONS_MAP = new HashMap<>();
 
@@ -100,17 +100,17 @@ public abstract class NetworkMultiDirectional extends NetworkDirectional {
                 blockFace.name(),
                 TextUtil.stripColor(slimefunItem.getItemName()))));
         final ItemMeta itemMeta = displayStack.getItemMeta();
-        List<String> lore = new ArrayList<>();
-        lore.add(Lang.getString("messages.normal-operation.directional.display_lore"));
+        itemMeta.setLore(Lang.getStringList("messages.normal-operation.directional.display_lore"));
         if (active) {
-            lore.add(Lang.getString("messages.normal-operation.directional.selected"));
+            List<String> lore = itemMeta.getLore();
+            if (lore == null) {
+                lore = new ArrayList<>();
+            }
+            lore.add(Lang.getString("messages.normal-operation.directional.set_facing"));
+            itemMeta.setLore(lore);
             itemMeta.addEnchant(NetworksVersionedEnchantment.LUCK_OF_THE_SEA, 1, true);
-        } else {
-            lore.add(Lang.getString("messages.normal-operation.directional.not_selected"));
+            itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         }
-        lore.add(Lang.getString("messages.normal-operation.directional.click_to_toggle"));
-        itemMeta.setLore(lore);
-        itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         displayStack.setItemMeta(itemMeta);
         return displayStack;
     }
@@ -126,36 +126,24 @@ public abstract class NetworkMultiDirectional extends NetworkDirectional {
                     blockFace.name(),
                     MaterialHelper.getName(blockMaterial)));
             final ItemMeta itemMeta = displayStack.getItemMeta();
-            List<String> lore = new ArrayList<>();
-            lore.add(Lang.getString("messages.normal-operation.directional.display_lore"));
+            itemMeta.setLore(Lang.getStringList("messages.normal-operation.directional.display_lore"));
             if (active) {
-                lore.add(Lang.getString("messages.normal-operation.directional.selected"));
+                List<String> lore = itemMeta.getLore();
+                if (lore == null) {
+                    lore = new ArrayList<>();
+                }
+                lore.add(Lang.getString("messages.normal-operation.directional.set_facing"));
+                itemMeta.setLore(lore);
                 itemMeta.addEnchant(NetworksVersionedEnchantment.LUCK_OF_THE_SEA, 1, true);
-            } else {
-                lore.add(Lang.getString("messages.normal-operation.directional.not_selected"));
+                itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
             }
-            lore.add(Lang.getString("messages.normal-operation.directional.click_to_toggle"));
-            itemMeta.setLore(lore);
-            itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
             displayStack.setItemMeta(itemMeta);
             return displayStack;
         } else {
-            Material material = active ? Material.LIME_STAINED_GLASS_PANE : Material.RED_STAINED_GLASS_PANE;
-            ItemStack displayStack = new CustomItemStack(
+            Material material = active ? Material.GREEN_STAINED_GLASS_PANE : Material.RED_STAINED_GLASS_PANE;
+            return ItemStackUtil.getCleanItem(new CustomItemStack(
                 material,
-                String.format(Lang.getString("messages.normal-operation.directional.display_empty"), blockFace.name()));
-            ItemMeta itemMeta = displayStack.getItemMeta();
-            List<String> lore = new ArrayList<>();
-            lore.add(Lang.getString("messages.normal-operation.directional.empty_block"));
-            if (active) {
-                lore.add(Lang.getString("messages.normal-operation.directional.selected"));
-            } else {
-                lore.add(Lang.getString("messages.normal-operation.directional.not_selected"));
-            }
-            lore.add(Lang.getString("messages.normal-operation.directional.click_to_toggle"));
-            itemMeta.setLore(lore);
-            displayStack.setItemMeta(itemMeta);
-            return displayStack;
+                String.format(Lang.getString("messages.normal-operation.directional.display_empty"), blockFace)));
         }
     }
 
@@ -313,7 +301,7 @@ public abstract class NetworkMultiDirectional extends NetworkDirectional {
 
             @Override
             public void newInstance(@NotNull BlockMenu blockMenu, @NotNull Block b) {
-                // 方向按钮点击处理器
+
                 blockMenu.addMenuClickHandler(
                     getNorthSlot(),
                     (player, i, itemStack, clickAction) ->
@@ -388,7 +376,6 @@ public abstract class NetworkMultiDirectional extends NetworkDirectional {
         Location location = blockMenu.getLocation().clone();
         SELECTED_DIRECTIONS_MAP.put(location, directions);
 
-        // 将方向集合保存为逗号分隔的字符串
         String directionString = directions.stream()
             .map(BlockFace::name)
             .collect(Collectors.joining(","));
