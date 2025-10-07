@@ -65,7 +65,11 @@ public enum FeedbackType implements Keyed {
     TRANSFER_TRY_GRAB_ITEM,
     ROOT_REQUEST_0,
     ROOT_LIMITING_ACCESS_OUTPUT,
-    ROOT_LIMITING_ACCESS_INPUT;
+    ROOT_LIMITING_ACCESS_INPUT,
+    NO_TARGET_LOCATION,
+    NO_TARGET_NETWORK_FOUND,
+    SAME_NETWORK,
+    NO_MENU;
 
     private final @NotNull NamespacedKey key;
     private final @NotNull String message;

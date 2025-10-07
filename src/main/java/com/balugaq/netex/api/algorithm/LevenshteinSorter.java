@@ -8,6 +8,7 @@ import java.util.function.Function;
 /**
  * @author balugaq
  */
+@Deprecated
 public class LevenshteinSorter {
     public static int distance(@NotNull String a, @NotNull String b) {
         if (a.isEmpty()) return b.length();

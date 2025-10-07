@@ -83,6 +83,7 @@ import com.ytdd9527.networksexpansion.implementation.machines.networks.advanced.
 import com.ytdd9527.networksexpansion.implementation.machines.networks.advanced.AdvancedImport;
 import com.ytdd9527.networksexpansion.implementation.machines.networks.advanced.AdvancedPurger;
 import com.ytdd9527.networksexpansion.implementation.machines.networks.advanced.AdvancedVacuum;
+import com.ytdd9527.networksexpansion.implementation.machines.networks.advanced.AdvancedWirelessTransmitter;
 import com.ytdd9527.networksexpansion.implementation.machines.networks.advanced.DueMachine;
 import com.ytdd9527.networksexpansion.implementation.machines.networks.advanced.HangingGridNewStyle;
 import com.ytdd9527.networksexpansion.implementation.machines.networks.advanced.NetworkBlueprintDecoder;
@@ -1445,4 +1446,10 @@ public class ExpansionItems {
         ExpansionItemStacks.SMART_NETWORK_CRAFTING_GRID_NEW_STYLE,
         ExpansionWorkbench.TYPE,
         ExpansionRecipes.SMART_NETWORK_CRAFTING_GRID_NEW_STYLE);
+
+    public static final AdvancedWirelessTransmitter ADVANCED_WIRELESS_TRANSMITTER = new AdvancedWirelessTransmitter(
+        ExpansionItemsMenus.MENU_FUNCTIONAL_MACHINE,
+        ExpansionItemStacks.ADVANCED_WIRELESS_TRANSMITTER,
+        ExpansionWorkbench.TYPE,
+        ExpansionRecipes.ADVANCED_WIRELESS_TRANSMITTER);
 }

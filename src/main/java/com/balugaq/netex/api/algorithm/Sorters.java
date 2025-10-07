@@ -8,12 +8,14 @@ import io.github.sefiraat.networks.network.stackcaches.BarrelIdentity;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
 import net.guizhanss.guizhanlib.minecraft.helper.inventory.ItemStackHelper;
 import org.bukkit.inventory.ItemStack;
+import org.jspecify.annotations.NullMarked;
 
 import java.text.Collator;
 import java.util.Comparator;
 import java.util.Locale;
 import java.util.Map;
 
+@NullMarked
 public class Sorters {
     public static final String NO_ITEM = ItemStackHelper.getDisplayName(Icon.QUANTUM_STORAGE_NO_ITEM);
 

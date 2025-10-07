@@ -35,12 +35,14 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -48,6 +50,7 @@ import java.util.stream.Collectors;
 
 @SuppressWarnings("DuplicatedCode")
 public class LocalizationService {
+    public static final Set<String> noticed = new HashSet<>();
     private static final Map<String, String> CACHE = new HashMap<>();
     private static final String KEY_NAME = ".name";
     private static final String KEY_LORE = ".lore";
@@ -63,17 +66,13 @@ public class LocalizationService {
     private final @NotNull Map<String, Language> langMap;
     private final String colorTagRegex = "<[a-zA-Z0-9_]+>";
     private final Pattern pattern = Pattern.compile(this.colorTagRegex);
-
     @Setter
     @Getter
     private @NotNull String idPrefix = "";
-
     @Setter
     private @NotNull String itemGroupKey = "categories";
-
     @Setter
     private @NotNull String itemsKey = "items";
-
     @Setter
     private @NotNull String recipesKey = "recipes";
 
@@ -175,6 +174,11 @@ public class LocalizationService {
         String localization;
         do {
             if (!languages.hasNext()) {
+                if (noticed.contains(path)) {
+                    return path;
+                }
+
+                noticed.add(path);
                 Networks.getInstance().getLogger().severe("No localization found for path: " + path);
                 return path;
             }

@@ -125,7 +125,8 @@ public class SmartNetworkCraftingGridNewStyle extends AbstractGridNewStyle imple
                 storeItem,
                 Keybind.gridActionGenerate(this, AmountHandleStrategy.ONE, true),
                 Keybind.gridActionGenerate(this, AmountHandleStrategy.STACK, true),
-                Keybind.gridActionGenerate(this, AmountHandleStrategy.CUSTOM, true)
+                Keybind.gridActionGenerate(this, AmountHandleStrategy.CUSTOM, true),
+                Keybind.gridActionGenerate(this, AmountHandleStrategy.ASK, true)
             );
             it.defaultKeybinds(
                 Keybind.shiftLeftClick, storeItem
@@ -423,37 +424,37 @@ public class SmartNetworkCraftingGridNewStyle extends AbstractGridNewStyle imple
             }
 
             // fire craft event
-            NetworkCraftEvent event = new NetworkCraftEvent(player, this, templates, crafted);
+            NetworkCraftEvent event = new NetworkCraftEvent(player, this, templates, crafted.clone());
             Bukkit.getPluginManager().callEvent(event);
             if (event.isCancelled()) {
                 return;
             }
-            crafted = event.getOutput();
+            ItemStack c2 = event.getOutput();
 
             // Push item
-            if (crafted != null) {
+            if (c2 != null) {
                 label:
                 {
-                    if (crafted == null || crafted.getType() == Material.AIR || crafted.getAmount() <= 0) break label;
+                    if (c2 == null || c2.getType() == Material.AIR || c2.getAmount() <= 0) break label;
 
-                    // 1. try store back into networks
-                    root.addItemStack(crafted);
-                    if (crafted.getAmount() == 0) break label;
+                    // 1. try store into output slots
+                    BlockMenuUtil.pushItem(menu, c2, OUTPUT_SLOTS);
+                    if (c2.getAmount() == 0) break label;
 
-                    // 2. try store into output slots
-                    BlockMenuUtil.pushItem(menu, crafted, OUTPUT_SLOTS);
-                    if (crafted.getAmount() == 0) break label;
+                    // 2. try store back into networks
+                    root.addItemStack(c2);
+                    if (c2.getAmount() == 0) break label;
 
                     // 3. try store into ingredients slots
-                    BlockMenuUtil.pushItem(menu, crafted, getIngredientSlots());
-                    if (crafted.getAmount() == 0) break label;
+                    BlockMenuUtil.pushItem(menu, c2, getIngredientSlots());
+                    if (c2.getAmount() == 0) break label;
 
                     // 4. try store into player inventory
-                    InventoryUtil.addItem(player, crafted);
-                    if (crafted.getAmount() == 0) break label;
+                    InventoryUtil.addItem(player, c2);
+                    if (c2.getAmount() == 0) break label;
 
                     // 5. try drop in the world
-                    player.getWorld().dropItem(player.getLocation(), crafted);
+                    player.getWorld().dropItem(player.getLocation(), c2);
                 }
             }
 

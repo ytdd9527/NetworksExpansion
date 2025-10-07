@@ -66,18 +66,22 @@ public interface Keybind extends Keyed, Comparable<Keybind> {
             ItemStack clone = grid.precheck(definition, menu, player, i);
             if (clone == null) return ActionResult.of(MultiActionHandle.CONTINUE, false);
 
-            final GridItemRequest request = new GridItemRequest(clone, strategy.getAmount(player, clone), player);
+            strategy.handle(menu.getLocation(), player, clone, amount -> {
+                final GridItemRequest request = new GridItemRequest(clone, amount, player);
 
-            if (toInventory) {
-                grid.addToInventory(player, definition, request, menu);
-            } else {
-                grid.addToCursor(player, definition, request, a.isRightClicked(), menu);
-            }
-            GridCache gridCache = grid.getCacheMap().get(menu.getLocation());
-            if (gridCache.getDisplayMode() == GridCache.DisplayMode.DISPLAY) {
-                gridCache.addPullItemHistory(clone);
-            }
-            grid.updateDisplay(menu);
+                if (toInventory) {
+                    grid.addToInventory(player, definition, request, menu);
+                } else {
+                    grid.addToCursor(player, definition, request, a.isRightClicked(), menu);
+                }
+
+                GridCache gridCache = grid.getCacheMap().get(menu.getLocation());
+                if (gridCache.getDisplayMode() == GridCache.DisplayMode.DISPLAY) {
+                    gridCache.addPullItemHistory(clone);
+                }
+                grid.updateDisplay(menu);
+            });
+
             return ActionResult.of(MultiActionHandle.BREAK, false);
         });
     }

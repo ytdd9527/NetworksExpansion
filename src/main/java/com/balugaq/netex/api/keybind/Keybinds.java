@@ -296,19 +296,19 @@ public @Data class Keybinds implements ChestMenu.MenuClickHandler, Keyed {
         return Lang.getIcon("keybinds." + key.getKey(), Material.DIAMOND_ORE);
     }
 
-    public void openMenu(Location location, Player player, Consumer<Player> back) {
-        openMenu(location, player, 1, back);
+    public void openMenu(Location location, Player player) {
+        openMenu(location, player, 1);
     }
 
-    public void openMenu(Location location, Player player, int page, Consumer<Player> back) {
-        ChestMenu menu = new ChestMenu(Lang.getString("messages.keybind.sub-title"));
+    public static int[] backgroundSlots = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 13, 17, 18, 22, 26, 27, 31, 35, 36, 40, 44, 45, 46, 47, 48, 50, 51, 52, 53};
+    public static int[] keybindsSlots = {10, 19, 28, 37, 14, 23, 32, 41};
+    public static int[] bordersSlots = {11, 20, 29, 38, 15, 24, 33, 42};
+    public static int[] actionsSlots = {12, 21, 30, 39, 16, 25, 34, 43};
+    public static int previousSlot = 47;
+    public static int nextSlot = 52;
 
-        int[] backgroundSlots = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 13, 17, 18, 22, 26, 27, 31, 35, 36, 40, 44, 45, 46, 47, 48, 50, 51, 52, 53};
-        int[] keybindsSlots = {10, 19, 28, 37, 14, 23, 32, 41};
-        int[] bordersSlots = {11, 20, 29, 38, 15, 24, 33, 42};
-        int[] actionsSlots = {12, 21, 30, 39, 16, 25, 34, 43};
-        int previousSlot = 47;
-        int nextSlot = 52;
+    public void openMenu(Location location, Player player, int page) {
+        ChestMenu menu = new ChestMenu(Lang.getString("messages.keybind.sub-title"));
 
         for (int slot : backgroundSlots) {
             menu.addItem(slot, Icon.BLUE_BACKGROUND, (p, s, i, a) -> false);
@@ -328,7 +328,7 @@ public @Data class Keybinds implements ChestMenu.MenuClickHandler, Keyed {
                 menu.addItem(bordersSlots[slot], Icon.YELLOW_BORDER, (p, s, i, a) -> false);
                 menu.addItem(actionsSlots[slot], Lang.getIcon("keybinds." + action.getKey().getKey(), Material.REDSTONE_TORCH), (p, s, i, a) -> {
                     openActionSelectMenu(location, player, this, keybind, action, 1, p2 ->
-                        openMenu(location, p2, page, back)
+                        openMenu(location, p2, page)
                     );
                     return false;
                 });
@@ -340,7 +340,7 @@ public @Data class Keybinds implements ChestMenu.MenuClickHandler, Keyed {
         if (page > 1) {
             menu.addItem(previousSlot, Icon.getPageStack(Icon.PAGE_PREVIOUS_STACK, page, maxPage), (p, s, i, a) -> {
                 if (page <= 1) return false;
-                openMenu(location, p, page - 1, back);
+                openMenu(location, p, page - 1);
                 return false;
             });
         }
@@ -348,7 +348,7 @@ public @Data class Keybinds implements ChestMenu.MenuClickHandler, Keyed {
         if (page < maxPage) {
             menu.addItem(nextSlot, Icon.getPageStack(Icon.PAGE_NEXT_STACK, page, maxPage), (p, s, i, a) -> {
                 if (page >= maxPage) return false;
-                openMenu(location, p, page + 1, back);
+                openMenu(location, p, page + 1);
                 return false;
             });
         }

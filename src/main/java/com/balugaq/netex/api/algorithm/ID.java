@@ -1,9 +1,14 @@
 package com.balugaq.netex.api.algorithm;
 
 import io.github.sefiraat.networks.Networks;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.concurrent.atomic.AtomicLong;
 
+/**
+ * @author balugaq
+ */
+@NullMarked
 public class ID {
     private static AtomicLong id = new AtomicLong(0);
 

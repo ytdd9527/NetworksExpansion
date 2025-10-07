@@ -45,6 +45,8 @@ import static io.github.sefiraat.networks.slimefun.NetworkSlimefunItems.NETWORK_
 import static io.github.sefiraat.networks.slimefun.NetworkSlimefunItems.NETWORK_VANILLA_GRABBER;
 import static io.github.sefiraat.networks.slimefun.NetworkSlimefunItems.NETWORK_VANILLA_PUSHER;
 import static io.github.sefiraat.networks.slimefun.NetworkSlimefunItems.NETWORK_WIRELESS_CONFIGURATOR;
+import static io.github.sefiraat.networks.slimefun.NetworkSlimefunItems.NETWORK_WIRELESS_RECEIVER;
+import static io.github.sefiraat.networks.slimefun.NetworkSlimefunItems.NETWORK_WIRELESS_TRANSMITTER;
 import static io.github.sefiraat.networks.slimefun.NetworkSlimefunItems.OPTIC_CABLE;
 import static io.github.sefiraat.networks.slimefun.NetworkSlimefunItems.OPTIC_GLASS;
 import static io.github.sefiraat.networks.slimefun.NetworkSlimefunItems.OPTIC_STAR;
@@ -1693,5 +1695,11 @@ public class ExpansionRecipes {
         NETWORK_BRIDGE.getItem(), NETWORK_BRIDGE.getItem(), NETWORK_BRIDGE.getItem(),
         NETWORK_BRIDGE.getItem(), ExpansionItemStacks.NETWORK_CRAFTING_GRID_NEW_STYLE, NETWORK_BRIDGE.getItem(),
         NETWORK_BRIDGE.getItem(), NETWORK_BRIDGE.getItem(), NETWORK_BRIDGE.getItem()
+    };
+
+    public static final ItemStack[] ADVANCED_WIRELESS_TRANSMITTER = new ItemStack[]{
+        NETWORK_BRIDGE.getItem(), NETWORK_WIRELESS_TRANSMITTER.getItem(), NETWORK_BRIDGE.getItem(),
+        NETWORK_WIRELESS_RECEIVER.getItem(), NETWORK_WIRELESS_TRANSMITTER.getItem(), NETWORK_WIRELESS_RECEIVER.getItem(),
+        NETWORK_BRIDGE.getItem(), NETWORK_WIRELESS_TRANSMITTER.getItem(), NETWORK_BRIDGE.getItem()
     };
 }

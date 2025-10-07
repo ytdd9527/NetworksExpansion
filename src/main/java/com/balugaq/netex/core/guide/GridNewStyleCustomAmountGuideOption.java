@@ -1,6 +1,7 @@
 package com.balugaq.netex.core.guide;
 
 import com.balugaq.jeg.api.patches.JEGGuideSettings;
+import com.balugaq.netex.api.algorithm.Calculator;
 import io.github.sefiraat.networks.Networks;
 import io.github.thebusybiscuit.slimefun4.api.SlimefunAddon;
 import io.github.thebusybiscuit.slimefun4.core.guide.options.SlimefunGuideOption;
@@ -22,7 +23,7 @@ import java.util.Optional;
  */
 @SuppressWarnings({"UnnecessaryUnicodeEscape", "SameReturnValue"})
 public class GridNewStyleCustomAmountGuideOption implements SlimefunGuideOption<Integer> {
-    public static final int GRID_NEW_STYLE_MAX_CUSTOM_AMOUNT = 36 * 64;
+    public static final int GRID_NEW_STYLE_MAX_CUSTOM_AMOUNT = Networks.getConfigManager().getInt("grid-new-style-max-custom-amount");
     private static final @NotNull GridNewStyleCustomAmountGuideOption instance = new GridNewStyleCustomAmountGuideOption();
 
     public static @NotNull GridNewStyleCustomAmountGuideOption instance() {
@@ -68,10 +69,10 @@ public class GridNewStyleCustomAmountGuideOption implements SlimefunGuideOption<
     @Override
     public void onClick(@NotNull Player p, @NotNull ItemStack guide) {
         p.closeInventory();
-        p.sendMessage(ChatColors.color("&a请输入高级网格自定义单次取出数量"));
+        p.sendMessage(ChatColors.color("&e请输入高级网格自定义单次取出数量"));
         ChatInput.waitForPlayer(Networks.getInstance(), p, s -> {
             try {
-                int value = Integer.parseInt(s);
+                int value = Calculator.calculate(s).intValue();
                 if (value < 1 || value > GRID_NEW_STYLE_MAX_CUSTOM_AMOUNT) {
                     p.sendMessage("请输入 1 ~ " + GRID_NEW_STYLE_MAX_CUSTOM_AMOUNT + " 之间的正整数");
                     return;
@@ -83,8 +84,8 @@ public class GridNewStyleCustomAmountGuideOption implements SlimefunGuideOption<
                 } catch (Exception ignored) {
                     SlimefunGuideSettings.openSettings(p, guide);
                 }
-            } catch (NumberFormatException ignored) {
-                p.sendMessage("请输入 1 ~ " + GRID_NEW_STYLE_MAX_CUSTOM_AMOUNT + " 之间的正整数");
+            } catch (NumberFormatException e) {
+                p.sendMessage("请输入 1 ~ " + GRID_NEW_STYLE_MAX_CUSTOM_AMOUNT + " 之间的正整数" + e.getMessage());
             }
         });
     }

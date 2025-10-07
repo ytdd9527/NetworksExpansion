@@ -66,6 +66,10 @@ messages:
     root_limiting_access_output: "getItemStack0被限制执行"
     root_limiting_access_input: "addItemStack0被限制执行"
     too_many_entities: "周围实体过多"
+    no_target_location: "未指定目标位置"
+    no_target_network_found: "未找到目标网络"
+    same_network: "不能向同一网络发送物品"
+    no_menu: "未找到菜单"
   blueprint:
     title: "<click_info>已指定配方"
     empty: "<passive>空"
@@ -92,8 +96,8 @@ messages:
     enabled-debug: "<success>该模式将持续至服务器关闭，或者手动关闭。"
     wildchests: "WildChests 已安装：%s"
     ischest: "该方块是否被 WildChest 判断为方块：%s"
-    wildchests-test-success: "WildChests 测试成功!"
-    wildchests-test-failed: "WildChests 测试失败!"
+    wildchests-trigger-success: "WildChests 测试成功!"
+    wildchests-trigger-failed: "WildChests 测试失败!"
     status_view: "位置 %s 反馈了信息: %s"
   commands:
     no-permission: "&c你没有权限执行该指令!"
@@ -294,6 +298,7 @@ messages:
     wireless_configurator:
       transmitter_linked: "<success>已设置网络无线发射器。"
       receiver_set: "<success>已存储网络无线接收器的位置。"
+      set_location: "已设置机器 %s 的目标位置 %s"
     cargo_node_quick_tool:
       node_set: "&9物品: %s"
       config_saved: "&a加载成功"
@@ -532,8 +537,8 @@ icons:
   craft:
     name: "&e合成"
     lore:
-      - "左键点击: 合成1次"
-      - "右键点击: 合成64次"
+      - "<click_info>左键点击: 合成1次"
+      - "<click_info>右键点击: 合成64次"
   keybinds:
     scripts:
       display:
@@ -576,6 +581,10 @@ icons:
       name: "&6取出自定义数量个物品至光标"
     custom-inv:
       name: "&6取出自定义数量个物品至背包"
+    ask-cursor:
+      name: "&6询问数量并取出指定数量个物品至光标"
+    ask-inv:
+      name: "&6询问数量并取出指定数量个物品至背包"
   filter-mode-black-list:
     name: "&6黑名单模式"
     lore:
@@ -940,11 +949,9 @@ icons:
     name: "&6点击升级"
     lore:
       - ""
+  ae_switcher:
+    name: "网络交换机"
   recipe-types:
-    expansion_workbench_6x6:
-      name: "网络拓展工作台6x6"
-      lore:
-        - "在6x6拓展工作台中制作"
     expansion_workbench_3x3:
       name: "网络拓展工作台"
       lore:
@@ -953,6 +960,7 @@ icons:
       name: "网络量子工作台"
       lore:
         - "在量子工作台中制作"
+
 items:
   # DO NOT TRANSLATE, CHANGE OR DELETE THESE ANNOUNCEMENTS
   NTW_EXPANSION_ANNOUNCE_1:
@@ -1083,9 +1091,9 @@ items:
       - "<warning> 网络拓展开发版不接受 GitHub Issues"
       - "<warning> 网络拓展开发版不接受 GitHub PR"
       - "<passive> 版本信息:"
-      - "<passive> 网络拓展版本: Special-Version-55"
+      - "<passive> 网络拓展版本: Special-Version-57"
       - "<passive> 版本状态: 稳定版"
-      - "<passive> 版本更新时间: 2025-9-24 17:01:40"
+      - "<passive> 版本更新时间: 2025-10-2 16:37:22"
       - "<passive> 开发状态: 更新中"
       - "<passive> 开发者（们）: ytdd9527, balugaq"
       - "<passive> 开发者 GitHub 页面: <click_info>https://github.com/ytdd9527"
@@ -3258,6 +3266,14 @@ items:
       - "网络无线接收器中(只能在同一世界)."
       - "使用网络无线配置器来进行绑定."
       - "每次传输会消耗 500 J 网络电力."
+
+  NTW_EXPANSION_ADVANCED_WIRELESS_TRANSMITTER:
+    name: "高级网络无线发射器"
+    lore:
+      - "高级网络无线发射器可以"
+      - "将其中的物品传输到绑定的"
+      - "网络无线接收器中(只能在同一世界)."
+      - "使用网络无线配置器来进行绑定."
 
   NTW_NETWORK_WIRELESS_RECEIVER:
     name: "网络无线接收器"

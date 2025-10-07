@@ -1,5 +1,6 @@
 package com.ytdd9527.networksexpansion.core.items.machines;
 
+import com.balugaq.netex.api.algorithm.Calculator;
 import com.balugaq.netex.api.enums.TransportMode;
 import com.balugaq.netex.api.helpers.Icon;
 import com.balugaq.netex.utils.Lang;
@@ -17,8 +18,10 @@ import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
 import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
 import io.github.thebusybiscuit.slimefun4.implementation.Slimefun;
+import io.github.thebusybiscuit.slimefun4.libraries.dough.common.ChatColors;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.items.CustomItemStack;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.protection.Interaction;
+import io.github.thebusybiscuit.slimefun4.utils.ChatUtils;
 import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.ClickAction;
 import me.mrCookieSlime.Slimefun.Objects.handlers.BlockTicker;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
@@ -62,7 +65,7 @@ public abstract class AdvancedDirectional extends NetworkDirectional {
     private static final Set<BlockFace> VALID_FACES =
         EnumSet.of(BlockFace.UP, BlockFace.DOWN, BlockFace.NORTH, BlockFace.EAST, BlockFace.SOUTH, BlockFace.WEST);
     private static final Map<Location, BlockFace> SELECTED_DIRECTION_MAP = new HashMap<>();
-    private static final Map<Location, Integer> NETWORK_LIMIT_QUANTITY_MAP = new HashMap<>();
+    protected static final Map<Location, Integer> NETWORK_LIMIT_QUANTITY_MAP = new HashMap<>();
     private static final Map<Location, TransportMode> NETWORK_TRANSPORT_MODE_MAP = new HashMap<>();
     final NetworkDirectional instance = this;
     private final @NotNull ItemStack CARGO_NUMBER_ICON_CLONE;
@@ -363,7 +366,28 @@ public abstract class AdvancedDirectional extends NetworkDirectional {
                         directionClick(player, clickAction, blockMenu, BlockFace.DOWN));
 
                 if (getCargoNumberSlot() != -1) {
-                    blockMenu.addMenuClickHandler(getCargoNumberSlot(), (player, i, itemStack, clickAction) -> false);
+                    blockMenu.addMenuClickHandler(getCargoNumberSlot(), (player, i, itemStack, clickAction) -> {
+                        player.sendMessage(ChatColors.color("&e输入数量"));
+                        ChatUtils.awaitInput(player, input -> {
+                            try {
+                                int value = Calculator.calculate(input).intValue();
+                                if (value <= 0 || value > getMaxLimit()) {
+                                    player.sendMessage("请输入 1 ~ " + getMaxLimit() + " 之间的正整数");
+                                    BlockMenu menu = StorageCacheUtils.getMenu(location);
+                                    if (menu != null) menu.open(player);
+                                    return;
+                                }
+
+                                setLimitQuantity(location, value);
+                                updateShowIcon(location);
+                                BlockMenu menu = StorageCacheUtils.getMenu(location);
+                                if (menu != null) menu.open(player);
+                            } catch (NumberFormatException e) {
+                                player.sendMessage(e.getMessage());
+                            }
+                        });
+                        return false;
+                    });
                 }
 
                 if (getAddSlot() != -1) {

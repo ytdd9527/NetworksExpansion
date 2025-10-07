@@ -42,6 +42,7 @@ public enum NodeType {
     CRAFTER_MANAGER,
     FLOW_VIEWER,
     ADVANCED_VACUUM,
+    ADVANCED_WIRELESS_TRANSMITTER,
 
     // Hanging blocks
     @Deprecated
@@ -51,7 +52,7 @@ public enum NodeType {
     // will NOT count as a node
     HANGING_GRID,
 
-    // from foreign addons
+    // from other addons
     // For SlimeAEPlugin
     AE_SWITCHER
 }

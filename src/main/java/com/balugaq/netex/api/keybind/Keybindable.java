@@ -51,7 +51,7 @@ public interface Keybindable {
             } else {
                 Keybinds keybind = keybinds.get(slot + (page - 1) * keybindsSlots.length);
                 menu.addItem(keybindsSlots[slot], keybind.icon(), (p, s, i, a) -> {
-                    keybind.openMenu(location, p, p2 -> openMenu(location, p2, keybinds, page));
+                    keybind.openMenu(location, p);
                     return false;
                 });
             }

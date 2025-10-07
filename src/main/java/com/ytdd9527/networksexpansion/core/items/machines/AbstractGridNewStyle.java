@@ -12,6 +12,7 @@ import com.github.houbb.pinyin.constant.enums.PinyinStyleEnum;
 import com.github.houbb.pinyin.util.PinyinHelper;
 import com.xzavier0722.mc.plugin.slimefun4.storage.controller.SlimefunBlockData;
 import com.xzavier0722.mc.plugin.slimefun4.storage.util.StorageCacheUtils;
+import com.ytdd9527.networksexpansion.implementation.machines.networks.advanced.SmartNetworkCraftingGridNewStyle;
 import com.ytdd9527.networksexpansion.utils.TextUtil;
 import io.github.sefiraat.networks.NetworkStorage;
 import io.github.sefiraat.networks.Networks;
@@ -450,10 +451,13 @@ public abstract class AbstractGridNewStyle extends NetworkObject implements Keyb
         }
 
         HashMap<Integer, ItemStack> remnant = InventoryUtil.addItem(player, requestingStack);
-        requestingStack = remnant.values().stream().findFirst().orElse(null);
-        if (requestingStack != null) {
-            definition.getNode().getRoot().addItemStack(requestingStack);
-        }
+        remnant.values().stream().findFirst().ifPresent(r2 -> Bukkit.getScheduler().runTask(Networks.getInstance(), () -> {
+            if (player.getWorld().getNearbyEntities(player.getLocation(), 5, 5, 5).size() > SmartNetworkCraftingGridNewStyle.THRESHOLD) {
+                player.getWorld().dropItem(player.getLocation(), r2);
+            } else {
+                definition.getNode().getRoot().addItemStack(r2);
+            }
+        }));
     }
 
     @ParametersAreNonnullByDefault

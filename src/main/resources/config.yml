@@ -5,10 +5,12 @@ auto-update: true
 language: zh-CN
 
 # Do not change this value unless you know what you are doing.
-config-version: Special-Version-41
+config-version: Special-Version-56
 
 # Do not change this value unless you know what you are doing.
 debug: false
+
+grid-new-style-max-custom-amount: 2304
 
 ban-quantum-in-quantum: false
 

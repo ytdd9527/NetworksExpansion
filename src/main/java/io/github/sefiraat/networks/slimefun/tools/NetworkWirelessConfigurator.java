@@ -4,6 +4,7 @@ import com.balugaq.netex.utils.Lang;
 import com.jeff_media.morepersistentdatatypes.DataType;
 import com.xzavier0722.mc.plugin.slimefun4.storage.util.StorageCacheUtils;
 import com.ytdd9527.networksexpansion.core.items.SpecialSlimefunItem;
+import com.ytdd9527.networksexpansion.implementation.machines.networks.advanced.AdvancedWirelessTransmitter;
 import io.github.sefiraat.networks.slimefun.network.NetworkWirelessReceiver;
 import io.github.sefiraat.networks.slimefun.network.NetworkWirelessTransmitter;
 import io.github.sefiraat.networks.utils.Keys;
@@ -51,6 +52,25 @@ public class NetworkWirelessConfigurator extends SpecialSlimefunItem {
                         setTransmitter(transmitter, heldItem, blockMenu, player);
                     } else if (slimefunItem instanceof NetworkWirelessReceiver && !player.isSneaking()) {
                         setReceiver(heldItem, blockMenu, player);
+                    } else if (slimefunItem instanceof AdvancedWirelessTransmitter w) {
+                        final ItemMeta itemMeta = heldItem.getItemMeta();
+                        Location location = PersistentDataAPI.get(itemMeta, Keys.TARGET_LOCATION, DataType.LOCATION);
+                        if (location == null) {
+                            location = PersistentDataAPI.get(itemMeta, Keys.TARGET_LOCATION2, DataType.LOCATION);
+                        }
+
+                        if (location == null) {
+                            location = PersistentDataAPI.get(itemMeta, Keys.TARGET_LOCATION3, DataType.LOCATION);
+                        }
+
+                        if (location == null) {
+                            player.sendMessage(
+                                Lang.getString("messages.unsupported-operation.wireless_configurator.no_target_location"));
+                            return;
+                        }
+
+                        w.setTargetLocation(block.getLocation(), player, location);
+                        player.sendMessage(String.format(Lang.getString("messages.completed-operation.wireless_configurator.set_location"), AdvancedWirelessTransmitter.string(block.getLocation()), AdvancedWirelessTransmitter.string(location)));
                     } else {
                         player.sendMessage(Lang.getString(
                             "messages.unsupported-operation.wireless_configurator.not_network_wireless_block"));

@@ -85,6 +85,8 @@ public class NetworkProbe extends SpecialSlimefunItem implements CanCooldown {
             final int drawerManagers = root.getDrawerManagers().size();
             final int crafterManagers = root.getCrafterManagers().size();
             final int itemFlowViewers = root.getItemFlowViewers().size();
+            final int advancedWirelessTransmitters = root.getAdvancedWirelessTransmitters().size();
+            final int aeSwitchers = root.getAeSwitchers().size();
 
             final Map<ItemStack, Long> allNetworkItems = root.getAllNetworkItemsLongType();
             final int distinctItems = allNetworkItems.size();
@@ -115,7 +117,7 @@ public class NetworkProbe extends SpecialSlimefunItem implements CanCooldown {
             player.sendMessage(formatter(NetworksSlimefunItemStacks.NETWORK_PURGER.getDisplayName(), purgers));
             player.sendMessage(formatter(NetworksSlimefunItemStacks.NETWORK_AUTO_CRAFTER.getDisplayName(), crafters));
             player.sendMessage(formatter(
-                nullOrSpaces(NetworksSlimefunItemStacks.NETWORK_CAPACITOR_1.getDisplayName())
+                stringOrSpaces(NetworksSlimefunItemStacks.NETWORK_CAPACITOR_1.getDisplayName())
                     .substring(0, 4),
                 powerNodes));
             player.sendMessage(
@@ -129,7 +131,7 @@ public class NetworkProbe extends SpecialSlimefunItem implements CanCooldown {
             player.sendMessage(formatter(
                 NetworksSlimefunItemStacks.NETWORK_WIRELESS_RECEIVER.getDisplayName(), wirelessReceivers));
             player.sendMessage(formatter(
-                nullOrSpaces(NetworksSlimefunItemStacks.NETWORK_POWER_OUTLET_1.getDisplayName())
+                stringOrSpaces(NetworksSlimefunItemStacks.NETWORK_POWER_OUTLET_1.getDisplayName())
                     .substring(0, 4),
                 powerOutlets));
             player.sendMessage(
@@ -156,7 +158,7 @@ public class NetworkProbe extends SpecialSlimefunItem implements CanCooldown {
             player.sendMessage(
                 formatter(ExpansionItemStacks.NETWORK_OUTPUT_ONLY_MONITOR.getDisplayName(), outputOnlyMonitor));
             player.sendMessage(formatter(
-                nullOrSpaces(ExpansionItemStacks.LINE_POWER_OUTLET_1.getDisplayName())
+                stringOrSpaces(ExpansionItemStacks.LINE_POWER_OUTLET_1.getDisplayName())
                     .substring(0, 6),
                 linePowerOutlets));
             player.sendMessage(formatter(ExpansionItemStacks.NETWORK_BLUEPRINT_DECODER.getDisplayName(), decoders));
@@ -164,6 +166,8 @@ public class NetworkProbe extends SpecialSlimefunItem implements CanCooldown {
             player.sendMessage(formatter(ExpansionItemStacks.DRAWER_MANAGER.getDisplayName(), drawerManagers));
             player.sendMessage(formatter(ExpansionItemStacks.CRAFTER_MANAGER.getDisplayName(), crafterManagers));
             player.sendMessage(formatter(ExpansionItemStacks.ITEM_FLOW_VIEWER.getDisplayName(), itemFlowViewers));
+            player.sendMessage(formatter(ExpansionItemStacks.ADVANCED_WIRELESS_TRANSMITTER.getDisplayName(), advancedWirelessTransmitters));
+            player.sendMessage(formatter(Lang.getString("icons.ae_switcher.name"), aeSwitchers));
             player.sendMessage(Lang.getString("messages.completed-operation.probe.split"));
             player.sendMessage(
                 formatter(Lang.getString("messages.completed-operation.probe.distinct_items"), distinctItems));
@@ -195,7 +199,7 @@ public class NetworkProbe extends SpecialSlimefunItem implements CanCooldown {
             .toString();
     }
 
-    public static @NotNull String nullOrSpaces(@Nullable String s) {
+    public static @NotNull String stringOrSpaces(@Nullable String s) {
         return s == null ? SPACES : s;
     }
 

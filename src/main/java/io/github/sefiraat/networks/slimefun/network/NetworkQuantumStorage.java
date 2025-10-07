@@ -1,5 +1,6 @@
 package io.github.sefiraat.networks.slimefun.network;
 
+import com.balugaq.netex.api.algorithm.Calculator;
 import com.balugaq.netex.api.enums.FeedbackType;
 import com.balugaq.netex.api.helpers.Icon;
 import com.balugaq.netex.utils.BlockMenuUtil;
@@ -431,11 +432,12 @@ public class NetworkQuantumStorage extends SpecialSlimefunItem implements Distin
                                 if (s.isBlank()) {
                                     return;
                                 }
-                                int newMax = Math.max(1, Math.min(Integer.parseInt(s), maxAmount));
+                                int newMax = Math.max(1, Math.min(Calculator.calculate(s).intValue(), maxAmount));
                                 setCustomMaxAmount(menu, p, newMax);
                             } catch (NumberFormatException e) {
                                 p.sendMessage(Lang.getString(
                                     "messages.unsupported-operation.quantum_storage.invalid_custom_max_amount"));
+                                p.sendMessage(e.getMessage());
                             }
                         });
                     } else {

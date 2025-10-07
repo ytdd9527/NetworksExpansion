@@ -154,6 +154,10 @@ public class NetworkRoot extends NetworkNode {
     private final Set<Location> crafterManagers = ConcurrentHashMap.newKeySet();
     @Getter
     private final Set<Location> itemFlowViewers = ConcurrentHashMap.newKeySet();
+    @Getter
+    private final Set<Location> advancedWirelessTransmitters = ConcurrentHashMap.newKeySet();
+    @Getter
+    private final Set<Location> aeSwitchers = ConcurrentHashMap.newKeySet();
     @Deprecated
     private final boolean progressing = false;
     @Getter
@@ -510,6 +514,8 @@ public class NetworkRoot extends NetworkNode {
             case DRAWER_MANAGER -> drawerManagers.add(location);
             case CRAFTER_MANAGER -> crafterManagers.add(location);
             case FLOW_VIEWER -> itemFlowViewers.add(location);
+            case ADVANCED_WIRELESS_TRANSMITTER -> advancedWirelessTransmitters.add(location);
+            case AE_SWITCHER -> aeSwitchers.add(location);
         }
     }
 
