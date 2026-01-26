@@ -6,6 +6,9 @@
 
 ## 下载
 
+> [!IMPORTANT]
+> 本附属年久失修。[网络拓展](https://github.com/ytdd9527/NetworksExpansion)是基于本附属进行再开发以及 bug 修复的 fork 版本，建议更换。[点击前往下载网络扩展](https://builds.guizhanss.com/ytdd9527/NetworksExpansion)
+
 [![构建状态](https://builds.guizhanss.com/api/badge/SlimefunGuguProject/Networks/master/latest)](https://builds.guizhanss.com/SlimefunGuguProject/Networks/master)
 
 ## Wiki / 文档
