@@ -320,6 +320,26 @@ public class LineOperationUtil {
                     }
                 }
             }
+            case SPECIFIED_QUANTITY -> {
+                for (int slot : slots) {
+                    final ItemStack item = blockMenu.getItemInSlot(slot);
+                    if (item != null && item.getType() != Material.AIR) {
+                        final int currentAmount = item.getAmount();
+                        if (currentAmount > limitQuantity) {
+                            final int excess = currentAmount - limitQuantity;
+                            final int toGrab = Math.min(excess, limit);
+                            final ItemStack clone = StackUtils.getAsQuantity(item, toGrab);
+                            root.addItemStack0(accessor, clone);
+                            final int actualGrabbed = toGrab - clone.getAmount();
+                            item.setAmount(currentAmount - actualGrabbed);
+                            limit -= actualGrabbed;
+                            if (limit <= 0) {
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -588,6 +608,38 @@ public class LineOperationUtil {
                 final ItemStack retrieved = root.getItemStack0(accessor, itemRequest);
                 if (retrieved != null && retrieved.getType() != Material.AIR) {
                     BlockMenuUtil.pushItem(blockMenu, retrieved, slots);
+                }
+            }
+            case SPECIFIED_QUANTITY -> {
+                int existingCount = 0;
+                for (int slot : slots) {
+                    final ItemStack itemStack = blockMenu.getItemInSlot(slot);
+                    if (itemStack != null && itemStack.getType() != Material.AIR) {
+                        if (StackUtils.itemsMatch(itemRequest, itemStack)) {
+                            existingCount += itemStack.getAmount();
+                        }
+                    }
+                }
+                if (existingCount < limitQuantity) {
+                    final int deficit = limitQuantity - existingCount;
+                    int availableSpace = 0;
+                    for (int slot : slots) {
+                        final ItemStack itemStack = blockMenu.getItemInSlot(slot);
+                        if (itemStack == null || itemStack.getType() == Material.AIR) {
+                            availableSpace += clone.getMaxStackSize();
+                        } else if (StackUtils.itemsMatch(itemRequest, itemStack)) {
+                            availableSpace += Math.max(0, itemStack.getMaxStackSize() - itemStack.getAmount());
+                        }
+                    }
+                    if (availableSpace <= 0) {
+                        return;
+                    }
+                    final int toRequest = Math.min(deficit, availableSpace);
+                    itemRequest.setAmount(toRequest);
+                    final ItemStack retrieved = root.getItemStack0(accessor, itemRequest);
+                    if (retrieved != null && retrieved.getType() != Material.AIR) {
+                        BlockMenuUtil.pushItem(blockMenu, retrieved, slots);
+                    }
                 }
             }
         }
