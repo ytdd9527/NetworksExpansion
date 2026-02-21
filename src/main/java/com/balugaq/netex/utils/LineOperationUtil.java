@@ -338,7 +338,7 @@ public class LineOperationUtil {
                         }
                     }
                     if (!found) {
-                        itemSamples.put(typeIndex, item.clone());
+                        itemSamples.put(typeIndex, StackUtils.getAsQuantity(item, 1));
                         itemTotals.put(typeIndex, item.getAmount());
                         typeIndex++;
                     }
@@ -349,7 +349,7 @@ public class LineOperationUtil {
                         continue;
                     }
                     int toRemove = total - limitQuantity;
-                    for (int i = slots.length - 1; i >= 0 && toRemove > 0 && limit > 0; i--) {
+                    for (int i = slots.length - 1; i >= 0 && toRemove > 0; i--) {
                         final ItemStack item = blockMenu.getItemInSlot(slots[i]);
                         if (item == null || item.getType() == Material.AIR) {
                             continue;
@@ -357,13 +357,14 @@ public class LineOperationUtil {
                         if (!StackUtils.itemsMatch(entry.getValue(), item)) {
                             continue;
                         }
-                        final int grabFromSlot = Math.min(Math.min(item.getAmount(), toRemove), limit);
-                        final ItemStack clone = StackUtils.getAsQuantity(item, grabFromSlot);
-                        root.addItemStack0(accessor, clone);
-                        final int actualGrabbed = grabFromSlot - clone.getAmount();
-                        item.setAmount(item.getAmount() - actualGrabbed);
+                        final int grabFromSlot = Math.min(item.getAmount(), toRemove);
+                        final int beforeAmount = item.getAmount();
+                        item.setAmount(grabFromSlot);
+                        root.addItemStack0(accessor, item);
+                        final int afterAmount = item.getAmount();
+                        final int actualGrabbed = grabFromSlot - afterAmount;
+                        item.setAmount(beforeAmount - actualGrabbed);
                         toRemove -= actualGrabbed;
-                        limit -= actualGrabbed;
                     }
                 }
             }
