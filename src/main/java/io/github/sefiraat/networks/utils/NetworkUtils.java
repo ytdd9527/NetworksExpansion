@@ -67,7 +67,6 @@ public class NetworkUtils {
         directional.setDirection(blockMenu, BlockFace.valueOf(string));
         player.sendMessage(Lang.getString("messages.completed-operation.configurator.pasted_facing", string));
 
-        directional.getItemSlots();
         for (int slot : directional.getItemSlots()) {
             final ItemStack stackToDrop = blockMenu.getItemInSlot(slot);
             if (stackToDrop != null && stackToDrop.getType() != Material.AIR) {
@@ -76,7 +75,7 @@ public class NetworkUtils {
             }
         }
 
-        if (templateStacks != null) {
+        if (templateStacks != null && directional.getItemSlots().length > 0) {
             int i = 0;
             for (ItemStack templateStack : templateStacks) {
                 if (templateStack != null && templateStack.getType() != Material.AIR) {

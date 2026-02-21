@@ -1,6 +1,7 @@
 package com.ytdd9527.networksexpansion.core.items.machines;
 
 import com.balugaq.jeg.api.groups.SearchGroup;
+import com.balugaq.jeg.api.objects.enums.FilterType;
 import com.balugaq.netex.api.algorithm.Sorters;
 import com.balugaq.netex.api.enums.FeedbackType;
 import com.balugaq.netex.api.helpers.Icon;
@@ -46,6 +47,7 @@ import org.jspecify.annotations.NullMarked;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -388,8 +390,23 @@ public abstract class AbstractGridNewStyle extends AbstractGrid implements Keybi
         HashSet<SlimefunItem> pass = new HashSet<>();
         String searchTerm = cache.getFilter();
         if (searchTerm != null && Networks.getSupportedPluginManager().isJustEnoughGuide()) {
-            Bukkit.getOnlinePlayers().stream().findFirst().ifPresent(player ->
-                                                                         pass.addAll(new SearchGroup(null, player, searchTerm, false, false).slimefunItemList));
+            Bukkit.getOnlinePlayers().stream().findFirst().ifPresent(player -> {
+                List<SlimefunItem> sfs = new ArrayList<>();
+                for (ItemStack item : networkRoot.getAllNetworkItemsLongType().keySet()) {
+                    if (item != null && item.getType() != Material.AIR) {
+                        var sf = SlimefunItem.getByItem(item);
+                        if (sf != null) {
+                            sfs.add(sf);
+                        }
+                    }
+                }
+                List<FilterType> types = new ArrayList<>(Arrays.stream(FilterType.values()).toList());
+                types.remove(FilterType.BY_DISPLAY_ITEM_NAME);
+                types.remove(FilterType.BY_RECIPE_ITEM_NAME);
+                for (FilterType type : types) {
+                    pass.addAll(SearchGroup.filterItems(player, type, searchTerm, true, sfs));
+                }
+            });
         }
         return networkRoot.getAllNetworkItemsLongType().entrySet().stream()
             .filter(entry -> {

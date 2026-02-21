@@ -46,7 +46,7 @@ public class StorageCardConverter extends NetworkObject {
             if (Networks.getSupportedPluginManager().isFinalTECH()) {
                 card = ReflectionUtil.getStaticValue(Class.forName("io.taraxacum.finaltech.setup.FinalTechItems"), "STORAGE_CARD", SlimefunItem.class);
             }
-        } catch (ClassNotFoundException ignored) {
+        } catch (ClassNotFoundException | ClassCastException ignored) {
         }
     }
 
