@@ -321,22 +321,49 @@ public class LineOperationUtil {
                 }
             }
             case SPECIFIED_QUANTITY -> {
+                java.util.Map<Integer, ItemStack> itemSamples = new java.util.LinkedHashMap<>();
+                java.util.Map<Integer, Integer> itemTotals = new java.util.LinkedHashMap<>();
+                int typeIndex = 0;
                 for (int slot : slots) {
                     final ItemStack item = blockMenu.getItemInSlot(slot);
-                    if (item != null && item.getType() != Material.AIR) {
-                        final int currentAmount = item.getAmount();
-                        if (currentAmount > limitQuantity) {
-                            final int excess = currentAmount - limitQuantity;
-                            final int toGrab = Math.min(excess, limit);
-                            final ItemStack clone = StackUtils.getAsQuantity(item, toGrab);
-                            root.addItemStack0(accessor, clone);
-                            final int actualGrabbed = toGrab - clone.getAmount();
-                            item.setAmount(currentAmount - actualGrabbed);
-                            limit -= actualGrabbed;
-                            if (limit <= 0) {
-                                break;
-                            }
+                    if (item == null || item.getType() == Material.AIR) {
+                        continue;
+                    }
+                    boolean found = false;
+                    for (var entry : itemSamples.entrySet()) {
+                        if (StackUtils.itemsMatch(entry.getValue(), item)) {
+                            itemTotals.merge(entry.getKey(), item.getAmount(), Integer::sum);
+                            found = true;
+                            break;
                         }
+                    }
+                    if (!found) {
+                        itemSamples.put(typeIndex, item.clone());
+                        itemTotals.put(typeIndex, item.getAmount());
+                        typeIndex++;
+                    }
+                }
+                for (var entry : itemSamples.entrySet()) {
+                    final int total = itemTotals.get(entry.getKey());
+                    if (total <= limitQuantity) {
+                        continue;
+                    }
+                    int toRemove = total - limitQuantity;
+                    for (int i = slots.length - 1; i >= 0 && toRemove > 0 && limit > 0; i--) {
+                        final ItemStack item = blockMenu.getItemInSlot(slots[i]);
+                        if (item == null || item.getType() == Material.AIR) {
+                            continue;
+                        }
+                        if (!StackUtils.itemsMatch(entry.getValue(), item)) {
+                            continue;
+                        }
+                        final int grabFromSlot = Math.min(Math.min(item.getAmount(), toRemove), limit);
+                        final ItemStack clone = StackUtils.getAsQuantity(item, grabFromSlot);
+                        root.addItemStack0(accessor, clone);
+                        final int actualGrabbed = grabFromSlot - clone.getAmount();
+                        item.setAmount(item.getAmount() - actualGrabbed);
+                        toRemove -= actualGrabbed;
+                        limit -= actualGrabbed;
                     }
                 }
             }
