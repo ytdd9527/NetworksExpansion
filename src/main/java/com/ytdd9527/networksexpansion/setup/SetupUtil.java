@@ -320,7 +320,6 @@ public class SetupUtil {
     }
 
     public static void setupAll() {
-
         setupItem();
         setupMenu();
         setupWiki();

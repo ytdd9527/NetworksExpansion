@@ -36,7 +36,7 @@ body:
     id: minecraft-version
     attributes:
       label: Minecraft 版本
-      description: 请填写你的 Minecraft 版本
+      description: 请填写服务器的 Minecraft 版本
     validations:
       required: true
 

@@ -90,6 +90,8 @@ body:
         - Paper
         - Purpur
         - Airplane
+        - Leaf
+        - Folia
         - Other (please specify in the issue description)
     validations:
       required: true
@@ -98,7 +100,7 @@ body:
     id: minecraft-version
     attributes:
       label: Minecraft Version
-      description: Please fill in your Minecraft version
+      description: Please fill in the Minecraft version of your server
     validations:
       required: true
 

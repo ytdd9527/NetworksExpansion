@@ -1,7 +1,6 @@
 # Contributing
 
-When contributing to this repository, please first discuss the change you wish to make via the Slimefun Addon Community
-Discord server (https://discord.gg/J4KurMDCKU).
+When contributing to this repository, please first discuss the change you wish to make via the [Slimefun Communication QQ Group](https://qm.qq.com/q/eKxXlyEmaY)
 
 Please note we have a code of conduct, please follow it in all your interactions with the project.
 

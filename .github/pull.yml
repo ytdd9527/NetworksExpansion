@@ -4,9 +4,7 @@ rules:
     upstream: SlimefunGuguProject:master
     mergeMethod: merge
     assignees:
-      - ytdd9527
       - balugaq
     conflictReviewers:
-      - ytdd9527
       - balugaq
 
