@@ -280,7 +280,7 @@ public class NetworksMain implements TabExecutor {
             player.sendMessage(Lang.getString("messages.commands.must-hand-item"));
             return;
         }
-        final ItemStack clone = itemInHand.getType() == Material.AIR ? cache.getItemStack() : itemInHand;
+        final ItemStack clone = (itemInHand.getType() == Material.AIR ? cache.getItemStack() : itemInHand).clone();
         NetworkQuantumStorage.setItem(blockMenu, clone, amount);
 
         clone.setAmount(1);

@@ -254,6 +254,7 @@ public abstract class AbstractGridNewStyle extends AbstractGrid implements Keybi
             gridCache.setFilter(filter);
         }
 
+        blockMenu.replaceExistingItem(getChangeSort(), getSortOrderStack(gridCache.getSortOrder()));
         blockMenu.replaceExistingItem(getFilterSlot(), getFilterStack(gridCache.getFilter()));
 
         // Deprecated feature
