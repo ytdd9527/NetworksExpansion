@@ -15,6 +15,8 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Set;
@@ -90,34 +92,42 @@ public class NetworkNode {
             return;
         }
 
-        // Loop through all possible locations
-        for (BlockFace face : VALID_FACES) {
-            final Location testLocation = this.nodePosition.clone().add(face.getDirection());
-            final NodeDefinition testDefinition = NetworkStorage.getNode(testLocation);
+        Deque<NetworkNode> nodeStack = new ArrayDeque<>(200);
+        nodeStack.push(this);
 
-            if (testDefinition == null) {
-                continue;
-            }
+        while (!nodeStack.isEmpty()) {
+            NetworkNode currentNode = nodeStack.pop();
 
-            final NodeType testType = testDefinition.getType();
+            // Loop through all possible locations
+            for (BlockFace face : VALID_FACES) {
+                final Location testLocation = currentNode.nodePosition.clone().add(face.getDirection());
+                final NodeDefinition testDefinition = NetworkStorage.getNode(testLocation);
 
-            // Kill additional controllers if it isn't the root
-            if (testType == NodeType.CONTROLLER && !testLocation.equals(this.root.nodePosition)) {
-                killAdditionalController(testLocation);
-                continue;
-            }
-
-            // Check if it's in the network already and, if not, create a child node and propagate further.
-            if (testType != NodeType.CONTROLLER && !this.networkContains(testLocation)) {
-                if (this.root.getNodeCount() >= this.root.getMaxNodes()) {
-                    this.root.setOverburdened(true);
-                    return;
+                if (testDefinition == null) {
+                    continue;
                 }
-                final NetworkNode networkNode = new NetworkNode(testLocation, testType);
-                addChild(networkNode);
-                networkNode.addAllChildren();
-                testDefinition.setNode(networkNode);
-                NetworkStorage.registerNode(testLocation, testDefinition);
+
+                final NodeType testType = testDefinition.getType();
+
+                // Kill additional controllers if it isn't the root
+                if (testType == NodeType.CONTROLLER && !testLocation.equals(this.root.nodePosition)) {
+                    killAdditionalController(testLocation);
+                    continue;
+                }
+
+                // Check if it's in the network already and, if not, create a child node and propagate further.
+                if (testType != NodeType.CONTROLLER && !currentNode.networkContains(testLocation)) {
+                    if (this.root.getNodeCount() >= this.root.getMaxNodes()) {
+                        this.root.setOverburdened(true);
+                        return;
+                    }
+                    final NetworkNode networkNode = new NetworkNode(testLocation, testType);
+                    currentNode.addChild(networkNode);
+
+                    nodeStack.push(networkNode);
+                    testDefinition.setNode(networkNode);
+                    NetworkStorage.registerNode(testLocation, testDefinition);
+                }
             }
         }
     }
