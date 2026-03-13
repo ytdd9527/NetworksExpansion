@@ -129,7 +129,7 @@ public class CargoNodeQuickTool extends SpecialSlimefunItem {
                 }
                 if (!storedId.equalsIgnoreCase(blockData.getSfId())) {
                     p.sendMessage(
-                        Lang.getString("messages.unsupported-operation.cargo_node_quick_tool.nod-type-not-same"));
+                        Lang.getString("messages.unsupported-operation.cargo_node_quick_tool.node-type-not-same"));
                     return;
                 }
                 BlockMenu inv = blockData.getBlockMenu();
