@@ -10,9 +10,7 @@ import lombok.Getter;
 import lombok.ToString;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.Tag;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -167,20 +165,7 @@ public class StorageUnitData {
     }
 
     public static boolean isBlacklisted(@NotNull ItemStack itemStack) {
-        // if item is air, it's blacklisted
-        if (itemStack.getType() == Material.AIR) {
-            return true;
-        }
-        // if item has invalid durability, it's blacklisted
-        if (itemStack.getType().getMaxDurability() < 0) {
-            return true;
-        }
-        // if item is a shulker box, it's blacklisted
-        if (Tag.SHULKER_BOXES.isTagged(itemStack.getType())) {
-            return true;
-        }
-        // if item is a bundle, it's blacklisted
-        return itemStack.getType() == Material.BUNDLE;
+        return StackUtils.isBlacklisted(itemStack);
     }
 
     private static ConcurrentHashMap<Integer, ItemContainer> throwUnsupportedOperationException(@NotNull String message) {

@@ -1430,6 +1430,10 @@ public class NetworkRoot extends NetworkNode {
             "This method is deprecated and will be removed in the future. Use addItemStack0(Location, ItemStack) instead.")
     @Deprecated(forRemoval = true)
     public void addItemStack(@NotNull ItemStack incoming) {
+        if (StackUtils.isBlacklisted(incoming)) {
+            return;
+        }
+
         for (BlockMenu blockMenu : getAdvancedGreedyBlockMenus()) {
             final ItemStack template = blockMenu.getItemInSlot(AdvancedGreedyBlock.TEMPLATE_SLOT);
 
@@ -2342,6 +2346,10 @@ public class NetworkRoot extends NetworkNode {
     public void addItemStack0(@NotNull Location accessor, @NotNull ItemStack incoming) {
         if (!allowAccessInput(accessor)) {
             FeedbackSendable.sendFeedback0(accessor, FeedbackType.ROOT_LIMITING_ACCESS_INPUT);
+            return;
+        }
+
+        if (StackUtils.isBlacklisted(incoming)) {
             return;
         }
 

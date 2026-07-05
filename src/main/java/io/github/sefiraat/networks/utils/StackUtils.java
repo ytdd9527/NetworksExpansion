@@ -677,6 +677,10 @@ public class StackUtils {
         return itemStack.getType() == Material.AIR
             || itemStack.getType().getMaxDurability() < 0
             || Tag.SHULKER_BOXES.isTagged(itemStack.getType())
-            || itemStack.getType() == Material.BUNDLE;
+            || isBundle(itemStack.getType());
+    }
+
+    private static boolean isBundle(@NotNull Material material) {
+        return material == Material.BUNDLE || material.name().endsWith("_BUNDLE");
     }
 }

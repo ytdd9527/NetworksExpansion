@@ -634,7 +634,10 @@ public class NetworkQuantumStorage extends SpecialSlimefunItem implements Distin
         long maxAmount,
         boolean voidExcess,
         boolean supportsCustomMaxAmount) {
-        if (itemStack == null || itemStack.getType() == Material.AIR || isDisplayItem(itemStack)) {
+        if (itemStack == null
+            || itemStack.getType() == Material.AIR
+            || isDisplayItem(itemStack)
+            || StackUtils.isBlacklisted(itemStack)) {
             menu.addItem(ITEM_SLOT, ItemStackUtil.getCleanItem(Icon.QUANTUM_STORAGE_NO_ITEM));
             return new QuantumCache(null, 0, maxAmount, false, this.supportsCustomMaxAmount);
         } else {
@@ -700,6 +703,10 @@ public class NetworkQuantumStorage extends SpecialSlimefunItem implements Distin
         QuantumCache cache = Keys.getQuantumCache(itemMeta);
 
         if (cache == null) {
+            return;
+        }
+
+        if (cache.getItemStack() != null && StackUtils.isBlacklisted(cache.getItemStack())) {
             return;
         }
 
