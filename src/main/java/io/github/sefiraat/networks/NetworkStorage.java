@@ -1,12 +1,15 @@
 package io.github.sefiraat.networks;
 
 import io.github.sefiraat.networks.network.NetworkNode;
+import io.github.sefiraat.networks.network.NetworkRoot;
 import io.github.sefiraat.networks.network.NodeDefinition;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.blocks.ChunkPosition;
 import lombok.experimental.UtilityClass;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -15,6 +18,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 @UtilityClass
+@NullMarked
 public class NetworkStorage {
     private static final Map<ChunkPosition, Set<Location>> ALL_NETWORK_OBJECTS_BY_CHUNK = new ConcurrentHashMap<>();
     private static final Map<Location, NodeDefinition> ALL_NETWORK_OBJECTS = new ConcurrentHashMap<>();
@@ -45,13 +49,21 @@ public class NetworkStorage {
         }
     }
 
+    @Nullable
     public static NodeDefinition getNode(Location location) {
         synchronized (ALL_NETWORK_OBJECTS) {
             return ALL_NETWORK_OBJECTS.get(location);
         }
     }
 
-    public static void registerNode(@NotNull Location location, NodeDefinition nodeDefinition) {
+    @Nullable
+    public static NetworkRoot getRoot(Location location) {
+        var def = getNode(location);
+        if (def != null && def.getNode() != null) return def.getNode().getRoot();
+        return null;
+    }
+
+    public static void registerNode(Location location, NodeDefinition nodeDefinition) {
         synchronized (ALL_NETWORK_OBJECTS) {
             ALL_NETWORK_OBJECTS.put(location, nodeDefinition);
             ChunkPosition unionKey = new ChunkPosition(location);
@@ -63,7 +75,7 @@ public class NetworkStorage {
         }
     }
 
-    public static void unregisterChunk(@NotNull Chunk chunk) {
+    public static void unregisterChunk(Chunk chunk) {
         ChunkPosition chunkPosition = new ChunkPosition(chunk);
         Set<Location> locations = ALL_NETWORK_OBJECTS_BY_CHUNK.get(chunkPosition);
         if (locations == null) {
@@ -81,7 +93,7 @@ public class NetworkStorage {
         }
     }
 
-    public static @NotNull Map<Location, NodeDefinition> getAllNetworkObjects() {
+    public static Map<Location, NodeDefinition> getAllNetworkObjects() {
         return new HashMap<>(ALL_NETWORK_OBJECTS);
     }
 }

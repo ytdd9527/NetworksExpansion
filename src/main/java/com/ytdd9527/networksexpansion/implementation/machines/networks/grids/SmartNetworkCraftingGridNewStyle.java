@@ -17,6 +17,7 @@ import com.balugaq.netex.utils.InventoryUtil;
 import com.balugaq.netex.utils.Lang;
 import com.ytdd9527.networksexpansion.core.items.machines.AbstractGridNewStyle;
 import com.ytdd9527.networksexpansion.implementation.ExpansionItems;
+import com.ytdd9527.networksexpansion.utils.itemstacks.ItemStackUtil;
 import io.github.sefiraat.networks.NetworkStorage;
 import io.github.sefiraat.networks.Networks;
 import io.github.sefiraat.networks.events.NetworkCraftEvent;
@@ -46,6 +47,7 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -159,141 +161,62 @@ public class SmartNetworkCraftingGridNewStyle extends AbstractGridNewStyle {
     }
 
     @Override
-    protected BlockMenuPreset getPreset() {
-        return new BlockMenuPreset(this.getId(), this.getItemName()) {
-
-            @Override
-            public void init() {
-                drawBackground(getBackgroundSlots());
-                drawBackground(getDisplaySlots());
-                setSize(54);
+    public void postNewInstance(BlockMenu menu, Block b) {
+        menu.replaceExistingItem(getToggleModeSlot(), getModeStack(DisplayMode.DISPLAY));
+        menu.addMenuClickHandler(getToggleModeSlot(), (p, slot, item, action) -> {
+            if (!action.isRightClicked()) {
+                GridCache gridCache = getCacheMap().get(menu.getLocation());
+                gridCache.toggleDisplayMode();
+                menu.replaceExistingItem(getToggleModeSlot(), getModeStack(gridCache));
+                updateDisplay(Screen.of(menu));
             }
+            return false;
+        });
 
-            @Override
-            public boolean canOpen(Block block, Player player) {
-                return player.hasPermission("slimefun.inventory.bypass")
-                    || (ExpansionItems.NETWORK_CRAFTING_GRID_NEW_STYLE.canUse(player, false)
-                    && Slimefun.getProtectionManager()
-                    .hasPermission(player, block.getLocation(), Interaction.INTERACT_BLOCK));
-            }
+        menu.replaceExistingItem(CRAFT_BUTTON_SLOT, Icon.CRAFT);
+        menu.addMenuClickHandler(CRAFT_BUTTON_SLOT, (p, slot, item, action) -> {
+            tryCraft(menu, p, action);
+            return false;
+        });
 
-            @Override
-            public int[] getSlotsAccessedByItemTransport(ItemTransportFlow flow) {
-                return new int[0];
-            }
+        menu.addItem(RETURN_INGREDIENT_SLOT, Icon.RETURN_INGREDIENT);
+        menu.addMenuClickHandler(RETURN_INGREDIENT_SLOT, (p, s, i, a) -> {
+            NodeDefinition definition = NetworkStorage.getNode(menu.getLocation());
+            if (definition == null || definition.getNode() == null) return false;
+            NetworkRoot root = definition.getNode().getRoot();
+            for (int slot : getIngredientSlots()) {
+                ItemStack stack = menu.getItemInSlot(slot);
+                label:
+                {
+                    if (stack == null || stack.getType() == Material.AIR || stack.getAmount() <= 0) break label;
 
-            @Override
-            public void newInstance(BlockMenu menu, Block b) {
-                getCacheMap().put(menu.getLocation(), new GridCache(0, 0, GridCache.SortOrder.ALPHABETICAL));
+                    // 1. try store back into networks
+                    root.addItemStack(menu.getLocation(), stack);
+                    if (stack.getAmount() == 0) break label;
 
-                menu.replaceExistingItem(getPagePrevious(), getPagePreviousStack());
-                menu.addMenuClickHandler(getPagePrevious(), (p, slot, item, action) -> {
-                    GridCache gridCache = getCacheMap().get(menu.getLocation());
-                    gridCache.setPage(gridCache.getPage() <= 0 ? 0 : gridCache.getPage() - 1);
-                    getCacheMap().put(menu.getLocation(), gridCache);
-                    updateDisplay(Screen.of(menu));
-                    return false;
-                });
-
-                menu.replaceExistingItem(getPageNext(), getPageNextStack());
-                menu.addMenuClickHandler(getPageNext(), (p, slot, item, action) -> {
-                    GridCache gridCache = getCacheMap().get(menu.getLocation());
-                    gridCache.setPage(
-                        gridCache.getPage() >= gridCache.getMaxPages()
-                            ? gridCache.getMaxPages()
-                            : gridCache.getPage() + 1);
-                    getCacheMap().put(menu.getLocation(), gridCache);
-                    updateDisplay(Screen.of(menu));
-                    return false;
-                });
-
-                menu.replaceExistingItem(getChangeSort(), getChangeSortStack());
-                menu.addMenuClickHandler(getChangeSort(), (p, slot, item, action) -> {
-                    GridCache gridCache = getCacheMap().get(menu.getLocation());
-                    AbstractGrid.updateSortOrder(gridCache, action, 4);
-                    getCacheMap().put(menu.getLocation(), gridCache);
-                    updateDisplay(Screen.of(menu));
-                    return false;
-                });
-
-                menu.replaceExistingItem(getFilterSlot(), getFilterStack());
-                menu.addMenuClickHandler(getFilterSlot(), (p, slot, item, action) -> {
-                    GridCache gridCache = getCacheMap().get(menu.getLocation());
-                    setFilter(p, Screen.of(menu), gridCache, action);
-                    return false;
-                });
-
-                menu.replaceExistingItem(getToggleModeSlot(), getModeStack(DisplayMode.DISPLAY));
-                menu.addMenuClickHandler(getToggleModeSlot(), (p, slot, item, action) -> {
-                    if (!action.isRightClicked()) {
-                        GridCache gridCache = getCacheMap().get(menu.getLocation());
-                        gridCache.toggleDisplayMode();
-                        menu.replaceExistingItem(getToggleModeSlot(), getModeStack(gridCache));
-                        updateDisplay(Screen.of(menu));
-                    }
-                    return false;
-                });
-
-                menu.replaceExistingItem(CRAFT_BUTTON_SLOT, Icon.CRAFT);
-                menu.addMenuClickHandler(CRAFT_BUTTON_SLOT, (p, slot, item, action) -> {
-                    tryCraft(menu, p, action);
-                    return false;
-                });
-
-                for (int displaySlot : getDisplaySlots()) {
-                    menu.replaceExistingItem(displaySlot, ChestMenuUtils.getBackground());
-                    menu.addMenuClickHandler(displaySlot, (p, slot, item, action) -> false);
+                    // 2. try store into output slots
+                    BlockMenuUtil.pushItem(menu, stack, OUTPUT_SLOTS);
                 }
-
-                for (int backgroundSlot : getBackgroundSlots()) {
-                    menu.replaceExistingItem(backgroundSlot, ChestMenuUtils.getBackground());
-                    menu.addMenuClickHandler(backgroundSlot, (p, slot, item, action) -> false);
-                }
-
-                menu.addItem(RETURN_INGREDIENT_SLOT, Icon.RETURN_INGREDIENT);
-                menu.addMenuClickHandler(RETURN_INGREDIENT_SLOT, (p, s, i, a) -> {
-                    NodeDefinition definition = NetworkStorage.getNode(menu.getLocation());
-                    if (definition == null || definition.getNode() == null) return false;
-                    NetworkRoot root = definition.getNode().getRoot();
-                    for (int slot : getIngredientSlots()) {
-                        ItemStack stack = menu.getItemInSlot(slot);
-                        label:
-                        {
-                            if (stack == null || stack.getType() == Material.AIR || stack.getAmount() <= 0) break label;
-
-                            // 1. try store back into networks
-                            root.addItemStack(menu.getLocation(), stack);
-                            if (stack.getAmount() == 0) break label;
-
-                            // 2. try store into output slots
-                            BlockMenuUtil.pushItem(menu, stack, OUTPUT_SLOTS);
-                        }
-                    }
-                    return false;
-                });
-                menu.addItem(RETURN_OUTPUT_SLOT, Icon.RETURN_OUTPUT);
-                menu.addMenuClickHandler(RETURN_OUTPUT_SLOT, (p, s, i, a) -> {
-                    NodeDefinition definition = NetworkStorage.getNode(menu.getLocation());
-                    if (definition == null || definition.getNode() == null) return false;
-                    NetworkRoot root = definition.getNode().getRoot();
-                    for (int slot : OUTPUT_SLOTS) {
-                        ItemStack stack = menu.getItemInSlot(slot);
-                        label:
-                        {
-                            if (stack == null || stack.getType() == Material.AIR || stack.getAmount() <= 0) break label;
-
-                            // 1. try store back into networks
-                            root.addItemStack(menu.getLocation(), stack);
-                        }
-                    }
-
-                    return false;
-                });
-
-                menu.addPlayerInventoryClickHandler(smartOutsideKeybinds);
-                addKeybindSettingsButton(menu, getKeybindButtonSlot());
             }
-        };
+            return false;
+        });
+        menu.addItem(RETURN_OUTPUT_SLOT, Icon.RETURN_OUTPUT);
+        menu.addMenuClickHandler(RETURN_OUTPUT_SLOT, (p, s, i, a) -> {
+            NodeDefinition definition = NetworkStorage.getNode(menu.getLocation());
+            if (definition == null || definition.getNode() == null) return false;
+            NetworkRoot root = definition.getNode().getRoot();
+            for (int slot : OUTPUT_SLOTS) {
+                ItemStack stack = menu.getItemInSlot(slot);
+                if (stack == null || stack.getType() == Material.AIR || stack.getAmount() <= 0) continue;
+                // 1. try store back into networks
+                root.addItemStack(menu.getLocation(), stack);
+            }
+
+            return false;
+        });
+
+        menu.addPlayerInventoryClickHandler(smartOutsideKeybinds);
+        addKeybindSettingsButton(menu, getKeybindButtonSlot());
     }
 
     public Map<Location, GridCache> getCacheMap() {
@@ -334,7 +257,7 @@ public class SmartNetworkCraftingGridNewStyle extends AbstractGridNewStyle {
         return FILTER;
     }
 
-    @SuppressWarnings({"deprecation", "DataFlowIssue"})
+    @SuppressWarnings("deprecation")
     private synchronized void tryCraft(BlockMenu menu, Player player, ClickAction action) {
         if (player.getWorld().getNearbyEntities(player.getLocation(), 5, 5, 5).size() < THRESHOLD) {
             sendFeedback(menu.getLocation(), FeedbackType.TOO_MANY_ENTITIES);
@@ -354,7 +277,7 @@ public class SmartNetworkCraftingGridNewStyle extends AbstractGridNewStyle {
         NetworkRoot root = definition.getNode().getRoot();
 
         // Get the recipe input
-        final ItemStack[] templates = new ItemStack[TEMPLATE_SLOTS.length];
+        final @Nullable ItemStack[] templates = new ItemStack[TEMPLATE_SLOTS.length];
         int i = 0;
         for (int templateSlot : TEMPLATE_SLOTS) {
             ItemStack stack = menu.getItemInSlot(templateSlot);
@@ -428,7 +351,7 @@ public class SmartNetworkCraftingGridNewStyle extends AbstractGridNewStyle {
             if (c2 != null) {
                 label:
                 {
-                    if (c2 == null || c2.getType() == Material.AIR || c2.getAmount() <= 0) break label;
+                    if (c2.getType() == Material.AIR || c2.getAmount() <= 0) break label;
 
                     // 1. try store into output slots
                     BlockMenuUtil.pushItem(menu, c2, OUTPUT_SLOTS);
@@ -462,7 +385,7 @@ public class SmartNetworkCraftingGridNewStyle extends AbstractGridNewStyle {
         return List.of(displayKeybinds(), smartOutsideKeybinds);
     }
 
-    public ItemStack[] copyStacks(ItemStack[] array) {
-        return Arrays.stream(array).map(i -> i == null ? null : i.clone()).toArray(ItemStack[]::new);
+    public ItemStack[] copyStacks(@Nullable ItemStack[] array) {
+        return Arrays.stream(array).map(i -> i == null ? ItemStackUtil.AIR : i.clone()).toArray(ItemStack[]::new);
     }
 }

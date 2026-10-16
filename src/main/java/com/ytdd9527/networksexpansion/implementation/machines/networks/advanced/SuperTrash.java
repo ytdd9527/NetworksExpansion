@@ -27,6 +27,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -90,7 +91,7 @@ public class SuperTrash extends NetworkObject implements RecipeDisplayItem {
     }
 
     @Override
-    public void onPlace(BlockPlaceEvent event) {
+    public void onPlace(@NonNull BlockPlaceEvent event) {
         replaceMenu(event.getBlock().getLocation());
     }
 

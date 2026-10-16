@@ -39,7 +39,6 @@ public interface BaseGrid {
         Keybinds keybinds = Keybinds.create(Keys.newKey(key), it -> {
                 Keybind clickOnWithCursor = Keybind.of(Keys.newKey("clicked-item-not-equals-to-cursor"), (player, s, i, a, menu) -> {
                     NodeDefinition definition = NetworkStorage.getNode(menu.getLocation());
-                    if (definition == null || definition.getNode() == null) return false;
                     ItemStack clone = precheck(definition, menu, player, i);
                     if (clone == null) return false;
                     final ItemStack cursor = player.getItemOnCursor();
@@ -127,7 +126,7 @@ public interface BaseGrid {
     }
 
     @Nullable
-    ItemStack precheck(NodeDefinition definition, BlockMenu blockMenu, Player player, ItemStack itemStack);
+    ItemStack precheck(@Nullable NodeDefinition definition, BlockMenu blockMenu, Player player, ItemStack itemStack);
 
     void addToInventory(Player player, NodeDefinition definition, GridItemRequest request, BlockMenu menu);
 

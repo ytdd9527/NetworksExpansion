@@ -1,6 +1,5 @@
 package io.github.sefiraat.networks.slimefun.network.grid;
 
-import com.balugaq.netex.api.algorithm.Sorters;
 import com.balugaq.netex.api.enums.FeedbackType;
 import com.balugaq.netex.api.helpers.Icon;
 import com.balugaq.netex.api.visual.Screen;
@@ -27,11 +26,16 @@ import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
 import io.github.thebusybiscuit.slimefun4.api.items.settings.IntRangeSetting;
 import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
+import io.github.thebusybiscuit.slimefun4.implementation.Slimefun;
+import io.github.thebusybiscuit.slimefun4.libraries.dough.protection.Interaction;
 import io.github.thebusybiscuit.slimefun4.utils.ChatUtils;
+import io.github.thebusybiscuit.slimefun4.utils.ChestMenuUtils;
+import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.ChestMenu;
 import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.ClickAction;
 import me.mrCookieSlime.Slimefun.Objects.handlers.BlockTicker;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenuPreset;
+import me.mrCookieSlime.Slimefun.api.item_transport.ItemTransportFlow;
 import net.guizhanss.minecraft.guizhanlib.gugu.minecraft.helpers.inventory.ItemStackHelper;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -39,47 +43,38 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
+import org.jspecify.annotations.NullMarked;
 
-import javax.annotation.ParametersAreNonnullByDefault;
 import java.text.MessageFormat;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 
+@NullMarked
 @SuppressWarnings({"DuplicatedCode", "deprecation"})
 public abstract class AbstractGrid extends NetworkObject {
+    private static final Map<Location, GridCache> CACHE_MAP = new HashMap<>();
     protected static final String BS_FILTER_KEY = "filter";
-    private static final Map<GridCache.SortOrder, Comparator<? super Map.Entry<ItemStack, Long>>> SORT_MAP =
-        new HashMap<>();
 
-    static {
-        SORT_MAP.put(GridCache.SortOrder.ALPHABETICAL, Sorters.ITEMSTACK_ALPHABETICAL_SORT);
-        SORT_MAP.put(GridCache.SortOrder.NUMBER, Sorters.ITEMSTACK_NUMERICAL_SORT.reversed());
-        SORT_MAP.put(GridCache.SortOrder.NUMBER_REVERSE, Sorters.ITEMSTACK_NUMERICAL_SORT);
-        SORT_MAP.put(GridCache.SortOrder.ADDON, Sorters.ITEMSTACK_ADDON_SORT);
-    }
-
-    protected final @NotNull ItemSetting<Integer> tickRate;
+    protected final ItemSetting<Integer> tickRate;
 
     protected AbstractGrid(
-        @NotNull ItemGroup itemGroup,
-        @NotNull SlimefunItemStack item,
-        @NotNull RecipeType recipeType,
-        ItemStack @NotNull [] recipe) {
+        ItemGroup itemGroup,
+        SlimefunItemStack item,
+        RecipeType recipeType,
+        ItemStack [] recipe) {
         this(itemGroup, item, recipeType, recipe, NodeType.GRID);
     }
 
     protected AbstractGrid(
-        @NotNull ItemGroup itemGroup,
-        @NotNull SlimefunItemStack item,
-        @NotNull RecipeType recipeType,
-        ItemStack @NotNull [] recipe,
+        ItemGroup itemGroup,
+        SlimefunItemStack item,
+        RecipeType recipeType,
+        ItemStack [] recipe,
         NodeType type) {
         super(itemGroup, item, recipeType, recipe, type);
 
@@ -91,7 +86,6 @@ public abstract class AbstractGrid extends NetworkObject {
         addItemSetting(this.tickRate);
 
         addItemHandler(new BlockTicker() {
-
             private int tick = 1;
 
             @Override
@@ -100,7 +94,7 @@ public abstract class AbstractGrid extends NetworkObject {
             }
 
             @Override
-            public void tick(@NotNull Block block, SlimefunItem item, @NotNull SlimefunBlockData data) {
+            public void tick(Block block, SlimefunItem item, SlimefunBlockData data) {
                 if (tick <= 1) {
                     final BlockMenu blockMenu = data.getBlockMenu();
                     if (blockMenu == null) {
@@ -123,16 +117,15 @@ public abstract class AbstractGrid extends NetworkObject {
             }
 
             @Override
-            public @NotNull Optional<IncompatibleItemHandlerException> validate(SlimefunItem item) {
+            public Optional<IncompatibleItemHandlerException> validate(SlimefunItem item) {
                 return Optional.empty();
             }
         });
     }
 
-    protected void syncSkin(@NotNull Block block) {
+    protected void syncSkin(Block block) {
     }
 
-    @NotNull
     private static List<String> getLoreAddition(long amount) {
         final MessageFormat format =
             new MessageFormat(Lang.getString("messages.normal-operation.grid.item_amount"), Locale.ROOT);
@@ -145,7 +138,7 @@ public abstract class AbstractGrid extends NetworkObject {
                 .toString());
     }
 
-    protected void tryAddItem(@NotNull BlockMenu blockMenu) {
+    protected void tryAddItem(BlockMenu blockMenu) {
         if (getInputSlot() == -1) return;
 
         final ItemStack itemStack = blockMenu.getItemInSlot(getInputSlot());
@@ -175,12 +168,12 @@ public abstract class AbstractGrid extends NetworkObject {
         return clone;
     }
 
-    protected void updateDisplay(@NotNull BlockMenu menu) {
+    protected void updateDisplay(BlockMenu menu) {
         updateDisplay(Screen.of(menu));
     }
 
     @SuppressWarnings("deprecation")
-    protected void updateDisplay(@NotNull Screen screen) {
+    protected void updateDisplay(Screen screen) {
         Location location = screen.getLocation();
 
         // No viewer - lets not bother updating
@@ -259,7 +252,7 @@ public abstract class AbstractGrid extends NetworkObject {
                 });
             } else {
                 screen.setItem(getDisplaySlots()[i], Icon.BLANK_SLOT_STACK, (p, slot, item, action) -> {
-                    receiveItem(p, p.getItemOnCursor(), action, screen);
+                    receiveItem(p, p.getItemOnCursor(), screen);
                     return false;
                 });
             }
@@ -274,14 +267,13 @@ public abstract class AbstractGrid extends NetworkObject {
         sendFeedback(screen.getLocation(), FeedbackType.WORKING);
     }
 
-    protected void clearDisplay(@NotNull Screen blockMenu) {
+    protected void clearDisplay(Screen blockMenu) {
         for (int displaySlot : getDisplaySlots()) {
             blockMenu.setItem(displaySlot, getBlankSlotStack(), (p, slot, item, action) -> false);
         }
     }
 
-    @NotNull
-    protected List<Map.Entry<ItemStack, Long>> getEntries(@NotNull NetworkRoot networkRoot, @NotNull GridCache cache) {
+    protected List<Map.Entry<ItemStack, Long>> getEntries(NetworkRoot networkRoot, GridCache cache) {
         if (cache.getEntriesCache() != null) {
             return cache.getEntriesCache();
         }
@@ -290,11 +282,10 @@ public abstract class AbstractGrid extends NetworkObject {
         return entries;
     }
 
-    @NotNull
     public static List<Map.Entry<ItemStack, Long>> filterAndSort(
-        @NotNull Map<ItemStack, Long> items,
+        Map<ItemStack, Long> items,
         @Nullable String filter,
-        @NotNull GridCache.SortOrder sortOrder) {
+        GridCache.SortOrder sortOrder) {
         return items.entrySet().stream()
             .filter(entry -> {
                 if (filter == null) {
@@ -315,7 +306,7 @@ public abstract class AbstractGrid extends NetworkObject {
                     return name.contains(filter);
                 }
             })
-            .sorted(SORT_MAP.get(sortOrder))
+            .sorted(sortOrder.comparator())
             .toList();
     }
 
@@ -358,7 +349,6 @@ public abstract class AbstractGrid extends NetworkObject {
     }
 
     @SuppressWarnings("deprecation")
-    @ParametersAreNonnullByDefault
     protected synchronized void takeItem(
         Player player, @Nullable ItemStack itemStack, ClickAction action, Screen screen) {
         NodeDefinition definition = NetworkStorage.getNode(screen.getLocation());
@@ -420,23 +410,21 @@ public abstract class AbstractGrid extends NetworkObject {
     }
 
     @SuppressWarnings({"deprecation", "unused"})
-    @ParametersAreNonnullByDefault
     private void addToInventory(
         Player player, NodeDefinition definition, GridItemRequest request, ClickAction action, Screen screen) {
-        ItemStack requestingStack = definition.getNode().getRoot().getItemStack(screen.getLocation(), request);
+        ItemStack received = definition.getNode().getRoot().getItemStack(screen.getLocation(), request);
 
-        if (requestingStack == null) {
+        if (received == null) {
             return;
         }
 
-          InventoryUtil.addItem(player, requestingStack);
-          if (requestingStack.getAmount() > 0) {
-              definition.getNode().getRoot().addItemStack(screen.getLocation(), requestingStack);
-          }
+        InventoryUtil.addItem(player, received);
+        if (received.getAmount() > 0) {
+            definition.getNode().getRoot().addItemStack(screen.getLocation(), received);
+        }
     }
 
     @SuppressWarnings("deprecation")
-    @ParametersAreNonnullByDefault
     private void addToCursor(
         Player player,
         NodeDefinition definition,
@@ -454,7 +442,7 @@ public abstract class AbstractGrid extends NetworkObject {
         setCursor(player, cursor, requestingStack);
     }
 
-    private void setCursor(@NotNull Player player, @NotNull ItemStack cursor, @Nullable ItemStack requestingStack) {
+    private void setCursor(Player player, ItemStack cursor, @Nullable ItemStack requestingStack) {
         if (requestingStack != null) {
             if (cursor.getType() != Material.AIR) {
                 requestingStack.setAmount(cursor.getAmount() + 1);
@@ -465,7 +453,7 @@ public abstract class AbstractGrid extends NetworkObject {
 
     @SuppressWarnings("deprecation")
     private boolean canAddMore(
-        @NotNull ClickAction action, @NotNull ItemStack cursor, @NotNull GridItemRequest request) {
+        ClickAction action, ItemStack cursor, GridItemRequest request) {
         return !action.isRightClicked()
             && request.getAmount() == 1
             && cursor.getAmount() < cursor.getMaxStackSize()
@@ -476,12 +464,102 @@ public abstract class AbstractGrid extends NetworkObject {
     public void postRegister() {
         getPreset();
     }
-
+    
     @Nullable
-    protected abstract BlockMenuPreset getPreset();
+    protected BlockMenuPreset getPreset() {
+        return new BlockMenuPreset(this.getId(), this.getItemName()) {
 
-    @NotNull
-    protected abstract Map<Location, GridCache> getCacheMap();
+            @Override
+            public void init() {
+                drawBackground(getBackgroundSlots());
+                drawBackground(getDisplaySlots());
+                setSize(54);
+            }
+
+            @Override
+            public boolean canOpen(Block block, Player player) {
+                return player.hasPermission("slimefun.inventory.bypass")
+                    || (getSlimefunItem().canUse(player, false)
+                    && Slimefun.getProtectionManager()
+                    .hasPermission(player, block.getLocation(), Interaction.INTERACT_BLOCK));
+            }
+
+            @Override
+            public int[] getSlotsAccessedByItemTransport(ItemTransportFlow flow) {
+                return new int[0];
+            }
+
+            @Override
+            public void newInstance(BlockMenu menu, Block b) {
+                getCacheMap().put(menu.getLocation(), new GridCache(0, 0, GridCache.SortOrder.ALPHABETICAL));
+
+                menu.replaceExistingItem(getPagePrevious(), getPagePreviousStack());
+                menu.addMenuClickHandler(getPagePrevious(), (p, slot, item, action) -> {
+                    GridCache gridCache = getCacheMap().get(menu.getLocation());
+                    gridCache.setPage(gridCache.getPage() <= 0 ? 0 : gridCache.getPage() - 1);
+                    getCacheMap().put(menu.getLocation(), gridCache);
+                    updateDisplay(menu);
+                    return false;
+                });
+
+                menu.replaceExistingItem(getPageNext(), getPageNextStack());
+                menu.addMenuClickHandler(getPageNext(), (p, slot, item, action) -> {
+                    GridCache gridCache = getCacheMap().get(menu.getLocation());
+                    gridCache.setPage(
+                        gridCache.getPage() >= gridCache.getMaxPages()
+                            ? gridCache.getMaxPages()
+                            : gridCache.getPage() + 1);
+                    getCacheMap().put(menu.getLocation(), gridCache);
+                    updateDisplay(Screen.of(menu));
+                    return false;
+                });
+
+                menu.replaceExistingItem(getChangeSort(), getChangeSortStack());
+                menu.addMenuClickHandler(getChangeSort(), (p, slot, item, action) -> {
+                    GridCache gridCache = getCacheMap().get(menu.getLocation());
+                    AbstractGrid.updateSortOrder(gridCache, action, getSortOrderLimit());
+                    getCacheMap().put(menu.getLocation(), gridCache);
+                    updateDisplay(Screen.of(menu));
+                    return false;
+                });
+
+                menu.replaceExistingItem(getFilterSlot(), getFilterStack());
+                menu.addMenuClickHandler(getFilterSlot(), (p, slot, item, action) -> {
+                    GridCache gridCache = getCacheMap().get(menu.getLocation());
+                    setFilter(p, menu, gridCache, action);
+                    getCacheMap().put(menu.getLocation(), gridCache);
+                    return false;
+                });
+
+                for (int displaySlot : getDisplaySlots()) {
+                    menu.replaceExistingItem(displaySlot, ChestMenuUtils.getBackground());
+                    menu.addMenuClickHandler(displaySlot, (p, slot, item, action) -> false);
+                }
+
+                postNewInstance(menu, b);
+            }
+        };
+    }
+    
+    public void postNewInstance(BlockMenu menu, Block b) {
+        menu.addPlayerInventoryClickHandler(defaultOutsideKeybind(menu));
+    }
+    
+    public ChestMenu.MenuClickHandler defaultOutsideKeybind(BlockMenu menu) {
+        return (p, s, i, a) -> {
+            if (!a.isShiftClicked() || a.isRightClicked()) {
+                return true;
+            }
+
+            // Shift+Left-click
+            receiveItem(p, i, Screen.of(menu));
+            return false;
+        };
+    }
+
+    public Map<Location, GridCache> getCacheMap() {
+        return CACHE_MAP;
+    }
 
     protected abstract int[] getBackgroundSlots();
 
@@ -498,29 +576,28 @@ public abstract class AbstractGrid extends NetworkObject {
     protected abstract int getFilterSlot();
 
     @SuppressWarnings("unused")
-    protected @NotNull ItemStack getBlankSlotStack() {
+    protected ItemStack getBlankSlotStack() {
         return Icon.BLANK_SLOT_STACK;
     }
 
-    protected @NotNull ItemStack getPagePreviousStack() {
+    protected ItemStack getPagePreviousStack() {
         return Icon.PAGE_PREVIOUS_STACK;
     }
 
-    protected @NotNull ItemStack getPageNextStack() {
+    protected ItemStack getPageNextStack() {
         return Icon.PAGE_NEXT_STACK;
     }
 
-    protected @NotNull ItemStack getChangeSortStack() {
+    protected ItemStack getChangeSortStack() {
         return Icon.CHANGE_SORT_STACK;
     }
 
-    protected @NotNull ItemStack getFilterStack() {
+    protected ItemStack getFilterStack() {
         return Icon.FILTER_STACK;
     }
 
-    @SuppressWarnings("deprecation")
     public void receiveItem(
-        @NotNull Player player, ItemStack itemStack, ClickAction action, @NotNull Screen screen) {
+        Player player, ItemStack itemStack, Screen screen) {
         NodeDefinition definition = NetworkStorage.getNode(screen.getLocation());
         if (definition == null || definition.getNode() == null) {
             clearDisplay(screen);
@@ -534,7 +611,7 @@ public abstract class AbstractGrid extends NetworkObject {
             return;
         }
 
-        if (itemStack != null && itemStack.getType() != Material.AIR && !StackUtils.isBlacklisted(itemStack)) {
+        if (!StackUtils.isBlacklisted(itemStack)) {
             definition.getNode().getRoot().addItemStack(screen.getLocation(), itemStack);
         }
     }
@@ -549,5 +626,9 @@ public abstract class AbstractGrid extends NetworkObject {
                 gridCache.setSortOrder(gridCache.getSortOrder().next(limit));
             }
         }
+    }
+
+    public int getSortOrderLimit() {
+        return 2;
     }
 }

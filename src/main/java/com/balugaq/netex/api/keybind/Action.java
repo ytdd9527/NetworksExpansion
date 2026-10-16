@@ -7,22 +7,21 @@ import org.bukkit.Keyed;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jspecify.annotations.NullMarked;
 
 @NullMarked
 @SuppressWarnings("deprecation")
 public interface Action extends Keyed, Comparable<Action> {
-    static Action of(NamespacedKey key, Function5<Player, Integer, ItemStack, ClickAction, BlockMenu, ActionResult> function) {
+    static Action of(NamespacedKey key, Function5<Player, Integer, @Nullable ItemStack, ClickAction, BlockMenu, ActionResult> function) {
         return new Action() {
             @Override
-            public ActionResult apply(Player player, int slot, ItemStack item, ClickAction action, BlockMenu menu) {
+            public ActionResult apply(Player player, int slot, @Nullable ItemStack item, ClickAction action, BlockMenu menu) {
                 return function.apply(player, slot, item, action, menu);
             }
 
             @Override
-            public @NotNull NamespacedKey getKey() {
+            public NamespacedKey getKey() {
                 return key;
             }
         }.register();

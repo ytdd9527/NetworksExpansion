@@ -18,7 +18,6 @@ import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jspecify.annotations.NullMarked;
 
@@ -100,7 +99,7 @@ public interface Keybind extends Keyed, Comparable<Keybind> {
         return this;
     }
 
-    default int compareTo(@NotNull Keybind o) {
+    default int compareTo(Keybind o) {
         return getKey().compareTo(o.getKey());
     }
 
@@ -129,7 +128,7 @@ public interface Keybind extends Keyed, Comparable<Keybind> {
         }
 
         @Override
-        public @NotNull NamespacedKey getKey() {
+        public NamespacedKey getKey() {
             return key;
         }
     }

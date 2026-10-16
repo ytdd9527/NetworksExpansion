@@ -30,6 +30,7 @@ import io.github.thebusybiscuit.slimefun4.api.items.ItemGroup;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
 import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
+import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.ClickAction;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
 import net.guizhanss.minecraft.guizhanlib.gugu.minecraft.helpers.inventory.ItemStackHelper;
 import org.bukkit.Bukkit;
@@ -55,16 +56,6 @@ import java.util.Map.Entry;
 @NullMarked
 @SuppressWarnings({"deprecation", "DuplicatedCode"})
 public abstract class AbstractGridNewStyle extends AbstractGrid implements Keybindable, BaseGrid {
-    private static final Map<GridCache.SortOrder, Comparator<? super Entry<ItemStack, Long>>> SORT_MAP =
-        new HashMap<>();
-
-    static {
-        SORT_MAP.put(GridCache.SortOrder.ALPHABETICAL, Sorters.ITEMSTACK_ALPHABETICAL_SORT);
-        SORT_MAP.put(GridCache.SortOrder.NUMBER, Sorters.ITEMSTACK_NUMERICAL_SORT.reversed());
-        SORT_MAP.put(GridCache.SortOrder.NUMBER_REVERSE, Sorters.ITEMSTACK_NUMERICAL_SORT);
-        SORT_MAP.put(GridCache.SortOrder.ADDON, Sorters.ITEMSTACK_ADDON_SORT);
-    }
-
     protected AbstractGridNewStyle(
         ItemGroup itemGroup,
         SlimefunItemStack item,
@@ -84,7 +75,7 @@ public abstract class AbstractGridNewStyle extends AbstractGrid implements Keybi
 
     @Override
     @Nullable
-    public ItemStack precheck(NodeDefinition definition, BlockMenu blockMenu, Player player, ItemStack itemStack) {
+    public ItemStack precheck(@Nullable NodeDefinition definition, BlockMenu blockMenu, Player player, @Nullable ItemStack itemStack) {
         if (definition == null || definition.getNode() == null) {
             clearDisplay(Screen.of(blockMenu));
             blockMenu.close();
@@ -114,8 +105,8 @@ public abstract class AbstractGridNewStyle extends AbstractGrid implements Keybi
             return null;
         }
 
-        cloneLore.remove(cloneLore.size() - 1);
-        cloneLore.remove(cloneLore.size() - 1);
+        cloneLore.removeLast();
+        cloneLore.removeLast();
         cloneMeta.setLore(cloneLore);
         clone.setItemMeta(cloneMeta);
 
@@ -227,9 +218,7 @@ public abstract class AbstractGridNewStyle extends AbstractGrid implements Keybi
         final GridCache gridCache = getCacheMap().get(screen.getLocation());
 
         SlimefunBlockData data = StorageCacheUtils.getBlock(screen.getLocation());
-        if (data == null) {
-            return;
-        }
+        if (data == null) return;
 
         String filter = data.getData(BS_FILTER_KEY);
         if (filter != null) {
@@ -376,11 +365,9 @@ public abstract class AbstractGridNewStyle extends AbstractGrid implements Keybi
                 Bukkit.getOnlinePlayers().stream().findFirst().ifPresent(player -> {
                     List<SlimefunItem> sfs = new ArrayList<>();
                     for (ItemStack item : networkRoot.getAllNetworkItemsLongTypeView().keySet()) {
-                        if (item != null && item.getType() != Material.AIR) {
-                            var sf = SlimefunItem.getByItem(item);
-                            if (sf != null) {
-                                sfs.add(sf);
-                            }
+                        var sf = SlimefunItem.getByItem(item);
+                        if (sf != null) {
+                            sfs.add(sf);
                         }
                     }
                     List<FilterType> types = new ArrayList<>(Arrays.stream(FilterType.values()).toList());
@@ -395,12 +382,10 @@ public abstract class AbstractGridNewStyle extends AbstractGrid implements Keybi
         }
         var result = networkRoot.getAllNetworkItemsLongTypeView().entrySet().stream()
             .filter(entry -> {
-                if (searchTerm == null) {
-                    return true;
-                }
+                if (searchTerm == null) return true;
 
                 final ItemStack itemStack = entry.getKey();
-                if (pass != null) {
+                if (!pass.isEmpty()) {
                     final SlimefunItem slimefunItem = SlimefunItem.getByItem(itemStack);
                     if (slimefunItem != null) {
                         if (pass.contains(slimefunItem)) {
@@ -421,14 +406,24 @@ public abstract class AbstractGridNewStyle extends AbstractGrid implements Keybi
                     return name.contains(searchTerm);
                 }
             })
-            .sorted(SORT_MAP.get(cache.getSortOrder()))
+            .sorted(cache.getSortOrder().comparator())
             .toList();
         cache.setEntriesCache(result);
         return result;
     }
 
     @Override
+    public void receiveItem(Player player, ItemStack itemStack, ClickAction action, Screen screen) {
+        receiveItem(player, itemStack, screen);
+    }
+
+    @Override
     protected int getInputSlot() {
         return -1;
+    }
+
+    @Override
+    public int getSortOrderLimit() {
+        return 4;
     }
 }

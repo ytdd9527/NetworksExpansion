@@ -11,9 +11,9 @@ import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
 import io.github.thebusybiscuit.slimefun4.core.attributes.NotConfigurable;
 import io.github.thebusybiscuit.slimefun4.implementation.Slimefun;
 import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
+import org.jspecify.annotations.NullMarked;
 
 /**
  * We may add something soon
@@ -22,45 +22,46 @@ import org.jetbrains.annotations.Range;
  * @author baluagq
  * @since 2.0
  */
+@NullMarked
 public abstract class SpecialSlimefunItem extends SlimefunItem implements FeedbackSendable {
     public SpecialSlimefunItem(
-        @NotNull ItemGroup itemGroup,
-        @NotNull SlimefunItemStack item,
-        @NotNull RecipeType recipeType,
-        @Nullable ItemStack @NotNull [] recipe) {
+        ItemGroup itemGroup,
+        SlimefunItemStack item,
+        RecipeType recipeType,
+        @Nullable ItemStack [] recipe) {
         super(itemGroup, item, recipeType, recipe);
     }
 
     public SpecialSlimefunItem(
-        @NotNull ItemGroup itemGroup,
-        @NotNull SlimefunItemStack item,
-        @NotNull RecipeType recipeType,
-        @Nullable ItemStack @NotNull [] recipe,
+        ItemGroup itemGroup,
+        SlimefunItemStack item,
+        RecipeType recipeType,
+        @Nullable ItemStack [] recipe,
         @Nullable ItemStack recipeOutput) {
         super(itemGroup, item, recipeType, recipe, recipeOutput);
     }
 
     public SpecialSlimefunItem(
-        @NotNull ItemGroup itemGroup,
-        @NotNull ItemStack item,
-        @NotNull String id,
-        @NotNull RecipeType recipeType,
-        @Nullable ItemStack @NotNull [] recipe) {
+        ItemGroup itemGroup,
+        ItemStack item,
+        String id,
+        RecipeType recipeType,
+        @Nullable ItemStack [] recipe) {
         super(itemGroup, item, id, recipeType, recipe);
     }
 
     public SpecialSlimefunItem(
-        @NotNull ItemGroup itemGroup,
-        @NotNull SlimefunItemStack item,
-        @NotNull RecipeType recipeType,
-        @Nullable ItemStack @NotNull [] recipe,
+        ItemGroup itemGroup,
+        SlimefunItemStack item,
+        RecipeType recipeType,
+        @Nullable ItemStack [] recipe,
         @Range(from = 1, to = 64) int outputAmount
     ) {
         this(itemGroup, item, recipeType, recipe, StackUtils.getAsQuantity(item, outputAmount));
     }
 
     @Override
-    public void register(@NotNull SlimefunAddon addon) {
+    public void register(SlimefunAddon addon) {
         super.register(addon);
 
         this.enchantable = false;
@@ -71,7 +72,6 @@ public abstract class SpecialSlimefunItem extends SlimefunItem implements Feedba
         }
     }
 
-    @NotNull
     public SpecialSlimefunItem registerThis() {
         this.register(Networks.getInstance());
         return this;

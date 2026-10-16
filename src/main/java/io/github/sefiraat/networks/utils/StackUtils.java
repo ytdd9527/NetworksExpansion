@@ -396,14 +396,12 @@ public class StackUtils {
             || itemStack.getType() == Material.CHEST_MINECART; // Fix Packed Dolly(possible) in FluffyMachines
     }
 
-    @SuppressWarnings("removal")
     public static boolean canQuickEscapeMetaVariant(ItemMeta metaOne, ItemMeta metaTwo) {
         return canQuickEscapeMetaVariant(metaOne, metaTwo, false);
     }
 
     @SuppressWarnings("removal")
     public static boolean canQuickEscapeMetaVariant(ItemMeta metaOne, ItemMeta metaTwo, boolean ignoreDurability) {
-
         // Damageable (first as everything can be damageable apparently)
         if (!ignoreDurability) {
             if (metaOne instanceof Damageable instanceOne && metaTwo instanceof Damageable instanceTwo) {
@@ -760,8 +758,9 @@ public class StackUtils {
         return false;
     }
 
-    public static boolean isBlacklisted(ItemStack itemStack) {
-        return itemStack.getType() == Material.AIR
+    public static boolean isBlacklisted(@Nullable ItemStack itemStack) {
+        return itemStack == null
+            || itemStack.getType() == Material.AIR
             || itemStack.getType().getMaxDurability() < 0
             || Tag.SHULKER_BOXES.isTagged(itemStack.getType())
             || isBundle(itemStack.getType());

@@ -1,36 +1,26 @@
 package io.github.sefiraat.networks.slimefun.network.grid;
 
+import com.balugaq.netex.api.algorithm.Sorters;
 import com.balugaq.netex.utils.Lang;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
-@Getter
-@Setter
+@Data
+@NullMarked
 public class GridCache {
-
-    @NotNull
     private final List<ItemStack> pullItemHistory = new ArrayList<>();
-
-    @Setter
-    @Getter
     private int page;
-
-    @Setter
-    @Getter
     private int maxPages;
-
-    @NotNull
     private DisplayMode displayMode;
-
-    @NotNull
     private SortOrder sortOrder;
 
     @Nullable
@@ -39,7 +29,7 @@ public class GridCache {
     @Nullable
     private List<Map.Entry<ItemStack, Long>> entriesCache;
 
-    public GridCache(int page, int maxPages, @NotNull SortOrder sortOrder) {
+    public GridCache(int page, int maxPages, SortOrder sortOrder) {
         this.page = page;
         this.maxPages = maxPages;
         this.sortOrder = sortOrder;
@@ -49,8 +39,7 @@ public class GridCache {
     public void addPullItemHistory(@Nullable ItemStack itemStack) {
         if (itemStack != null) {
             getPullItemHistory().remove(itemStack);
-
-            getPullItemHistory().add(0, itemStack);
+            getPullItemHistory().addFirst(itemStack);
         }
     }
 
@@ -62,13 +51,16 @@ public class GridCache {
         }
     }
 
+    @RequiredArgsConstructor
     public enum SortOrder {
-        ALPHABETICAL,
-        NUMBER,
-        NUMBER_REVERSE,
-        ADDON;
+        ALPHABETICAL(Sorters.ITEMSTACK_ALPHABETICAL_SORT),
+        NUMBER(Sorters.ITEMSTACK_NUMERICAL_SORT.reversed()),
+        NUMBER_REVERSE(Sorters.ITEMSTACK_NUMERICAL_SORT),
+        ADDON(Sorters.ITEMSTACK_ADDON_SORT);
 
-        public @NotNull SortOrder next(@Range(from = 1, to = 4) int limit) {
+        final Comparator<Map.Entry<ItemStack, Long>> comparator;
+
+        public SortOrder next(@Range(from = 1, to = 4) int limit) {
             if (this.next().ordinal() + 1 >= limit) {
                 return ALPHABETICAL;
             }
@@ -76,7 +68,7 @@ public class GridCache {
             return this.next();
         }
 
-        public @NotNull SortOrder next() {
+        public SortOrder next() {
             return switch (this) {
                 case ALPHABETICAL -> NUMBER;
                 case NUMBER -> NUMBER_REVERSE;
@@ -85,7 +77,7 @@ public class GridCache {
             };
         }
 
-        public @NotNull SortOrder previous(@Range(from = 1, to = 4) int limit) {
+        public SortOrder previous(@Range(from = 1, to = 4) int limit) {
             if (this.previous().ordinal() + 1 >= limit) {
                 return values()[limit - 1];
             }
@@ -93,7 +85,7 @@ public class GridCache {
             return this.previous();
         }
 
-        public @NotNull SortOrder previous() {
+        public SortOrder previous() {
             return switch (this) {
                 case ALPHABETICAL -> ADDON;
                 case NUMBER -> ALPHABETICAL;
@@ -104,6 +96,10 @@ public class GridCache {
 
         public String getTranslationName() {
             return Lang.getString("messages.completed-operation.grid.sort_orders." + name().toLowerCase());
+        }
+
+        public Comparator<? super Map.Entry<ItemStack, Long>> comparator() {
+            return comparator;
         }
     }
 

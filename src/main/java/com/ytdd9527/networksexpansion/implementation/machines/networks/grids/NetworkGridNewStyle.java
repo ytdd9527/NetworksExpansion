@@ -4,32 +4,20 @@ import com.balugaq.netex.api.keybind.Keybindable;
 import com.balugaq.netex.api.keybind.Keybinds;
 import com.balugaq.netex.api.visual.Screen;
 import com.ytdd9527.networksexpansion.core.items.machines.AbstractGridNewStyle;
-import com.ytdd9527.networksexpansion.implementation.ExpansionItems;
 import io.github.sefiraat.networks.network.NodeType;
-import io.github.sefiraat.networks.slimefun.network.grid.AbstractGrid;
 import io.github.sefiraat.networks.slimefun.network.grid.GridCache;
 import io.github.sefiraat.networks.slimefun.network.grid.GridCache.DisplayMode;
 import io.github.thebusybiscuit.slimefun4.api.items.ItemGroup;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
 import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
 import io.github.thebusybiscuit.slimefun4.core.handlers.BlockBreakHandler;
-import io.github.thebusybiscuit.slimefun4.implementation.Slimefun;
-import io.github.thebusybiscuit.slimefun4.libraries.dough.protection.Interaction;
-import io.github.thebusybiscuit.slimefun4.utils.ChestMenuUtils;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
-import me.mrCookieSlime.Slimefun.api.inventory.BlockMenuPreset;
-import me.mrCookieSlime.Slimefun.api.item_transport.ItemTransportFlow;
-import org.bukkit.Location;
 import org.bukkit.block.Block;
-import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.NullMarked;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @NullMarked
 @SuppressWarnings("DuplicatedCode")
@@ -53,8 +41,6 @@ public class NetworkGridNewStyle extends AbstractGridNewStyle implements Keybind
     private static final int PAGE_NEXT = 53;
     private static final int TOGGLE_MODE_SLOT = 17;
 
-    private static final Map<Location, GridCache> CACHE_MAP = new HashMap<>();
-
     public NetworkGridNewStyle(
         ItemGroup itemGroup,
         SlimefunItemStack item,
@@ -64,7 +50,8 @@ public class NetworkGridNewStyle extends AbstractGridNewStyle implements Keybind
         addItemHandler(new BlockBreakHandler(false, false) {
 
             @Override
-            public void onPlayerBreak(@NotNull BlockBreakEvent event, @NotNull ItemStack item, @NotNull List<ItemStack> drops) {
+            public void onPlayerBreak(BlockBreakEvent event, ItemStack item, List<ItemStack> drops) {
+                onBreak(event);
             }
         });
     }
@@ -79,99 +66,20 @@ public class NetworkGridNewStyle extends AbstractGridNewStyle implements Keybind
     }
 
     @Override
-    protected BlockMenuPreset getPreset() {
-        return new BlockMenuPreset(this.getId(), this.getItemName()) {
-
-            @Override
-            public void init() {
-                // drawBackground(getBackgroundSlots());
-                drawBackground(getDisplaySlots());
-                setSize(54);
+    public void postNewInstance(BlockMenu menu, Block b) {
+        menu.replaceExistingItem(getToggleModeSlot(), getModeStack(DisplayMode.DISPLAY));
+        menu.addMenuClickHandler(getToggleModeSlot(), (p, slot, item, action) -> {
+            if (!action.isRightClicked()) {
+                GridCache gridCache = getCacheMap().get(menu.getLocation());
+                gridCache.toggleDisplayMode();
+                menu.replaceExistingItem(getToggleModeSlot(), getModeStack(gridCache));
+                updateDisplay(Screen.of(menu));
             }
+            return false;
+        });
 
-            @Override
-            public boolean canOpen(Block block, Player player) {
-                return player.hasPermission("slimefun.inventory.bypass")
-                    || (ExpansionItems.NETWORK_GRID_NEW_STYLE.canUse(player, false)
-                    && Slimefun.getProtectionManager()
-                    .hasPermission(player, block.getLocation(), Interaction.INTERACT_BLOCK));
-            }
-
-            @Override
-            public int[] getSlotsAccessedByItemTransport(ItemTransportFlow flow) {
-                return new int[0];
-            }
-
-            @Override
-            public void newInstance(BlockMenu menu, Block b) {
-                getCacheMap().put(menu.getLocation(), new GridCache(0, 0, GridCache.SortOrder.ALPHABETICAL));
-
-                menu.replaceExistingItem(getPagePrevious(), getPagePreviousStack());
-                menu.addMenuClickHandler(getPagePrevious(), (p, slot, item, action) -> {
-                    GridCache gridCache = getCacheMap().get(menu.getLocation());
-                    gridCache.setPage(gridCache.getPage() <= 0 ? 0 : gridCache.getPage() - 1);
-                    getCacheMap().put(menu.getLocation(), gridCache);
-                    updateDisplay(Screen.of(menu));
-                    return false;
-                });
-
-                menu.replaceExistingItem(getPageNext(), getPageNextStack());
-                menu.addMenuClickHandler(getPageNext(), (p, slot, item, action) -> {
-                    GridCache gridCache = getCacheMap().get(menu.getLocation());
-                    gridCache.setPage(
-                        gridCache.getPage() >= gridCache.getMaxPages()
-                            ? gridCache.getMaxPages()
-                            : gridCache.getPage() + 1);
-                    getCacheMap().put(menu.getLocation(), gridCache);
-                    updateDisplay(Screen.of(menu));
-                    return false;
-                });
-
-                menu.replaceExistingItem(getChangeSort(), getChangeSortStack());
-                menu.addMenuClickHandler(getChangeSort(), (p, slot, item, action) -> {
-                    GridCache gridCache = getCacheMap().get(menu.getLocation());
-                    AbstractGrid.updateSortOrder(gridCache, action, 4);
-                    getCacheMap().put(menu.getLocation(), gridCache);
-                    updateDisplay(Screen.of(menu));
-                    return false;
-                });
-
-                menu.replaceExistingItem(getFilterSlot(), getFilterStack());
-                menu.addMenuClickHandler(getFilterSlot(), (p, slot, item, action) -> {
-                    GridCache gridCache = getCacheMap().get(menu.getLocation());
-                    setFilter(p, Screen.of(menu), gridCache, action);
-                    return false;
-                });
-
-                menu.replaceExistingItem(getToggleModeSlot(), getModeStack(DisplayMode.DISPLAY));
-                menu.addMenuClickHandler(getToggleModeSlot(), (p, slot, item, action) -> {
-                    if (!action.isRightClicked()) {
-                        GridCache gridCache = getCacheMap().get(menu.getLocation());
-                        gridCache.toggleDisplayMode();
-                        menu.replaceExistingItem(getToggleModeSlot(), getModeStack(gridCache));
-                        updateDisplay(Screen.of(menu));
-                    }
-                    return false;
-                });
-
-                for (int displaySlot : getDisplaySlots()) {
-                    menu.replaceExistingItem(displaySlot, ChestMenuUtils.getBackground());
-                    menu.addMenuClickHandler(displaySlot, (p, slot, item, action) -> false);
-                }
-
-                for (int backgroundSlot : getBackgroundSlots()) {
-                    menu.replaceExistingItem(backgroundSlot, ChestMenuUtils.getBackground());
-                    menu.addMenuClickHandler(backgroundSlot, (p, slot, item, action) -> false);
-                }
-
-                menu.addPlayerInventoryClickHandler(outsideKeybinds());
-                addKeybindSettingsButton(menu, getKeybindButtonSlot());
-            }
-        };
-    }
-
-    public Map<Location, GridCache> getCacheMap() {
-        return CACHE_MAP;
+        menu.addPlayerInventoryClickHandler(outsideKeybinds());
+        addKeybindSettingsButton(menu, getKeybindButtonSlot());
     }
 
     public int[] getBackgroundSlots() {

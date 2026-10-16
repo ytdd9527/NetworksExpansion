@@ -10,22 +10,25 @@ import io.github.thebusybiscuit.slimefun4.implementation.items.backpacks.Slimefu
 import lombok.experimental.UtilityClass;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.HashMap;
 import java.util.Map;
 
 @SuppressWarnings("JavaExistingMethodCanBeUsed")
 @UtilityClass
+@NullMarked
 public final class SupportedCraftingTableRecipes {
 
-    private static final Map<ItemStack[], ItemStack> RECIPES = new HashMap<>();
+    private static final Map<@Nullable ItemStack[], ItemStack> RECIPES = new HashMap<>();
 
     static {
         String id = SlimefunItems.ENHANCED_CRAFTING_TABLE.getItemId();
         SlimefunItem recipeTypeItem = SlimefunItem.getById(id);
         if (recipeTypeItem instanceof MultiBlockMachine mb) {
             boolean isInput = true;
-            ItemStack[] input = null;
+            @Nullable ItemStack @Nullable [] input = null;
             ItemStack[] output;
             for (ItemStack[] recipe : mb.getRecipes()) {
                 if (isInput) {
@@ -33,7 +36,7 @@ public final class SupportedCraftingTableRecipes {
                 } else {
                     output = recipe;
                     if (input.length != 9) {
-                        ItemStack[] newInput = new ItemStack[9];
+                        @Nullable ItemStack[] newInput = new ItemStack[9];
                         for (int i = 0; i < 9; i++) {
                             if (i < input.length) {
                                 newInput[i] = input[i];
@@ -51,7 +54,7 @@ public final class SupportedCraftingTableRecipes {
         for (SlimefunItem item : Slimefun.getRegistry().getEnabledSlimefunItems()) {
             RecipeType recipeType = item.getRecipeType();
             if ((recipeType == RecipeType.ENHANCED_CRAFTING_TABLE) && allowedRecipe(item)) {
-                ItemStack[] itemStacks = new ItemStack[9];
+                @Nullable ItemStack[] itemStacks = new ItemStack[9];
                 int i = 0;
                 for (ItemStack itemStack : item.getRecipe()) {
                     if (itemStack == null) {
@@ -68,15 +71,15 @@ public final class SupportedCraftingTableRecipes {
         }
     }
 
-    public static @NotNull Map<ItemStack[], ItemStack> getRecipes() {
+    public static Map<@Nullable ItemStack[], ItemStack> getRecipes() {
         return RECIPES;
     }
 
-    public static void addRecipe(@NotNull ItemStack[] input, @NotNull ItemStack output) {
+    public static void addRecipe(@Nullable ItemStack[] input, ItemStack output) {
         RECIPES.put(input, output);
     }
 
-    public static boolean testRecipe(@NotNull ItemStack[] input, @NotNull ItemStack @NotNull [] recipe) {
+    public static boolean testRecipe(@Nullable ItemStack[] input, ItemStack [] recipe) {
         for (int test = 0; test < recipe.length; test++) {
             if (!StackUtils.itemsMatch(input[test], recipe[test])) {
                 return false;
@@ -85,7 +88,7 @@ public final class SupportedCraftingTableRecipes {
         return true;
     }
 
-    public static boolean allowedRecipe(@NotNull SlimefunItem item) {
+    public static boolean allowedRecipe(SlimefunItem item) {
         return !(item instanceof SlimefunBackpack);
     }
 }

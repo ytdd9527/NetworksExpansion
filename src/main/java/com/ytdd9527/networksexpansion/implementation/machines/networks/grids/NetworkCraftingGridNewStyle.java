@@ -42,7 +42,6 @@ import java.util.Map;
 @NullMarked
 @SuppressWarnings("DuplicatedCode")
 public class NetworkCraftingGridNewStyle extends AbstractGridNewStyle {
-
     private static final int[] BACKGROUND_SLOTS = {5, 14, 23, 32, 41, 43, 50, 51};
 
     private static final int[] DISPLAY_SLOTS = {
@@ -75,101 +74,26 @@ public class NetworkCraftingGridNewStyle extends AbstractGridNewStyle {
     }
 
     @Override
-    protected BlockMenuPreset getPreset() {
-        return new BlockMenuPreset(this.getId(), this.getItemName()) {
-
-            @Override
-            public void init() {
-                // drawBackground(getBackgroundSlots());
-                drawBackground(getDisplaySlots());
-                setSize(54);
+    public void postNewInstance(BlockMenu menu, Block b) {
+        menu.replaceExistingItem(getToggleModeSlot(), getModeStack(DisplayMode.DISPLAY));
+        menu.addMenuClickHandler(getToggleModeSlot(), (p, slot, item, action) -> {
+            if (!action.isRightClicked()) {
+                GridCache gridCache = getCacheMap().get(menu.getLocation());
+                gridCache.toggleDisplayMode();
+                menu.replaceExistingItem(getToggleModeSlot(), getModeStack(gridCache));
+                updateDisplay(menu);
             }
+            return false;
+        });
 
-            @Override
-            public boolean canOpen(Block block, Player player) {
-                return player.hasPermission("slimefun.inventory.bypass")
-                    || (ExpansionItems.NETWORK_CRAFTING_GRID_NEW_STYLE.canUse(player, false)
-                    && Slimefun.getProtectionManager()
-                    .hasPermission(player, block.getLocation(), Interaction.INTERACT_BLOCK));
-            }
+        menu.replaceExistingItem(CRAFT_BUTTON_SLOT, Icon.CRAFT_BUTTON_NEW_STYLE);
+        menu.addMenuClickHandler(CRAFT_BUTTON_SLOT, (p, slot, item, action) -> {
+            tryCraft(menu, p, action);
+            return false;
+        });
 
-            @Override
-            public int[] getSlotsAccessedByItemTransport(ItemTransportFlow flow) {
-                return new int[0];
-            }
-
-            @Override
-            public void newInstance(BlockMenu menu, Block b) {
-                getCacheMap().put(menu.getLocation(), new GridCache(0, 0, GridCache.SortOrder.ALPHABETICAL));
-
-                menu.replaceExistingItem(getPagePrevious(), getPagePreviousStack());
-                menu.addMenuClickHandler(getPagePrevious(), (p, slot, item, action) -> {
-                    GridCache gridCache = getCacheMap().get(menu.getLocation());
-                    gridCache.setPage(gridCache.getPage() <= 0 ? 0 : gridCache.getPage() - 1);
-                    getCacheMap().put(menu.getLocation(), gridCache);
-                    updateDisplay(menu);
-                    return false;
-                });
-
-                menu.replaceExistingItem(getPageNext(), getPageNextStack());
-                menu.addMenuClickHandler(getPageNext(), (p, slot, item, action) -> {
-                    GridCache gridCache = getCacheMap().get(menu.getLocation());
-                    gridCache.setPage(
-                        gridCache.getPage() >= gridCache.getMaxPages()
-                            ? gridCache.getMaxPages()
-                            : gridCache.getPage() + 1);
-                    getCacheMap().put(menu.getLocation(), gridCache);
-                    updateDisplay(Screen.of(menu));
-                    return false;
-                });
-
-                menu.replaceExistingItem(getChangeSort(), getChangeSortStack());
-                menu.addMenuClickHandler(getChangeSort(), (p, slot, item, action) -> {
-                    GridCache gridCache = getCacheMap().get(menu.getLocation());
-                    AbstractGrid.updateSortOrder(gridCache, action, 4);
-                    getCacheMap().put(menu.getLocation(), gridCache);
-                    updateDisplay(Screen.of(menu));
-                    return false;
-                });
-
-                menu.replaceExistingItem(getFilterSlot(), getFilterStack());
-                menu.addMenuClickHandler(getFilterSlot(), (p, slot, item, action) -> {
-                    GridCache gridCache = getCacheMap().get(menu.getLocation());
-                    setFilter(p, menu, gridCache, action);
-                    return false;
-                });
-
-                menu.replaceExistingItem(getToggleModeSlot(), getModeStack(DisplayMode.DISPLAY));
-                menu.addMenuClickHandler(getToggleModeSlot(), (p, slot, item, action) -> {
-                    if (!action.isRightClicked()) {
-                        GridCache gridCache = getCacheMap().get(menu.getLocation());
-                        gridCache.toggleDisplayMode();
-                        menu.replaceExistingItem(getToggleModeSlot(), getModeStack(gridCache));
-                        updateDisplay(menu);
-                    }
-                    return false;
-                });
-
-                menu.replaceExistingItem(CRAFT_BUTTON_SLOT, Icon.CRAFT_BUTTON_NEW_STYLE);
-                menu.addMenuClickHandler(CRAFT_BUTTON_SLOT, (p, slot, item, action) -> {
-                    tryCraft(menu, p, action);
-                    return false;
-                });
-
-                for (int displaySlot : getDisplaySlots()) {
-                    menu.replaceExistingItem(displaySlot, ChestMenuUtils.getBackground());
-                    menu.addMenuClickHandler(displaySlot, (p, slot, item, action) -> false);
-                }
-
-                for (int backgroundSlot : getBackgroundSlots()) {
-                    menu.replaceExistingItem(backgroundSlot, ChestMenuUtils.getBackground());
-                    menu.addMenuClickHandler(backgroundSlot, (p, slot, item, action) -> false);
-                }
-
-                menu.addPlayerInventoryClickHandler(outsideKeybinds());
-                addKeybindSettingsButton(menu, getKeybindButtonSlot());
-            }
-        };
+        menu.addPlayerInventoryClickHandler(outsideKeybinds());
+        addKeybindSettingsButton(menu, getKeybindButtonSlot());
     }
 
     public Map<Location, GridCache> getCacheMap() {
@@ -219,7 +143,7 @@ public class NetworkCraftingGridNewStyle extends AbstractGridNewStyle {
 
         // Get node and, if it doesn't exist - escape
         final NodeDefinition definition = NetworkStorage.getNode(menu.getLocation());
-        if (definition.getNode() == null) {
+        if (definition == null || definition.getNode() == null) {
             return;
         }
 

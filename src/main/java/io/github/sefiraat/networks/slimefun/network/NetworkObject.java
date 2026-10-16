@@ -29,11 +29,11 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
+import org.jspecify.annotations.NullMarked;
 
 import javax.annotation.OverridingMethodsMustInvokeSuper;
-import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -42,6 +42,7 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+@NullMarked
 @Getter
 public abstract class NetworkObject extends SpecialSlimefunItem implements AdminDebuggable {
     public static final Queue<Location> scheduledHangingTick = new ConcurrentLinkedQueue<>();
@@ -68,31 +69,31 @@ public abstract class NetworkObject extends SpecialSlimefunItem implements Admin
     private final Set<Location> firstTickLocations = new HashSet<>();
 
     protected NetworkObject(
-        @NotNull ItemGroup itemGroup,
-        @NotNull SlimefunItemStack item,
-        @NotNull RecipeType recipeType,
-        @NotNull ItemStack @NotNull [] recipe,
+        ItemGroup itemGroup,
+        SlimefunItemStack item,
+        RecipeType recipeType,
+        ItemStack [] recipe,
         @Range(from = 1, to = 64) int outputAmount,
-        @NotNull NodeType type
+        NodeType type
     ) {
         this(itemGroup, item, recipeType, recipe, StackUtils.getAsQuantity(item, outputAmount), type);
     }
 
     protected NetworkObject(
-        @NotNull ItemGroup itemGroup,
-        @NotNull SlimefunItemStack item,
-        @NotNull RecipeType recipeType,
-        ItemStack @NotNull [] recipe,
+        ItemGroup itemGroup,
+        SlimefunItemStack item,
+        RecipeType recipeType,
+        ItemStack [] recipe,
         NodeType type) {
         this(itemGroup, item, recipeType, recipe, null, type);
     }
 
     protected NetworkObject(
-        @NotNull ItemGroup itemGroup,
-        @NotNull SlimefunItemStack item,
-        @NotNull RecipeType recipeType,
-        ItemStack @NotNull [] recipe,
-        ItemStack recipeOutput,
+        ItemGroup itemGroup,
+        SlimefunItemStack item,
+        RecipeType recipeType,
+        ItemStack [] recipe,
+        @Nullable ItemStack recipeOutput,
         NodeType type) {
         super(itemGroup, item, recipeType, recipe, recipeOutput);
         this.nodeType = type;
@@ -105,7 +106,7 @@ public abstract class NetworkObject extends SpecialSlimefunItem implements Admin
                 }
 
                 @Override
-                public void tick(@NotNull Block b, SlimefunItem item, @NotNull SlimefunBlockData data) {
+                public void tick(Block b, SlimefunItem item, SlimefunBlockData data) {
                     if (!firstTickLocations.contains(b.getLocation())) {
                         // Netex - Hanging patch start
                         Bukkit.getScheduler().runTask(Networks.getInstance(), () -> {
@@ -123,14 +124,12 @@ public abstract class NetworkObject extends SpecialSlimefunItem implements Admin
 
                 // no exception
                 @Override
-                @NotNull
-                public Optional<IncompatibleItemHandlerException> validate(@NotNull SlimefunItem slimefunItem) {
+                public Optional<IncompatibleItemHandlerException> validate(SlimefunItem slimefunItem) {
                     return Optional.empty();
                 }
             },
             new BlockBreakHandler(false, false) {
                 @Override
-                @ParametersAreNonnullByDefault
                 public void onPlayerBreak(BlockBreakEvent event, ItemStack item, List<ItemStack> drops) {
                     preBreak(event);
                     onBreak(event);
@@ -139,7 +138,6 @@ public abstract class NetworkObject extends SpecialSlimefunItem implements Admin
             },
             new BlockPlaceHandler(false) {
                 @Override
-                @ParametersAreNonnullByDefault
                 public void onPlayerPlace(BlockPlaceEvent event) {
                     prePlace(event);
                     onPlace(event);
@@ -148,25 +146,25 @@ public abstract class NetworkObject extends SpecialSlimefunItem implements Admin
             });
     }
 
-    protected void addToRegistry(@NotNull Block block) {
+    protected void addToRegistry(Block block) {
         if (!NetworkStorage.containsKey(block.getLocation())) {
             final NodeDefinition nodeDefinition = new NodeDefinition(nodeType);
             NetworkStorage.registerNode(block.getLocation(), nodeDefinition);
         }
     }
 
-    protected void tickHangingBlocks(@NotNull Block block) {
+    protected void tickHangingBlocks(Block block) {
         scheduledHangingTick.add(block.getLocation());
     }
 
     @OverridingMethodsMustInvokeSuper
-    protected void preBreak(@NotNull BlockBreakEvent event) {
+    protected void preBreak(BlockBreakEvent event) {
         NetworkRoot.removePersistentAccessHistory(event.getBlock().getLocation());
         NetworkRoot.removeCountObservingAccessHistory(event.getBlock().getLocation());
     }
 
     @OverridingMethodsMustInvokeSuper
-    protected void onBreak(@NotNull BlockBreakEvent event) {
+    protected void onBreak(BlockBreakEvent event) {
         final Location location = event.getBlock().getLocation();
         final BlockMenu blockMenu = StorageCacheUtils.getMenu(location);
 
@@ -175,32 +173,23 @@ public abstract class NetworkObject extends SpecialSlimefunItem implements Admin
                 blockMenu.dropItems(location, i);
             }
         }
-
-        Slimefun.getDatabaseManager().getBlockDataController().removeBlock(location);
     }
 
-    @OverridingMethodsMustInvokeSuper
-    protected void postBreak(@NotNull BlockBreakEvent event) {
+    protected void postBreak(BlockBreakEvent event) {
     }
 
-    @OverridingMethodsMustInvokeSuper
-    @SuppressWarnings("unused")
-    protected void prePlace(@NotNull BlockPlaceEvent event) {
+    protected void prePlace(BlockPlaceEvent event) {
     }
 
-    @SuppressWarnings("unused")
-    protected void cancelPlace(@NotNull BlockPlaceEvent event) {
+    protected void cancelPlace(BlockPlaceEvent event) {
         event.getPlayer().sendMessage(Lang.getString("messages.unsupported-operation.comprehensive.cancel_place"));
         event.setCancelled(true);
     }
 
-    @OverridingMethodsMustInvokeSuper
-    protected void onPlace(@NotNull BlockPlaceEvent event) {
+    protected void onPlace(BlockPlaceEvent event) {
     }
 
-    @OverridingMethodsMustInvokeSuper
-    @SuppressWarnings("unused")
-    protected void postPlace(@NotNull BlockPlaceEvent event) {
+    protected void postPlace(BlockPlaceEvent event) {
     }
 
     public boolean isAdminDebuggable() {
