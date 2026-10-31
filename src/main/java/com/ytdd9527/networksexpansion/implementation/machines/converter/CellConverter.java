@@ -8,6 +8,7 @@ import com.ytdd9527.networksexpansion.api.cell.CellTier;
 import com.ytdd9527.networksexpansion.api.cell.StorageCell;
 import com.ytdd9527.networksexpansion.api.cell.CellLedger;
 import com.ytdd9527.networksexpansion.api.cell.CellPersistence;
+import com.ytdd9527.networksexpansion.api.cell.CellTransferLogic;
 import com.ytdd9527.networksexpansion.core.machines.AbstractCellBrowser;
 import com.ytdd9527.networksexpansion.utils.ChatInput;
 import com.ytdd9527.networksexpansion.utils.ItemKey;
@@ -373,6 +374,7 @@ public class CellConverter extends AbstractCellBrowser {
         // 转出为量子储存需要消耗一个玩家放入的空量子储存壳，且壳的等级必须与
         // 元件需要的量子储存等级一致；不一致的壳不能用于存入
         int shellSlot = -1;
+        long shellAmount = 0;
         boolean hasMismatchedShell = false;
         for (int slot : OUTPUT_SLOTS) {
             ItemStack onSlot = menu.getItemInSlot(slot);
@@ -395,6 +397,7 @@ public class CellConverter extends AbstractCellBrowser {
                 continue;
             }
             shellSlot = slot;
+            shellAmount = onSlot.getAmount();
             break;
         }
 
@@ -405,17 +408,28 @@ public class CellConverter extends AbstractCellBrowser {
             return;
         }
 
+        // 同槽叠放多个空壳时只消耗 1 个：成品需放到其他空槽
+        CellTransferLogic.ExportPlan plan = CellTransferLogic.planExport(
+            shellAmount, firstFreeOutputSlot(menu, shellSlot) >= 0);
+        if (!plan.accepted()) {
+            player.sendMessage(Lang.getString(plan.result() == CellTransferLogic.ExportResult.REJECT_NO_SLOT
+                ? CellnetText.CONVERTER_NO_FREE_SLOT
+                : CellnetText.CONVERTER_NO_QUANTUM_STORAGE));
+            return;
+        }
+
         ItemStack qsItem = CellQuantumConverter.buildQuantumStorage(ctx.entry().sample, ctx.entry().amount, required);
 
-        // 消耗空壳：原槽位被灌成带内容的量子储存
-        menu.replaceExistingItem(shellSlot, qsItem);
-        ctx.cache().takeItem(ctx.entry().sample, ctx.entry().amount);
-        if (!CellPersistence.isUnlimited(ctx.per())) {
-            long current = StorageCell.getCurrentPerTypeLimit(ctx.cellItem());
-            if (current > 1) {
-                CellPersistence.setCurrentPerTypeLimit(ctx.cellItem(), current - 1);
-            }
+        if (plan.result() == CellTransferLogic.ExportResult.ACCEPTED_WITH_EXTRA_SLOT) {
+            ItemStack shells = menu.getItemInSlot(shellSlot);
+            shells.setAmount((int) (shellAmount - 1));
+            menu.replaceExistingItem(shellSlot, shells);
+            menu.replaceExistingItem(firstFreeOutputSlot(menu, shellSlot), qsItem);
+        } else {
+            // 消耗空壳：原槽位被灌成带内容的量子储存
+            menu.replaceExistingItem(shellSlot, qsItem);
         }
+        ctx.cache().takeItem(ctx.entry().sample, ctx.entry().amount);
         refresh(menu);
 
         CellPersistence.saveAsync();
@@ -474,57 +488,68 @@ public class CellConverter extends AbstractCellBrowser {
 
         ItemKey targetKey = new ItemKey(target.qc().getItemStack());
         long existing = cache.getAmount(targetKey);
-        long amount = target.qc().getAmountLong();
-        boolean brandNew = existing <= 0;
-        long remaining = brandNew ? per : per - existing;
-        long transferable = Math.min(amount, remaining);
+        long maxUnits = CellPersistence.getMaxUnitsFor(per);
 
         if (cache.isWhitelistEnabled() && !isInCellWhitelist(cache, target.qc().getItemStack())) {
             player.sendMessage(Lang.getString(CellnetText.CONVERTER_WHITELIST_REJECTED));
             return;
         }
 
-        if (brandNew) {
-            // 元件没有对应的物品：需要占用一个新的容量格，没有剩余容量则拒绝存入
-            if (cache.getCurrentPerTypeLimit() >= cache.getMaxUnits()
-                || cache.getStoredItems().size() >= cache.getMaxUnits()) {
-                player.sendMessage(Lang.getString(CellnetText.CONVERTER_UNITS_FULL));
-                return;
-            }
-        } else if (transferable <= 0) {
-            // 该物品已达单格容量上限，无可转移的量：不动量子存储，避免丢失数据
-            player.sendMessage(Lang.getString(CellnetText.CONVERTER_ITEM_CAPACITY_FULL));
+        ItemStack qsItem = menu.getItemInSlot(target.sourceSlot());
+        CellTransferLogic.ImportPlan plan = CellTransferLogic.planImport(
+            qsItem.getAmount(), target.qc().getAmountLong(),
+            existing, per, cache.typeCount(), maxUnits);
+        if (!plan.accepted()) {
+            player.sendMessage(Lang.getString(switch (plan.result()) {
+                case REJECT_UNITS_FULL -> CellnetText.CONVERTER_UNITS_FULL;
+                case REJECT_TYPE_FULL -> CellnetText.CONVERTER_ITEM_CAPACITY_FULL;
+                case REJECT_SHELL_OVERFLOW -> CellnetText.CONVERTER_SHELL_OVERFLOW;
+                case REJECT_NO_SLOT -> CellnetText.CONVERTER_NO_FREE_SLOT;
+                default -> CellnetText.CONVERTER_NO_QUANTUM_STORAGE;
+            }));
             return;
         }
 
-        cache.pushItemLong(targetKey, transferable);
-
-        boolean fullyTransferred = amount - transferable <= 0;
-        if (brandNew) {
-            // 新种类：占用一个容量格
-            CellPersistence.setCurrentPerTypeLimit(target.cellItem(), cache.getCurrentPerTypeLimit() + 1);
-        } else if (fullyTransferred) {
-            // 已有种类且量子存储被完全转空：吞掉本体，尝试补偿一个容量格；已满则提示
-            long current = cache.getCurrentPerTypeLimit();
-            if (current < cache.getMaxUnits()) {
-                CellPersistence.setCurrentPerTypeLimit(target.cellItem(), current + 1);
-            } else {
-                player.sendMessage(Lang.getString(CellnetText.CONVERTER_UNITS_FULL));
+        if (plan.needExtraSlot()) {
+            int extraSlot = firstFreeOutputSlot(menu, target.sourceSlot());
+            if (extraSlot < 0) {
+                player.sendMessage(Lang.getString(CellnetText.CONVERTER_NO_FREE_SLOT));
+                return;
             }
+            menu.replaceExistingItem(extraSlot, CellQuantumConverter.buildQuantumStorage(
+                target.qc().getItemStack(), plan.remainder(), target.storage()));
         }
 
-        if (fullyTransferred) {
-            // 转移完成必吞掉量子存储本体，不再生成新的空量子储存
+        cache.pushItemLong(targetKey, plan.transferAmount());
+
+        if (plan.consumeAll()) {
             menu.replaceExistingItem(target.sourceSlot(), null);
+        } else if (plan.fullShells() <= 0) {
+            menu.replaceExistingItem(target.sourceSlot(), CellQuantumConverter.buildQuantumStorage(
+                target.qc().getItemStack(), plan.remainder(), target.storage()));
         } else {
-            // 部分转移：原位变身为剩余量的量子储存（仍持有真实内容，不属于凭空产出）
-            menu.replaceExistingItem(target.sourceSlot(),
-                CellQuantumConverter.buildQuantumStorage(target.qc().getItemStack(), amount - transferable, target.storage()));
+            ItemStack fullShells = CellQuantumConverter.buildQuantumStorage(
+                target.qc().getItemStack(), target.qc().getAmountLong(), target.storage());
+            fullShells.setAmount((int) plan.fullShells());
+            menu.replaceExistingItem(target.sourceSlot(), fullShells);
         }
 
         refresh(menu);
 
         CellPersistence.saveAsync();
+    }
+
+    private int firstFreeOutputSlot(@NotNull BlockMenu menu, int excludeSlot) {
+        for (int slot : OUTPUT_SLOTS) {
+            if (slot == excludeSlot) {
+                continue;
+            }
+            ItemStack onSlot = menu.getItemInSlot(slot);
+            if (onSlot == null || onSlot.getType().isAir()) {
+                return slot;
+            }
+        }
+        return -1;
     }
 
     private static List<Integer> listQuantumSlots(@NotNull BlockMenu menu) {

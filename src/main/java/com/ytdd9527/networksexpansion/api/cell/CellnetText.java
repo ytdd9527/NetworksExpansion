@@ -148,6 +148,8 @@ public final class CellnetText {
     public static final String CONVERTER_TRANSFER_HINT = "messages.cellnet.converter.transfer_hint";
     public static final String CONVERTER_UNITS_FULL = "messages.cellnet.converter.units_full";
     public static final String CONVERTER_WHITELIST_REJECTED = "messages.cellnet.converter.whitelist_rejected";
+    public static final String CONVERTER_NO_FREE_SLOT = "messages.cellnet.converter.no_free_slot";
+    public static final String CONVERTER_SHELL_OVERFLOW = "messages.cellnet.converter.shell_overflow";
 
     public static final String DRIVE_BREAK_NOT_ALLOWED = "messages.cellnet.drive.break_not_allowed";
     public static final String DRIVE_CELL_COUNT = "messages.cellnet.drive.cell_count";

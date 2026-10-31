@@ -844,6 +844,8 @@ messages:
       units_full: "<error>元件种类已满，先清理一部分"
       whitelist_rejected: "<error>该物品不在白名单中"
       item_capacity_full: "<error>该物品已达单格容量上限"
+      no_free_slot: "<error>输出槽没有空位放置剩余量子储存，先清出空位"
+      shell_overflow: "<error>同槽量子储存过多，剩余无法放入输出槽，请分批转运"
       info_title: "<passive>元件信息"
       cell_name: "<passive>元件 <aqua>{0}"
       item_types: "<passive>物品种类 <aqua>{0}"

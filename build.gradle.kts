@@ -70,6 +70,14 @@ dependencies {
     compileOnly(libs.tsingshan.technology)
     // System-scoped local JARs
     compileOnly(fileTree(mapOf("dir" to "lib", "include" to listOf("*.jar"))))
+
+    testImplementation(platform("org.junit:junit-bom:5.10.2"))
+    testImplementation("org.junit.jupiter:junit-jupiter")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+}
+
+tasks.test {
+    useJUnitPlatform()
 }
 
 tasks.withType<JavaExec>().configureEach {
@@ -138,7 +146,7 @@ tasks {
             "-Dnet.kyori.adventure.text.warn_when_legacy_formatting_detected=false"
         )
         maxHeapSize = "4G"
-        minecraftVersion("1.20.1")
+        minecraftVersion("26.2")
     }
 }
 
