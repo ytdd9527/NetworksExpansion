@@ -20,6 +20,8 @@ import io.github.sefiraat.networks.utils.NetworkUtils;
 import io.github.sefiraat.networks.utils.StackUtils;
 import io.github.sefiraat.networks.utils.datatypes.DataTypeMethods;
 import io.github.sefiraat.networks.utils.datatypes.PersistentQuantumStorageType;
+import io.papermc.paper.datacomponent.DataComponentTypes;
+import io.papermc.paper.datacomponent.item.ItemLore;
 import io.github.thebusybiscuit.slimefun4.api.items.ItemGroup;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
@@ -40,6 +42,8 @@ import me.mrCookieSlime.Slimefun.api.BlockStorage;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenuPreset;
 import me.mrCookieSlime.Slimefun.api.item_transport.ItemTransportFlow;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -224,31 +228,23 @@ public class NetworkQuantumStorage extends SpecialSlimefunItem implements Distin
                 menu.replaceExistingItem(ITEM_SLOT, Icon.QUANTUM_STORAGE_NO_ITEM);
                 return;
             }
-            final ItemMeta itemMeta = itemStack.getItemMeta();
-            if (itemMeta == null) {
-                menu.replaceExistingItem(ITEM_SLOT, Icon.QUANTUM_STORAGE_NO_ITEM);
-                return;
-            }
+            ItemLore originalLore = itemStack.getData(DataComponentTypes.LORE);
+            List<Component> lore = originalLore == null ? new ArrayList<>() : new ArrayList<>(originalLore.lines());
+            LegacyComponentSerializer serializer = LegacyComponentSerializer.legacySection();
 
-            List<String> lore = itemMeta.hasLore() ? itemMeta.getLore() : new ArrayList<>();
-            if (lore == null) {
-                lore = new ArrayList<>();
-            }
-
-            lore.add("");
-            lore.add(String.format(
+            lore.add(Component.empty());
+            lore.add(serializer.deserialize(String.format(
                 Lang.getString("displays.quantum_storage.void_excess"),
                 (cache.isVoidExcess()
                     ? Lang.getString("displays.quantum_storage.enabled_void_excess")
-                    : Lang.getString("displays.quantum_storage.disabled_void_excess"))));
-            lore.add(String.format(Lang.getString("displays.quantum_storage.stored_amount"), cache.getAmountLong()));
+                    : Lang.getString("displays.quantum_storage.disabled_void_excess")))));
+            lore.add(serializer.deserialize(String.format(Lang.getString("displays.quantum_storage.stored_amount"), cache.getAmountLong())));
             if (cache.supportsCustomMaxAmount()) {
                 // Cache limit is set at the potentially custom max amount set
                 // The player could set the custom maximum amount to be the actual maximum amount
-                lore.add(String.format(Lang.getString("displays.quantum_storage.custom_max_amount"), cache.getLimitLong()));
+                lore.add(serializer.deserialize(String.format(Lang.getString("displays.quantum_storage.custom_max_amount"), cache.getLimitLong())));
             }
-            itemMeta.setLore(lore);
-            itemStack.setItemMeta(itemMeta);
+            itemStack.setData(DataComponentTypes.LORE, ItemLore.lore(lore));
             itemStack.setAmount(1);
             menu.replaceExistingItem(ITEM_SLOT, itemStack);
         }
@@ -645,23 +641,26 @@ public class NetworkQuantumStorage extends SpecialSlimefunItem implements Distin
             return new QuantumCache(null, 0, maxAmount, false, this.supportsCustomMaxAmount);
         } else {
             final ItemStack clone = itemStack.clone();
-            final ItemMeta itemMeta = clone.getItemMeta();
-            final List<String> lore = itemMeta.getLore();
+            final ItemLore itemLore = clone.getData(DataComponentTypes.LORE);
+            final List<Component> lore = itemLore == null ? new ArrayList<>() : new ArrayList<>(itemLore.lines());
             for (int i = 0; i < 3; i++) {
-                if (lore == null || lore.isEmpty()) {
+                if (lore.isEmpty()) {
                     break;
                 }
                 lore.remove(lore.size() - 1);
             }
 
             if (supportsCustomMaxAmount) {
-                if (lore != null && !lore.isEmpty()) {
+                if (!lore.isEmpty()) {
                     lore.remove(lore.size() - 1);
                 }
             }
 
-            itemMeta.setLore(lore == null || lore.isEmpty() ? null : lore);
-            clone.setItemMeta(itemMeta);
+            if (lore.isEmpty()) {
+                clone.resetData(DataComponentTypes.LORE);
+            } else {
+                clone.setData(DataComponentTypes.LORE, ItemLore.lore(lore));
+            }
 
             final QuantumCache cache =
                 new QuantumCache(clone, amount, maxAmount, voidExcess, this.supportsCustomMaxAmount);
