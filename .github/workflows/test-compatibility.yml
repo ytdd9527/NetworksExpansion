@@ -69,13 +69,19 @@ jobs:
           echo "level-type=flat" >> server/server.properties
           echo "generate-structures=false" >> server/server.properties
 
-          # 启动服务端，240 秒后强制终止（插件在 ENABLE 阶段就会打日志，无需等世界生成完）
+          # 启动服务端，90 秒后向控制台发送 stop 正常关服（走完整 onDisable 流程）；
+          # 外层 timeout 300 兜底，防止 stop 失败时挂死
           cd server
-          timeout 240 java -Xmx2G -jar paper.jar nogui > console.log 2>&1 || true
+          timeout 300 bash -c '(sleep 90; echo stop) | java -Xmx2G -jar paper.jar nogui > console.log 2>&1' || true
           cd ..
 
-          echo "---- console tail ----"
-          tail -n 40 server/console.log || true
+      - name: Upload server log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: server-log-${{ matrix.version }}
+          path: server/console.log
+          if-no-files-found: warn
 
       - name: Check server logs
         run: |
@@ -87,14 +93,21 @@ jobs:
 
           PLUGIN_NAME="Networks"
 
-          # 1) 出现 Disabling 即判定加载失败
-          if grep -q "\[${PLUGIN_NAME}\] Disabling ${PLUGIN_NAME}" "$LOG_FILE"; then
-            echo "::error::插件在 MC ${{ matrix.version }} 上被禁用（Disabling）"
+          # 以 "Done (x.xxs)!" 为界：插件在 Done 之前被 Disabling = 开服阶段就炸了，判失败
+          DONE_LINE=$(grep -n 'Done (' "$LOG_FILE" | head -n 1 | cut -d: -f1)
+          if [ -z "$DONE_LINE" ]; then
+            echo "::error::服务端在 MC ${{ matrix.version }} 上没能完成启动（未找到 Done 行）"
+            exit 1
+          fi
+
+          DISABLE_LINE=$(grep -n "\[${PLUGIN_NAME}\] Disabling ${PLUGIN_NAME}" "$LOG_FILE" | head -n 1 | cut -d: -f1)
+          if [ -n "$DISABLE_LINE" ] && [ "$DISABLE_LINE" -lt "$DONE_LINE" ]; then
+            echo "::error::插件在 MC ${{ matrix.version }} 上开服阶段即被禁用（Disabling 出现在 Done 之前）"
             grep -n "Disabling ${PLUGIN_NAME}" "$LOG_FILE"
             exit 1
           fi
 
-          # 2) 没出现 Enabling 说明插件压根没加载成功（崩溃/依赖缺失）
+          # 没出现 Enabling 说明插件压根没加载成功（崩溃/依赖缺失）
           if ! grep -q "Enabling ${PLUGIN_NAME}" "$LOG_FILE"; then
             echo "::error::插件在 MC ${{ matrix.version }} 上未成功启用（未找到 Enabling 日志）"
             exit 1
