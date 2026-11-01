@@ -62,18 +62,13 @@ jobs:
         run: |
           cp build/libs/*.jar server/plugins/
 
-          # 两步取最新 build：先 /versions 拿 build id 列表，再取该 build 的下载地址
-          BUILDS=$(curl -s "https://fill.papermc.io/v3/projects/paper/versions" | jq -r --arg v "${{ matrix.version }}" '.[] | select(.version.id == $v) | .builds | max')
-          if [ -z "$BUILDS" ] || [ "$BUILDS" = "null" ]; then
+          # 一次请求拿该版本全部 build，取 id 最大的那个的下载地址
+          DOWNLOAD_URL=$(curl -s "https://fill.papermc.io/v3/projects/paper/versions/${{ matrix.version }}/builds" | jq -r '[.[].downloads["server:default"].url] | last // empty')
+          if [ -z "$DOWNLOAD_URL" ]; then
             echo "::error::Paper ${{ matrix.version }} 没有可用的 build（版本不存在或尚未发布）"
             exit 1
           fi
-          DOWNLOAD_URL=$(curl -s "https://fill.papermc.io/v3/projects/paper/versions/${{ matrix.version }}/builds/$BUILDS" | jq -r '.downloads["server:default"].url')
-          if [ -z "$DOWNLOAD_URL" ] || [ "$DOWNLOAD_URL" = "null" ]; then
-            echo "::error::Paper ${{ matrix.version }} build $BUILDS 没有下载地址"
-            exit 1
-          fi
-          echo "Downloading Paper ${{ matrix.version }} build $BUILDS: $DOWNLOAD_URL"
+          echo "Downloading Paper ${{ matrix.version }}: $DOWNLOAD_URL"
           curl -L -o server/paper.jar "$DOWNLOAD_URL"
 
           # 接受 EULA，静默启动配置
