@@ -44,23 +44,36 @@ jobs:
         run: |
           ./gradlew clean build -x test
 
-      - name: Run Paper server and load plugin
-        id: run-server
+      - name: Download dependencies
         run: |
           mkdir -p server/plugins
-          cp build/libs/*.jar server/plugins/
 
           # 依赖插件
+          # Networks 的 plugin.yml 里 depend: [Slimefun]，不装 Slimefun 会被 Bukkit 拒绝启用
+          # 用 GuguProject 构建源（与仓库编译目标对齐）
+          curl -L -o server/plugins/Slimefun4.jar \
+            "https://resources.guizhanss.com/api/v1/projects/Slimefun4/versions/master-271/download"
+
           curl -L -o server/plugins/GuizhanLibPlugin.jar \
             "https://resources.guizhanss.com/api/v1/projects/GuizhanLibPlugin/versions/build-61/download"
 
-          # 从 Paper v3 API 获取最新 build 的 paperclip jar（v2 API 已 410 下线）
-          DOWNLOAD_URL=$(curl -s "https://fill.papermc.io/v3/projects/paper/versions/${{ matrix.version }}/builds/latest" | jq -r '.downloads["server:default"].url')
-          if [ -z "$DOWNLOAD_URL" ] || [ "$DOWNLOAD_URL" = "null" ]; then
+      - name: Run Paper server and load plugin
+        id: run-server
+        run: |
+          cp build/libs/*.jar server/plugins/
+
+          # 两步取最新 build：先 /versions 拿 build id 列表，再取该 build 的下载地址
+          BUILDS=$(curl -s "https://fill.papermc.io/v3/projects/paper/versions" | jq -r --arg v "${{ matrix.version }}" '.[] | select(.version.id == $v) | .builds | max')
+          if [ -z "$BUILDS" ] || [ "$BUILDS" = "null" ]; then
             echo "::error::Paper ${{ matrix.version }} 没有可用的 build（版本不存在或尚未发布）"
             exit 1
           fi
-          echo "Downloading: $DOWNLOAD_URL"
+          DOWNLOAD_URL=$(curl -s "https://fill.papermc.io/v3/projects/paper/versions/${{ matrix.version }}/builds/$BUILDS" | jq -r '.downloads["server:default"].url')
+          if [ -z "$DOWNLOAD_URL" ] || [ "$DOWNLOAD_URL" = "null" ]; then
+            echo "::error::Paper ${{ matrix.version }} build $BUILDS 没有下载地址"
+            exit 1
+          fi
+          echo "Downloading Paper ${{ matrix.version }} build $BUILDS: $DOWNLOAD_URL"
           curl -L -o server/paper.jar "$DOWNLOAD_URL"
 
           # 接受 EULA，静默启动配置
@@ -69,10 +82,16 @@ jobs:
           echo "level-type=flat" >> server/server.properties
           echo "generate-structures=false" >> server/server.properties
 
-          # 启动服务端，90 秒后向控制台发送 stop 正常关服（走完整 onDisable 流程）；
-          # 外层 timeout 300 兜底，防止 stop 失败时挂死
+          # 启动服务端；后台监视进程盯 console.log，出现 "Done ("（开服完成）后发 stop 正常关服；
+          # 外层 timeout 300 兜底，防止一直等不到 Done 时挂死
           cd server
-          timeout 300 bash -c '(sleep 90; echo stop) | java -Xmx2G -jar paper.jar nogui > console.log 2>&1' || true
+          rm -f in.fifo
+          mkfifo in.fifo
+          ( for i in $(seq 1 56); do grep -q 'Done (' console.log 2>/dev/null && break; sleep 5; done; sleep 5; echo stop > in.fifo ) &
+          MON_PID=$!
+          timeout 300 java -Xmx2G -jar paper.jar nogui < in.fifo > console.log 2>&1 || true
+          kill $MON_PID 2>/dev/null || true
+          rm -f in.fifo
           cd ..
 
       - name: Upload server log
