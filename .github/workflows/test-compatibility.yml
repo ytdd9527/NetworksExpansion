@@ -1,15 +1,22 @@
 name: Test Plugin Compatibility
 
+env:
+  # 默认测试版本（push/PR 触发时用这套；手动触发可覆盖）
+  DEFAULT_VERSIONS: '1.20.1,1.20.5,1.20.6,1.21.1,1.21.8,1.21.11,26.1.2,26.2'
+
 on:
+  push:
+    branches: [ master ]
+  pull_request:
   workflow_dispatch:
     inputs:
       versions:
-        description: '要测试的 MC 版本，逗号分隔（如 1.21.8,1.20.6）'
-        required: true
-        default: '1.21.8'
+        description: '要测试的 MC 版本，逗号分隔（留空用默认列表）'
+        required: false
+        default: '1.20.1,1.20.5,1.20.6,1.21.1,1.21.8,1.21.11,26.1.2,26.2'
 
 jobs:
-  # 把手动输入的版本串拆成矩阵
+  # 把版本串拆成矩阵：手动触发用输入值，push/PR 用默认列表
   prepare:
     runs-on: ubuntu-latest
     outputs:
@@ -18,8 +25,10 @@ jobs:
       - name: Split versions input
         id: split
         run: |
+          RAW="${{ github.event.inputs.versions }}"
+          [ -z "$RAW" ] && RAW="$DEFAULT_VERSIONS"
           # 去空格、按逗号拆分成 JSON 数组
-          VERSIONS=$(echo "${{ github.event.inputs.versions }}" | tr -d ' ' | tr ',' '\n' | jq -R . | jq -sc .)
+          VERSIONS=$(echo "$RAW" | tr -d ' ' | tr ',' '\n' | jq -R . | jq -sc .)
           echo "Test versions: $VERSIONS"
           echo "versions=$VERSIONS" >> $GITHUB_OUTPUT
 
