@@ -38,11 +38,33 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
-          java-version: '21'
+          # 21 跑旧版本；26.x 起的 Paper 要求 Java 25
+          java-version: |
+            21
+            25
+          cache: gradle
 
       - name: Build plugin
         run: |
           ./gradlew clean build -x test
+
+          # 版本号从 Gradle 工程取（plugin.yml 里是 ${version} 占位符，最终值由 Gradle 注入）
+          PROPS=$(./gradlew -q properties)
+          PLUGIN_VERSION=$(echo "$PROPS" | grep -oP '^version: \K.*' | head -n 1)
+          echo "Gradle project version: $PLUGIN_VERSION"
+          echo "PLUGIN_VERSION=$PLUGIN_VERSION" >> $GITHUB_ENV
+
+      # 缓存 Paper 服务端本体（jar + 原版库 + 补丁产物），按版本区分，避免每次重下 40M+ 和重解压
+      - name: Cache Paper server
+        uses: actions/cache@v4
+        with:
+          path: |
+            server/paper.jar
+            server/cache
+            server/caches
+            server/libraries
+            server/versions
+          key: paper-server-${{ matrix.version }}
 
       - name: Download dependencies
         run: |
@@ -62,32 +84,102 @@ jobs:
         run: |
           cp build/libs/*.jar server/plugins/
 
+          VER="${{ matrix.version }}"
+
+          # 先校验版本真实存在；不存在则列出 Did you mean 候选并跳过测试（不算失败）
+          export VER
+          RESOLVE=$(python3 << 'EOF' 2>&1
+          import json, os, urllib.request
+
+          ver = os.environ['VER']
+          UA = {'User-Agent': 'NetworksExpansion-CI'}
+
+          def fetch(url):
+              req = urllib.request.Request(url, headers=UA)
+              with urllib.request.urlopen(req, timeout=30) as r:
+                  return json.load(r)
+
+          data = fetch('https://fill.papermc.io/v3/projects/paper/versions')
+          items = data['versions'] if isinstance(data, dict) else data
+          ids = [v['version']['id'] for v in items]
+
+          if ver in ids:
+              print('EXISTS')
+              # 从版本信息里取最低 Java 要求，供后续选择 JDK
+              entry = next(v for v in items if v['version']['id'] == ver)
+              minimum = entry['version'].get('java', {}).get('version', {}).get('minimum', 21)
+              print(f'MINJAVA={minimum}')
+          else:
+              # 前缀匹配：输入 26.1 → 提示 26.1.1 / 26.1.2
+              near = sorted(i for i in ids if i.startswith(ver + '.'))
+              if near:
+                  print('SUGGEST=' + ', '.join(near))
+              else:
+                  print('NO_SUGGEST')
+          EOF
+          ) || {
+            echo "::error::校验 Paper $VER 时出错: $RESOLVE"
+            exit 1
+          }
+
+          case "$RESOLVE" in
+            EXISTS*)
+              : # 版本存在，继续
+              ;;
+            SUGGEST=*)
+              echo "::notice::Paper $VER 不存在。Did you mean: ${RESOLVE#SUGGEST=}"
+              exit 0
+              ;;
+            *)
+              echo "::error::Paper $VER 不存在，且没有以它开头的相近版本号，无法测试"
+              exit 1
+              ;;
+          esac
+
+          # 按 API 给的最低 Java 要求选 JDK（本 workflow 预装 21 和 25）
+          MINJAVA=$(echo "$RESOLVE" | grep -oP 'MINJAVA=\K\d+' | head -n 1)
+          MINJAVA=${MINJAVA:-21}
+          echo "Paper $VER 最低 Java 要求: $MINJAVA"
+          if [ "$MINJAVA" -gt 25 ]; then
+            echo "::error::Paper $VER 需要 Java $MINJAVA，超出当前 CI 预装范围（21/25），请在 setup-java 中补充"
+            exit 1
+          elif [ "$MINJAVA" -gt 21 ]; then
+            if [ -n "$JAVA_HOME_25_X64" ]; then
+              export JAVA_HOME="$JAVA_HOME_25_X64"
+              export PATH="$JAVA_HOME/bin:$PATH"
+              echo "Using Java 25 for Paper $VER: $(java -version 2>&1 | head -n 1)"
+            else
+              echo "::warning::找不到 JAVA_HOME_25_X64，Paper $VER 可能无法启动"
+            fi
+          fi
+
           # 拉取该版本全部 build，解析出最新 build 的下载地址
           # 用 Python 解析并带明确报错（API 异常时会返回错误对象，jq 会给出难懂的 index 报错）
           curl -s -H "User-Agent: NetworksExpansion-CI (github.com/balugaq/NetworksExpansion)" \
-            "https://fill.papermc.io/v3/projects/paper/versions/${{ matrix.version }}/builds" -o builds.json
-          DOWNLOAD_URL=$(python3 << 'EOF'
+            "https://fill.papermc.io/v3/projects/paper/versions/$VER/builds" -o builds.json
+          RESULT=$(python3 << 'EOF' 2>&1
           import json
 
           with open('builds.json') as f:
               data = json.load(f)
 
           if isinstance(data, dict):
-              raise SystemExit(f"API 返回异常对象: {json.dumps(data)[:300]}")
+              raise SystemExit(f'API 返回异常对象: {json.dumps(data)[:300]}')
           if not isinstance(data, list) or not data:
-              raise SystemExit("builds 列表为空")
+              raise SystemExit('builds 列表为空')
 
           latest = max(data, key=lambda b: b.get('id', 0))
           url = (latest.get('downloads') or {}).get('server:default', {}).get('url')
           if not url:
               raise SystemExit(f"build {latest.get('id')} 没有下载地址: {json.dumps(latest)[:300]}")
-          print(url)
+          print(f'URL={url}')
           EOF
           ) || {
-            echo "::error::Paper ${{ matrix.version }}: $DOWNLOAD_URL"
+            echo "::error::Paper $VER: $RESULT"
             exit 1
           }
-          echo "Downloading Paper ${{ matrix.version }}: $DOWNLOAD_URL"
+          DOWNLOAD_URL=$(echo "$RESULT" | grep -oP 'URL=\K.*')
+          echo "Downloading Paper $VER: $DOWNLOAD_URL"
           curl -L -o server/paper.jar "$DOWNLOAD_URL"
 
           # 接受 EULA，静默启动配置
@@ -97,16 +189,21 @@ jobs:
           echo "generate-structures=false" >> server/server.properties
 
           # 启动服务端；后台监视进程盯 console.log，出现 "Done ("（开服完成）后发 stop 正常关服；
-          # 外层 timeout 300 兜底，防止一直等不到 Done 时挂死
+          # 外层 timeout 600 兜底（paperclip 首次启动要解压原版 jar + 装库，较慢）
           cd server
           rm -f in.fifo
           mkfifo in.fifo
-          ( for i in $(seq 1 56); do grep -q 'Done (' console.log 2>/dev/null && break; sleep 5; done; sleep 5; echo stop > in.fifo ) &
+          ( for i in $(seq 1 110); do grep -q 'Done (' console.log 2>/dev/null && break; sleep 5; done; sleep 5; echo stop > in.fifo ) &
           MON_PID=$!
-          timeout 300 java -Xmx2G -jar paper.jar nogui < in.fifo > console.log 2>&1 || true
+          timeout 600 java -Xmx2G -jar paper.jar nogui < in.fifo > console.log 2>&1 || true
           kill $MON_PID 2>/dev/null || true
           rm -f in.fifo
           cd ..
+
+          # 服务端控制台日志全量打到 job 日志，方便直接在页面看
+          echo "======== server console.log ========"
+          cat server/console.log || true
+          echo "======== end of console.log ========"
 
       - name: Upload server log
         if: always()
@@ -124,7 +221,12 @@ jobs:
             exit 1
           fi
 
-          PLUGIN_NAME="Networks"
+          # 插件名/版本从构建产物 jar 内的 plugin.yml 取（Gradle 工程名 NetworksExpansion ≠ Bukkit 插件名 Networks）；
+          # plugin.yml 的 ${version} 占位符在 processResources 阶段已被 Gradle 版本号替换
+          JAR=$(ls build/libs/*.jar | head -n 1)
+          PLUGIN_NAME=$(unzip -p "$JAR" plugin.yml | grep -oP '^name: *\K.*' | head -n 1)
+          PLUGIN_VERSION=$(unzip -p "$JAR" plugin.yml | grep -oP '^version: *\K.*' | head -n 1)
+          echo "Testing plugin: $PLUGIN_NAME v$PLUGIN_VERSION"
 
           # 以 "Done (x.xxs)!" 为界：插件在 Done 之前被 Disabling = 开服阶段就炸了，判失败
           DONE_LINE=$(grep -n 'Done (' "$LOG_FILE" | head -n 1 | cut -d: -f1)
