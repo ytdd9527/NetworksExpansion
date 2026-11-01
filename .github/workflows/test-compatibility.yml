@@ -1,0 +1,131 @@
+name: Test Plugin Compatibility
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  # 第一阶段：准备数据，获取 api-version 和所有需要测试的版本列表
+  prepare:
+    runs-on: ubuntu-latest
+    outputs:
+      plugin_name: ${{ steps.parse-yml.outputs.name }}
+      plugin_version: ${{ steps.parse-yml.outputs.version }}
+      versions: ${{ steps.get-versions.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Parse plugin.yml for name, version, api-version
+        id: parse-yml
+        run: |
+          # 使用 yq 解析 YAML（GitHub Actions 环境默认包含 yq）
+          PLUGIN_NAME=$(yq '.name' src/main/resources/plugin.yml)
+          PLUGIN_VERSION=$(yq '.version' src/main/resources/plugin.yml)
+          API_VERSION=$(yq '.api-version' src/main/resources/plugin.yml)
+
+          echo "Detected Plugin: $PLUGIN_NAME v$PLUGIN_VERSION"
+          echo "API Version: $API_VERSION"
+
+          # 将结果输出给后续 job 使用
+          echo "name=$PLUGIN_NAME" >> $GITHUB_OUTPUT
+          echo "version=$PLUGIN_VERSION" >> $GITHUB_OUTPUT
+          echo "api_version=$API_VERSION" >> $GITHUB_OUTPUT
+
+      - name: Fetch version manifest and build matrix
+        id: get-versions
+        run: |
+          # 下载 Mojang 版本清单
+          curl -s -o manifest.json "https://piston-meta.mojang.com/mc/game/version_manifest_v2.json"
+
+          # 筛选：从 api-version 开始到最新的所有 release 版本
+          python3 << 'EOF'
+          import json, os
+
+          with open('manifest.json') as f:
+              data = json.load(f)
+
+          api_version = os.environ.get('API_VERSION')
+
+          # 获取所有 release 版本（按时间倒序，最新在前）
+          releases = [v['id'] for v in data['versions'] if v['type'] == 'release']
+
+          # 查找 api_version 的索引
+          try:
+              start_index = releases.index(api_version)
+          except ValueError:
+              print(f"Error: api-version '{api_version}' not found in release list.")
+              exit(1)
+
+          # 从 api_version 所在位置开始，截取到最新
+          target_versions = releases[:start_index + 1]
+
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
+              f.write(f"matrix={json.dumps(target_versions)}\n")
+          EOF
+        env:
+          API_VERSION: ${{ steps.parse-yml.outputs.api_version }}
+
+  # 第二阶段：矩阵测试
+  test:
+    needs: prepare
+    runs-on: ubuntu-latest
+    timeout-minutes: 360 # 版本多的话耗时会很久
+    strategy:
+      matrix:
+        version: ${{ fromJson(needs.prepare.outputs.versions) }}
+      fail-fast: false # 一个版本失败不要终止其他版本
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: Build plugin
+        run: |
+          ./gradlew clean build -x test
+
+      - name: Download GuizhanLibPlugin
+        run: |
+          # 下载依赖插件，稍后通过 TestMC 的 files 参数复制进服务器
+          mkdir -p .github/test-server/plugins
+          curl -L -o .github/test-server/plugins/GuizhanLibPlugin.jar \
+            "https://resources.guizhanss.com/api/v1/projects/GuizhanLibPlugin/versions/build-61/download"
+
+      - name: Test with TestMC
+        uses: gmitch215/TestMC@v2
+        with:
+          path: 'build/libs/*.jar'
+          runtime: 'paper'
+          version: ${{ matrix.version }}
+          time: 120
+          files: |
+            .github/test-server/plugins/*
+
+      # --- 关键步骤：检查日志 ---
+      - name: Check server logs for plugin disable message
+        if: always()
+        run: |
+          LOG_FILE=$(find . -name "latest.log" -o -name "*.log" | head -n 1)
+
+          if [ -z "$LOG_FILE" ]; then
+            echo "No log file found. Cannot verify."
+            exit 1
+          fi
+
+          echo "Found log file: $LOG_FILE"
+
+          # 搜索 "[插件名] Disabling [插件名]" 字样，出现即说明插件在该版本上被禁用（加载失败）
+          PLUGIN_NAME="${{ needs.prepare.outputs.plugin_name }}"
+
+          if grep -q "\[${PLUGIN_NAME}\] Disabling ${PLUGIN_NAME}" "$LOG_FILE"; then
+            echo "❌ ERROR: Found disable message for plugin ${PLUGIN_NAME} on MC ${{ matrix.version }}"
+            grep "\[${PLUGIN_NAME}\] Disabling ${PLUGIN_NAME}" "$LOG_FILE"
+            exit 1
+          else
+            echo "✅ OK: No disable message found for plugin ${PLUGIN_NAME} on MC ${{ matrix.version }}"
+          fi
