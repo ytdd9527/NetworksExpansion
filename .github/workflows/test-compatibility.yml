@@ -1,81 +1,36 @@
 name: Test Plugin Compatibility
 
 on:
-  push:
-    branches: [ master ]
-  pull_request:
   workflow_dispatch:
+    inputs:
+      versions:
+        description: '要测试的 MC 版本，逗号分隔（如 1.21.8,1.20.6）'
+        required: true
+        default: '1.21.8'
 
 jobs:
-  # 第一阶段：准备数据，获取 api-version 和所有需要测试的版本列表
+  # 把手动输入的版本串拆成矩阵
   prepare:
     runs-on: ubuntu-latest
     outputs:
-      plugin_name: ${{ steps.parse-yml.outputs.name }}
-      plugin_version: ${{ steps.parse-yml.outputs.version }}
-      versions: ${{ steps.get-versions.outputs.matrix }}
+      versions: ${{ steps.split.outputs.versions }}
     steps:
-      - uses: actions/checkout@v4
-
-      - name: Parse plugin.yml for name, version, api-version
-        id: parse-yml
+      - name: Split versions input
+        id: split
         run: |
-          # 使用 yq 解析 YAML（GitHub Actions 环境默认包含 yq）
-          PLUGIN_NAME=$(yq '.name' src/main/resources/plugin.yml)
-          PLUGIN_VERSION=$(yq '.version' src/main/resources/plugin.yml)
-          API_VERSION=$(yq '.api-version' src/main/resources/plugin.yml)
+          # 去空格、按逗号拆分成 JSON 数组
+          VERSIONS=$(echo "${{ github.event.inputs.versions }}" | tr -d ' ' | tr ',' '\n' | jq -R . | jq -sc .)
+          echo "Test versions: $VERSIONS"
+          echo "versions=$VERSIONS" >> $GITHUB_OUTPUT
 
-          echo "Detected Plugin: $PLUGIN_NAME v$PLUGIN_VERSION"
-          echo "API Version: $API_VERSION"
-
-          # 将结果输出给后续 job 使用
-          echo "name=$PLUGIN_NAME" >> $GITHUB_OUTPUT
-          echo "version=$PLUGIN_VERSION" >> $GITHUB_OUTPUT
-          echo "api_version=$API_VERSION" >> $GITHUB_OUTPUT
-
-      - name: Fetch version manifest and build matrix
-        id: get-versions
-        run: |
-          # 下载 Mojang 版本清单
-          curl -s -o manifest.json "https://piston-meta.mojang.com/mc/game/version_manifest_v2.json"
-
-          # 筛选：从 api-version 开始到最新的所有 release 版本
-          python3 << 'EOF'
-          import json, os
-
-          with open('manifest.json') as f:
-              data = json.load(f)
-
-          api_version = os.environ.get('API_VERSION')
-
-          # 获取所有 release 版本（按时间倒序，最新在前）
-          releases = [v['id'] for v in data['versions'] if v['type'] == 'release']
-
-          # 查找 api_version 的索引
-          try:
-              start_index = releases.index(api_version)
-          except ValueError:
-              print(f"Error: api-version '{api_version}' not found in release list.")
-              exit(1)
-
-          # 从 api_version 所在位置开始，截取到最新
-          target_versions = releases[:start_index + 1]
-
-          with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
-              f.write(f"matrix={json.dumps(target_versions)}\n")
-          EOF
-        env:
-          API_VERSION: ${{ steps.parse-yml.outputs.api_version }}
-
-  # 第二阶段：矩阵测试
   test:
     needs: prepare
     runs-on: ubuntu-latest
-    timeout-minutes: 360 # 版本多的话耗时会很久
+    timeout-minutes: 30
     strategy:
       matrix:
         version: ${{ fromJson(needs.prepare.outputs.versions) }}
-      fail-fast: false # 一个版本失败不要终止其他版本
+      fail-fast: false
     steps:
       - uses: actions/checkout@v4
 
@@ -89,43 +44,60 @@ jobs:
         run: |
           ./gradlew clean build -x test
 
-      - name: Download GuizhanLibPlugin
+      - name: Run Paper server and load plugin
+        id: run-server
         run: |
-          # 下载依赖插件，稍后通过 TestMC 的 files 参数复制进服务器
-          mkdir -p .github/test-server/plugins
-          curl -L -o .github/test-server/plugins/GuizhanLibPlugin.jar \
+          mkdir -p server/plugins
+          cp build/libs/*.jar server/plugins/
+
+          # 依赖插件
+          curl -L -o server/plugins/GuizhanLibPlugin.jar \
             "https://resources.guizhanss.com/api/v1/projects/GuizhanLibPlugin/versions/build-61/download"
 
-      - name: Test with TestMC
-        uses: gmitch215/TestMC@v2
-        with:
-          path: 'build/libs/*.jar'
-          runtime: 'paper'
-          version: ${{ matrix.version }}
-          time: 120
-          files: |
-            .github/test-server/plugins/*
+          # 从 Paper v3 API 获取最新 build 的 paperclip jar（v2 API 已 410 下线）
+          DOWNLOAD_URL=$(curl -s "https://fill.papermc.io/v3/projects/paper/versions/${{ matrix.version }}/builds/latest" | jq -r '.downloads["server:default"].url')
+          if [ -z "$DOWNLOAD_URL" ] || [ "$DOWNLOAD_URL" = "null" ]; then
+            echo "::error::Paper ${{ matrix.version }} 没有可用的 build（版本不存在或尚未发布）"
+            exit 1
+          fi
+          echo "Downloading: $DOWNLOAD_URL"
+          curl -L -o server/paper.jar "$DOWNLOAD_URL"
 
-      # --- 关键步骤：检查日志 ---
-      - name: Check server logs for plugin disable message
-        if: always()
+          # 接受 EULA，静默启动配置
+          echo "eula=true" > server/eula.txt
+          echo "online-mode=false" > server/server.properties
+          echo "level-type=flat" >> server/server.properties
+          echo "generate-structures=false" >> server/server.properties
+
+          # 启动服务端，240 秒后强制终止（插件在 ENABLE 阶段就会打日志，无需等世界生成完）
+          cd server
+          timeout 240 java -Xmx2G -jar paper.jar nogui > console.log 2>&1 || true
+          cd ..
+
+          echo "---- console tail ----"
+          tail -n 40 server/console.log || true
+
+      - name: Check server logs
         run: |
-          LOG_FILE=$(find . -name "latest.log" -o -name "*.log" | head -n 1)
-
-          if [ -z "$LOG_FILE" ]; then
-            echo "No log file found. Cannot verify."
+          LOG_FILE=server/console.log
+          if [ ! -f "$LOG_FILE" ]; then
+            echo "::error::没有找到日志文件，服务端可能根本没启动"
             exit 1
           fi
 
-          echo "Found log file: $LOG_FILE"
+          PLUGIN_NAME="Networks"
 
-          # 搜索 "[插件名] Disabling [插件名]" 字样，出现即说明插件在该版本上被禁用（加载失败）
-          PLUGIN_NAME="${{ needs.prepare.outputs.plugin_name }}"
-
+          # 1) 出现 Disabling 即判定加载失败
           if grep -q "\[${PLUGIN_NAME}\] Disabling ${PLUGIN_NAME}" "$LOG_FILE"; then
-            echo "❌ ERROR: Found disable message for plugin ${PLUGIN_NAME} on MC ${{ matrix.version }}"
-            grep "\[${PLUGIN_NAME}\] Disabling ${PLUGIN_NAME}" "$LOG_FILE"
+            echo "::error::插件在 MC ${{ matrix.version }} 上被禁用（Disabling）"
+            grep -n "Disabling ${PLUGIN_NAME}" "$LOG_FILE"
             exit 1
-          else
-            echo "✅ OK: No disable message found for plugin ${PLUGIN_NAME} on MC ${{ matrix.version }}"
           fi
+
+          # 2) 没出现 Enabling 说明插件压根没加载成功（崩溃/依赖缺失）
+          if ! grep -q "Enabling ${PLUGIN_NAME}" "$LOG_FILE"; then
+            echo "::error::插件在 MC ${{ matrix.version }} 上未成功启用（未找到 Enabling 日志）"
+            exit 1
+          fi
+
+          echo "✅ OK: 插件在 MC ${{ matrix.version }} 上正常启用"
