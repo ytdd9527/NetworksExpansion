@@ -62,12 +62,31 @@ jobs:
         run: |
           cp build/libs/*.jar server/plugins/
 
-          # 一次请求拿该版本全部 build，取 id 最大的那个的下载地址
-          DOWNLOAD_URL=$(curl -s "https://fill.papermc.io/v3/projects/paper/versions/${{ matrix.version }}/builds" | jq -r '[.[].downloads["server:default"].url] | last // empty')
-          if [ -z "$DOWNLOAD_URL" ]; then
-            echo "::error::Paper ${{ matrix.version }} 没有可用的 build（版本不存在或尚未发布）"
+          # 拉取该版本全部 build，解析出最新 build 的下载地址
+          # 用 Python 解析并带明确报错（API 异常时会返回错误对象，jq 会给出难懂的 index 报错）
+          curl -s -H "User-Agent: NetworksExpansion-CI (github.com/balugaq/NetworksExpansion)" \
+            "https://fill.papermc.io/v3/projects/paper/versions/${{ matrix.version }}/builds" -o builds.json
+          DOWNLOAD_URL=$(python3 << 'EOF'
+          import json
+
+          with open('builds.json') as f:
+              data = json.load(f)
+
+          if isinstance(data, dict):
+              raise SystemExit(f"API 返回异常对象: {json.dumps(data)[:300]}")
+          if not isinstance(data, list) or not data:
+              raise SystemExit("builds 列表为空")
+
+          latest = max(data, key=lambda b: b.get('id', 0))
+          url = (latest.get('downloads') or {}).get('server:default', {}).get('url')
+          if not url:
+              raise SystemExit(f"build {latest.get('id')} 没有下载地址: {json.dumps(latest)[:300]}")
+          print(url)
+          EOF
+          ) || {
+            echo "::error::Paper ${{ matrix.version }}: $DOWNLOAD_URL"
             exit 1
-          fi
+          }
           echo "Downloading Paper ${{ matrix.version }}: $DOWNLOAD_URL"
           curl -L -o server/paper.jar "$DOWNLOAD_URL"
 
