@@ -441,7 +441,6 @@ public class CellConverter extends AbstractCellBrowser {
         }
         long per = StorageCell.getPerTypeLimit(cellItem);
         long maxUnits = CellPersistence.getMaxUnitsFor(per);
-        long current = Math.min(StorageCell.getCurrentPerTypeLimit(cellItem), maxUnits);
         if (!canUpgrade(cellItem)) {
             player.sendMessage(Lang.getString(CellnetText.CELL_UPGRADE_MAXED, NumberFormat.formatNumber(maxUnits)));
             return;
@@ -479,18 +478,11 @@ public class CellConverter extends AbstractCellBrowser {
             return;
         }
 
-        consumeOneShell(menu, matchedSlot);
-        long newUnits = CellTransferLogic.upgradedUnits(current, maxUnits);
-        CellPersistence.setCurrentPerTypeLimit(cellItem, newUnits);
-        StorageCell.applyLore(cellItem, per, newUnits);
-        menu.replaceExistingItem(CELL_SLOT, cellItem);
-        player.sendMessage(Lang.getString(CellnetText.CELL_UPGRADE_SUCCESS,
-            NumberFormat.formatNumber(newUnits), NumberFormat.formatNumber(maxUnits)));
-        refresh(menu);
-        CellPersistence.saveAsync();
+        performUpgrade(menu, player, cellItem, matchedSlot);
     }
 
     private void handleEmptyStorageClick(
+        @NotNull BlockMenu menu,
         @NotNull Player player,
         @NotNull ItemStack cellItem,
         @NotNull QuantumEntry entry) {
@@ -505,7 +497,26 @@ public class CellConverter extends AbstractCellBrowser {
                 NumberFormat.formatNumber(CellPersistence.getMaxUnitsFor(per))));
             return;
         }
-        player.sendMessage(Lang.getString(CellnetText.CONVERTER_UPGRADE_CLICK_HINT));
+        performUpgrade(menu, player, cellItem, entry.slot());
+    }
+
+    private void performUpgrade(
+        @NotNull BlockMenu menu,
+        @NotNull Player player,
+        @NotNull ItemStack cellItem,
+        int shellSlot) {
+        long per = StorageCell.getPerTypeLimit(cellItem);
+        long maxUnits = CellPersistence.getMaxUnitsFor(per);
+        long current = Math.min(StorageCell.getCurrentPerTypeLimit(cellItem), maxUnits);
+        consumeOneShell(menu, shellSlot);
+        long newUnits = CellTransferLogic.upgradedUnits(current, maxUnits);
+        CellPersistence.setCurrentPerTypeLimit(cellItem, newUnits);
+        StorageCell.applyLore(cellItem, per, newUnits);
+        menu.replaceExistingItem(CELL_SLOT, cellItem);
+        player.sendMessage(Lang.getString(CellnetText.CELL_UPGRADE_SUCCESS,
+            NumberFormat.formatNumber(newUnits), NumberFormat.formatNumber(maxUnits)));
+        refresh(menu);
+        CellPersistence.saveAsync();
     }
 
     private static void consumeOneShell(@NotNull BlockMenu menu, int slot) {
@@ -538,8 +549,8 @@ public class CellConverter extends AbstractCellBrowser {
         }
         QuantumEntry entry = entries.get(idx);
 
-        if (!entry.hasItem()) {
-            handleEmptyStorageClick(player, cellItem, entry);
+        if (entry.isEmpty()) {
+            handleEmptyStorageClick(menu, player, cellItem, entry);
             return;
         }
 
@@ -647,44 +658,42 @@ public class CellConverter extends AbstractCellBrowser {
             player.sendMessage(Lang.getString(CellnetText.CONVERTER_OUTPUT_FULL));
             return;
         }
-        NetworkQuantumStorage targetStorage = resolveTargetStorage(ctx.per(), cellAmount);
-        if (targetStorage == null) {
-            player.sendMessage(Lang.getString(CellnetText.CONVERTER_NO_MATCHING_STORAGE));
+        // 先确认有壳再扣元件存量，否则禁止输出时物品已被扣除
+        QuantumEntry shell = findShell(menu);
+        if (shell == null) {
+            player.sendMessage(Lang.getString(CellnetText.CONVERTER_NO_SHELL_TO_OUTPUT));
             return;
         }
-        long amount = Math.min(cellAmount, targetStorage.getMaxAmount());
+        long amount = Math.min(cellAmount, shell.storage().getMaxAmount());
         long taken = amount > 0 ? ctx.cache().takeItemAmount(key, amount) : 0L;
         if (taken <= 0) {
             return;
         }
 
-        consumeStackedShell(menu);
+        consumeOneShell(menu, shell.slot());
         menu.replaceExistingItem(freeSlot,
-            CellQuantumConverter.buildQuantumStorage(sample, taken, targetStorage));
+            CellQuantumConverter.buildQuantumStorage(sample, taken, shell.storage()));
         player.sendMessage(Lang.getString(CellnetText.CONVERTER_TRANSFER_SUCCESS));
         refresh(menu);
         CellPersistence.saveAsync();
     }
 
     @Nullable
-    private static NetworkQuantumStorage resolveTargetStorage(long per, long amount) {
-        return CellPersistence.isUnlimited(per)
-            ? CellTier.storageForAmount(amount)
-            : CellTier.upgradeMaterialOf(per);
-    }
-
-    private static void consumeStackedShell(@NotNull BlockMenu menu) {
-        for (int slot : OUTPUT_SLOTS) {
-            ItemStack stack = menu.getItemInSlot(slot);
-            if (stack == null || stack.getType().isAir() || stack.getAmount() <= 1) {
+    private static QuantumEntry findShell(@NotNull BlockMenu menu) {
+        QuantumEntry single = null;
+        for (QuantumEntry entry : listQuantumEntries(menu)) {
+            if (!entry.isEmpty()) {
                 continue;
             }
-            if (asQuantumStorage(stack) == null || !isEmptyStorage(stack)) {
-                continue;
+            // 叠放壳优先消耗，单个空壳只作后备，避免一次点击清空整格
+            if (entry.stack().getAmount() > 1) {
+                return entry;
             }
-            consumeOneShell(menu, slot);
-            return;
+            if (single == null) {
+                single = entry;
+            }
         }
+        return single;
     }
 
     private int firstFreeOutputSlot(@NotNull BlockMenu menu) {
