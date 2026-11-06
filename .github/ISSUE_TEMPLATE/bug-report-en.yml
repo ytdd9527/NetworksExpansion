@@ -18,10 +18,10 @@ body:
       label: Checklist
       description: Before reporting, you need to confirm
       options:
-        - label: You are using the version downloaded from the build site
+        - label: You are using the version downloaded from the [Guizhan Resources](https://resources.guizhanss.com/plugin/NetworksExpansion/versions)
         - label: You have verified the checksum of the downloaded file to ensure it is fully downloaded
         - label: You have not made any changes to the content of the downloaded file
-        - label: You have searched the [list of known issues](https://github.com/SlimefunGuguProject/Networks/issues) and have not found the same issue
+        - label: You have searched the [list of known issues](https://github.com/ytdd9527/NetworksExpansion/issues) and have not found the same issue
           required: true
 
   - type: textarea

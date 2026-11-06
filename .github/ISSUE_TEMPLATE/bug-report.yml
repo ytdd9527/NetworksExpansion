@@ -18,10 +18,10 @@ body:
       label: 检查项目
       description: 在汇报之前，你需要确认
       options:
-        - label: 你使用的是从构建站下载的版本
+        - label: 你使用的是从[鬼斩资源站](https://resources.guizhanss.com/plugin/NetworksExpansion/versions)下载的版本
         - label: 你已经检验过下载的文件的校验和，确认已完整下载文件
         - label: 你没有对下载的文件内容进行任何更改
-        - label: 你已经寻找过[已知问题列表](https://github.com/SlimefunGuguProject/Networks/issues)，且没有找到相同的问题
+        - label: 你已经寻找过[已知问题列表](https://github.com/ytdd9527/NetworksExpansion/issues)，且没有找到相同的问题
           required: true
 
   - type: textarea
