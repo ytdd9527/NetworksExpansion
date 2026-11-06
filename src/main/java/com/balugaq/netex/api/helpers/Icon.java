@@ -237,6 +237,7 @@ public class Icon {
     public static final ItemStack ASSEMBLY_WORKSHOP_CLEAR = of("cellnet-workshop-clear", Material.LAVA_BUCKET);
     public static final ItemStack CONVERTER_MODE_EXPORT = of("cellnet-converter-mode-export", Material.REPEATER);
     public static final ItemStack CONVERTER_MODE_IMPORT = of("cellnet-converter-mode-import", Material.REPEATER);
+    public static final ItemStack CONVERTER_UPGRADE = of("cellnet-converter-upgrade", Material.NETHER_STAR);
     public static final ItemStack CELL_TOGGLE_ON = of("cellnet-cell-toggle-on", Material.GREEN_DYE);
     public static final ItemStack CELL_TOGGLE_OFF = of("cellnet-cell-toggle-off", Material.RED_DYE);
     public static final ItemStack CELL_UPGRADE_MAX = of("cellnet-cell-upgrade-max", Material.BARRIER);

@@ -150,6 +150,20 @@ public final class CellnetText {
     public static final String CONVERTER_WHITELIST_REJECTED = "messages.cellnet.converter.whitelist_rejected";
     public static final String CONVERTER_NO_FREE_SLOT = "messages.cellnet.converter.no_free_slot";
     public static final String CONVERTER_SHELL_OVERFLOW = "messages.cellnet.converter.shell_overflow";
+    public static final String CONVERTER_UPGRADE_TITLE = "messages.cellnet.converter.upgrade_title";
+    public static final String CONVERTER_UPGRADE_UNITS = "messages.cellnet.converter.upgrade_units";
+    public static final String CONVERTER_UPGRADE_READY = "messages.cellnet.converter.upgrade_ready";
+    public static final String CONVERTER_UPGRADE_MAXED = "messages.cellnet.converter.upgrade_maxed";
+    public static final String CONVERTER_UPGRADE_NO_CELL = "messages.cellnet.converter.upgrade_no_cell";
+    public static final String CONVERTER_UPGRADE_TIER_MISMATCH = "messages.cellnet.converter.upgrade_tier_mismatch";
+    public static final String CONVERTER_UPGRADE_NO_SHELL = "messages.cellnet.converter.upgrade_no_shell";
+    public static final String CONVERTER_UPGRADE_CLICK_HINT = "messages.cellnet.converter.upgrade_click_hint";
+    public static final String CONVERTER_EMPTY_STORAGE_TITLE = "messages.cellnet.converter.empty_storage_title";
+    public static final String CONVERTER_EMPTY_STORAGE_HINT = "messages.cellnet.converter.empty_storage_hint";
+    public static final String CONVERTER_BLACKLISTED = "messages.cellnet.converter.blacklisted";
+    public static final String CONVERTER_SINGLE_STORAGE_ONLY = "messages.cellnet.converter.single_storage_only";
+    public static final String CONVERTER_INVALID_STORAGE = "messages.cellnet.converter.invalid_storage";
+    public static final String CONVERTER_TRANSFER_SUCCESS = "messages.cellnet.converter.transfer_success";
 
     public static final String DRIVE_BREAK_NOT_ALLOWED = "messages.cellnet.drive.break_not_allowed";
     public static final String DRIVE_CELL_COUNT = "messages.cellnet.drive.cell_count";

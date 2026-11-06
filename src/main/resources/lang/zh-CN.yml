@@ -837,15 +837,29 @@ messages:
     converter:
       item_count: "<passive>数量 <aqua>{0}"
       transfer_hint: "<click_info>点击转移"
-      output_full: "<passive>输出槽已满，取走后再转"
+      output_full: "<error>输出槽已满，无法转移"
       no_matching_storage: "<passive>该元件容量没有对应量子储存等级"
       no_quantum_storage: "<passive>请先放入同级量子储存"
       tier_mismatch: "<passive>量子储存等级与元件不符"
       units_full: "<error>元件种类已满，先清理一部分"
-      whitelist_rejected: "<error>该物品不在白名单中"
+      whitelist_rejected: "<error>该物品不在该元件的白名单中"
       item_capacity_full: "<error>该物品已达单格容量上限"
       no_free_slot: "<error>输出槽没有空位放置剩余量子储存，先清出空位"
       shell_overflow: "<error>同槽量子储存过多，剩余无法放入输出槽，请分批转运"
+      upgrade_title: "<gold>元件升级"
+      upgrade_units: "<passive>种类单元 <aqua>{0}<passive>/{1}"
+      upgrade_ready: "<click_info>放入同级空量子储存后点击升级"
+      upgrade_maxed: "<passive>种类单元已达上限"
+      upgrade_no_cell: "<passive>未放入元件"
+      upgrade_tier_mismatch: "<error>该量子存储不可用于升级该元件"
+      upgrade_no_shell: "<error>请先放入同级的空量子存储"
+      upgrade_click_hint: "<success>点击底部元件升级按钮升级元件"
+      empty_storage_title: "<passive>空量子储存 · {0}"
+      empty_storage_hint: "<click_info>点击检查是否可用于升级元件"
+      blacklisted: "<error>该物品不被允许转移"
+      single_storage_only: "<error>你只能一次转移一个量子存储"
+      invalid_storage: "<error>该量子存储无效"
+      transfer_success: "<success>成功转移"
       info_title: "<passive>元件信息"
       cell_name: "<passive>元件 <aqua>{0}"
       item_types: "<passive>物品种类 <aqua>{0}"
@@ -1227,6 +1241,10 @@ icons:
     name: "<passive>量子储存 → 元件"
     lore:
       - "<click_info>点击切换模式"
+  cellnet-converter-upgrade:
+    name: "<gold>元件升级"
+    lore:
+      - "<passive>消耗 1 个同级空量子储存，种类单元 +1"
   cellnet-cell-toggle-on:
     name: "<success>● 白名单已启用"
     lore:

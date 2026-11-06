@@ -25,14 +25,28 @@ public final class CellQuantumConverter {
 
     @NotNull
     public static ItemStack buildQuantumStorage(@NotNull ItemStack sample, long amount, @NotNull NetworkQuantumStorage storage) {
+        return buildQuantumStorage(sample, amount, storage, storage.getMaxAmount());
+    }
+
+    @NotNull
+    public static ItemStack buildQuantumStorage(
+        @NotNull ItemStack sample,
+        long amount,
+        @NotNull NetworkQuantumStorage storage,
+        long limit) {
         ItemStack qsItem = storage.getItem().clone();
         ItemMeta meta = qsItem.getItemMeta();
         QuantumCache quantumCache = new QuantumCache(
-            sample.clone(), amount, storage.getMaxAmount(), false, storage.supportsCustomMaxAmount());
+            sample.clone(), amount, limit, false, storage.supportsCustomMaxAmount());
         DataTypeMethods.setCustom(meta, Keys.QUANTUM_STORAGE_INSTANCE, PersistentQuantumStorageType.TYPE, quantumCache);
         quantumCache.addMetaLore(meta);
         qsItem.setItemMeta(meta);
         return qsItem;
+    }
+
+    @NotNull
+    public static ItemStack buildEmptyQuantumStorage(@NotNull NetworkQuantumStorage storage) {
+        return storage.getItem().clone();
     }
 
     public static void convert(@NotNull Player player) {

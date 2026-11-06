@@ -4,18 +4,20 @@ import com.balugaq.netex.api.helpers.Icon;
 import com.balugaq.netex.utils.Lang;
 import com.xzavier0722.mc.plugin.slimefun4.storage.controller.SlimefunBlockData;
 import com.xzavier0722.mc.plugin.slimefun4.storage.util.StorageCacheUtils;
-import com.ytdd9527.networksexpansion.api.cell.CellTier;
-import com.ytdd9527.networksexpansion.api.cell.StorageCell;
 import com.ytdd9527.networksexpansion.api.cell.CellLedger;
 import com.ytdd9527.networksexpansion.api.cell.CellPersistence;
+import com.ytdd9527.networksexpansion.api.cell.CellSlotUI;
+import com.ytdd9527.networksexpansion.api.cell.CellTier;
 import com.ytdd9527.networksexpansion.api.cell.CellTransferLogic;
+import com.ytdd9527.networksexpansion.api.cell.CellnetText;
+import com.ytdd9527.networksexpansion.api.cell.StorageCell;
 import com.ytdd9527.networksexpansion.core.machines.AbstractCellBrowser;
 import com.ytdd9527.networksexpansion.utils.ChatInput;
+import com.ytdd9527.networksexpansion.utils.GhostItems;
 import com.ytdd9527.networksexpansion.utils.ItemKey;
 import com.ytdd9527.networksexpansion.utils.ItemSearch;
-import com.ytdd9527.networksexpansion.api.cell.CellSlotUI;
-import com.ytdd9527.networksexpansion.api.cell.CellnetText;
 import com.ytdd9527.networksexpansion.utils.MenuShells;
+import com.ytdd9527.networksexpansion.utils.NumberFormat;
 import io.github.sefiraat.networks.Networks;
 import io.github.sefiraat.networks.network.stackcaches.QuantumCache;
 import io.github.sefiraat.networks.slimefun.network.NetworkQuantumStorage;
@@ -55,6 +57,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class CellConverter extends AbstractCellBrowser {
 
     public static final int MODE_SLOT = 48;
+    public static final int UPGRADE_SLOT = 50;
     public static final int[] DISPLAY_SLOTS = new int[]{
         9, 10, 11, 12, 13, 14, 15, 16, 17,
         18, 19, 20, 21, 22, 23, 24, 25, 26
@@ -66,7 +69,7 @@ public class CellConverter extends AbstractCellBrowser {
     public static final int[] BACKGROUND_SLOTS = new int[]{
         1, 2, 3, 5, 6, 7,
         39, 40, 41, 42, 43, 44,
-        46, 47, 49, 50, 51, 52, 53
+        46, 47, 49, 51, 52, 53
     };
 
     private static final NamespacedKey CELL_SLOT_MARKER_KEY =
@@ -158,6 +161,7 @@ public class CellConverter extends AbstractCellBrowser {
         ItemStack cellItem = menu.getItemInSlot(CELL_SLOT);
 
         menu.replaceExistingItem(MODE_SLOT, buildModeButton(exporting));
+        menu.replaceExistingItem(UPGRADE_SLOT, buildUpgradeButton(cellItem));
 
         if (cellItem == null || !StorageCell.isStorageCell(cellItem)) {
             menu.replaceExistingItem(CELL_SLOT, createCellSlotMarker());
@@ -201,13 +205,14 @@ public class CellConverter extends AbstractCellBrowser {
             if (onSlot != null && !onSlot.getType().isAir()) {
                 QuantumCache qc = Keys.getQuantumCache(onSlot.getItemMeta());
                 slotHash = qc != null
-                    ? Objects.hash(onSlot.getType(), qc.getAmountLong())
+                    ? Objects.hash(onSlot.getType(), onSlot.getAmount(), qc.getAmountLong())
                     : Objects.hash(onSlot.getType(), onSlot.getAmount(), onSlot.getItemMeta());
             }
             outputHash = 31L * outputHash + slotHash;
         }
         int entriesCount = 0;
         long totalAmount = 0L;
+        long currentUnits = 0L;
         if (hasCell) {
             long per = StorageCell.getPerTypeLimit(cellItem);
             CellLedger cache = StorageCell.loadCellCache(cellItem, per);
@@ -216,8 +221,10 @@ public class CellConverter extends AbstractCellBrowser {
             for (CellLedger.CellEntry entry : entries) {
                 totalAmount += entry.amount;
             }
+            currentUnits = Math.min(StorageCell.getCurrentPerTypeLimit(cellItem),
+                CellPersistence.getMaxUnitsFor(per));
         }
-        return Objects.hash(hasCell, page, exporting, search, outputHash, entriesCount, totalAmount);
+        return Objects.hash(hasCell, page, exporting, search, outputHash, entriesCount, totalAmount, currentUnits);
     }
 
     @Override
@@ -227,6 +234,10 @@ public class CellConverter extends AbstractCellBrowser {
             exportMode.put(menu.getLocation(), !exporting);
             pageCache.put(menu.getLocation(), 0);
             refresh(menu);
+            return false;
+        });
+        menu.addMenuClickHandler(UPGRADE_SLOT, (player, slot, item, action) -> {
+            handleUpgrade(menu, player);
             return false;
         });
     }
@@ -320,20 +331,42 @@ public class CellConverter extends AbstractCellBrowser {
         return exportMode.getOrDefault(menu.getLocation(), true);
     }
 
-    private record QuantumImport(
-            @NotNull ItemStack cellItem,
-            @NotNull CellLedger cache,
-            long per,
-            int sourceSlot,
-            @NotNull QuantumCache qc,
-            @NotNull NetworkQuantumStorage storage) {
-    }
-
     private record CellContext(
         @NotNull ItemStack cellItem,
         long per,
         @NotNull CellLedger cache,
         @NotNull CellLedger.CellEntry entry) {
+    }
+
+    private record QuantumEntry(
+        int slot,
+        @NotNull ItemStack stack,
+        @Nullable QuantumCache cache,
+        @NotNull NetworkQuantumStorage storage) {
+
+        boolean hasItem() {
+            return cache != null && cache.getItemStack() != null;
+        }
+
+        boolean isValid() {
+            return hasItem() && cache.getAmountLong() > 0;
+        }
+
+        boolean isEmpty() {
+            return !hasItem() || cache.getAmountLong() <= 0;
+        }
+
+        long amount() {
+            return isValid() ? cache.getAmountLong() : 0L;
+        }
+
+        long limit() {
+            return cache != null ? cache.getLimitLong() : storage.getMaxAmount();
+        }
+
+        long freeCapacity() {
+            return Math.max(0L, limit() - amount());
+        }
     }
 
     @Nullable
@@ -352,198 +385,310 @@ public class CellConverter extends AbstractCellBrowser {
         return idx < entries.size() ? new CellContext(cellItem, per, cache, entries.get(idx)) : null;
     }
 
-    @Nullable
-    private static NetworkQuantumStorage resolveTargetStorage(long amount, long per) {
-        return CellPersistence.isUnlimited(per)
-            ? findStorageForAmount(amount)
-            : CellTier.upgradeMaterialOf(per);
+    // ---------------------------------------------------------------------
+    // 元件升级
+    // ---------------------------------------------------------------------
+
+    @NotNull
+    private static ItemStack buildUpgradeButton(@Nullable ItemStack cellItem) {
+        ItemStack button = Icon.CONVERTER_UPGRADE.clone();
+        boolean hasCell = cellItem != null && StorageCell.isStorageCell(cellItem);
+        long current = 0L;
+        long max = 0L;
+        String stateKey = CellnetText.CONVERTER_UPGRADE_NO_CELL;
+        boolean unlimited = false;
+        if (hasCell) {
+            long per = StorageCell.getPerTypeLimit(cellItem);
+            unlimited = CellPersistence.isUnlimited(per);
+            max = CellPersistence.getMaxUnitsFor(per);
+            current = Math.min(StorageCell.getCurrentPerTypeLimit(cellItem), max);
+            stateKey = unlimited || current >= max
+                ? CellnetText.CONVERTER_UPGRADE_MAXED
+                : CellnetText.CONVERTER_UPGRADE_READY;
+        }
+        long finalCurrent = current;
+        long finalMax = max;
+        boolean finalUnlimited = unlimited;
+        String finalStateKey = stateKey;
+        button.editMeta(meta -> {
+            meta.setDisplayName(Lang.getString(CellnetText.CONVERTER_UPGRADE_TITLE));
+            List<String> lore = new ArrayList<>();
+            if (hasCell) {
+                String unitText = finalUnlimited ? "∞" : NumberFormat.formatNumber(finalCurrent);
+                String maxText = finalUnlimited ? "∞" : NumberFormat.formatNumber(finalMax);
+                lore.add(Lang.getString(CellnetText.CONVERTER_UPGRADE_UNITS, unitText, maxText));
+            }
+            lore.add(Lang.getString(finalStateKey));
+            meta.setLore(lore);
+        });
+        return button;
     }
 
-    private void transferItem(@NotNull BlockMenu menu, @NotNull Player player, int displaySlot) {
-        CellContext ctx = resolveCellContext(menu, displaySlot);
-        if (ctx == null) {
+    private static boolean canUpgrade(@NotNull ItemStack cellItem) {
+        long per = StorageCell.getPerTypeLimit(cellItem);
+        if (CellPersistence.isUnlimited(per)) {
+            return false;
+        }
+        long maxUnits = CellPersistence.getMaxUnitsFor(per);
+        return Math.min(StorageCell.getCurrentPerTypeLimit(cellItem), maxUnits) < maxUnits;
+    }
+
+    private void handleUpgrade(@NotNull BlockMenu menu, @NotNull Player player) {
+        ItemStack cellItem = menu.getItemInSlot(CELL_SLOT);
+        if (cellItem == null || !StorageCell.isStorageCell(cellItem)) {
+            player.sendMessage(Lang.getString(CellnetText.CONVERTER_NO_CELL));
             return;
         }
-
-        NetworkQuantumStorage required = resolveTargetStorage(ctx.entry().amount, ctx.per());
+        long per = StorageCell.getPerTypeLimit(cellItem);
+        long maxUnits = CellPersistence.getMaxUnitsFor(per);
+        long current = Math.min(StorageCell.getCurrentPerTypeLimit(cellItem), maxUnits);
+        if (!canUpgrade(cellItem)) {
+            player.sendMessage(Lang.getString(CellnetText.CELL_UPGRADE_MAXED, NumberFormat.formatNumber(maxUnits)));
+            return;
+        }
+        NetworkQuantumStorage required = CellTier.upgradeMaterialOf(per);
         if (required == null) {
             player.sendMessage(Lang.getString(CellnetText.CONVERTER_NO_MATCHING_STORAGE));
             return;
         }
 
-        // 转出为量子储存需要消耗一个玩家放入的空量子储存壳，且壳的等级必须与
-        // 元件需要的量子储存等级一致；不一致的壳不能用于存入
-        int shellSlot = -1;
-        long shellAmount = 0;
-        boolean hasMismatchedShell = false;
+        int matchedSlot = -1;
+        boolean mismatched = false;
         for (int slot : OUTPUT_SLOTS) {
-            ItemStack onSlot = menu.getItemInSlot(slot);
-            if (onSlot == null || onSlot.getType().isAir()) {
+            ItemStack stack = menu.getItemInSlot(slot);
+            if (stack == null || stack.getType().isAir()) {
                 continue;
             }
-            NetworkQuantumStorage shell = asQuantumStorage(onSlot);
-            if (shell == null) {
+            NetworkQuantumStorage storage = asQuantumStorage(stack);
+            if (storage == null || !isEmptyStorage(stack)) {
                 continue;
             }
-            QuantumCache shellData = Keys.getQuantumCache(onSlot.getItemMeta());
-            boolean empty = shellData == null
-                || shellData.getItemStack() == null
-                || shellData.getAmountLong() <= 0;
-            if (!empty) {
+            if (storage != required) {
+                mismatched = true;
                 continue;
             }
-            if (shell != required) {
-                hasMismatchedShell = true;
-                continue;
+            if (matchedSlot < 0 || stack.getAmount() == 1) {
+                matchedSlot = slot;
             }
-            shellSlot = slot;
-            shellAmount = onSlot.getAmount();
-            break;
         }
 
-        if (shellSlot < 0) {
-            player.sendMessage(Lang.getString(hasMismatchedShell
-                ? CellnetText.CONVERTER_TIER_MISMATCH
-                : CellnetText.CONVERTER_NO_QUANTUM_STORAGE));
+        if (matchedSlot < 0) {
+            player.sendMessage(Lang.getString(mismatched
+                ? CellnetText.CONVERTER_UPGRADE_TIER_MISMATCH
+                : CellnetText.CONVERTER_UPGRADE_NO_SHELL));
             return;
         }
 
-        // 同槽叠放多个空壳时只消耗 1 个：成品需放到其他空槽
-        CellTransferLogic.ExportPlan plan = CellTransferLogic.planExport(
-            shellAmount, firstFreeOutputSlot(menu, shellSlot) >= 0);
-        if (!plan.accepted()) {
-            player.sendMessage(Lang.getString(plan.result() == CellTransferLogic.ExportResult.REJECT_NO_SLOT
-                ? CellnetText.CONVERTER_NO_FREE_SLOT
-                : CellnetText.CONVERTER_NO_QUANTUM_STORAGE));
-            return;
-        }
-
-        ItemStack qsItem = CellQuantumConverter.buildQuantumStorage(ctx.entry().sample, ctx.entry().amount, required);
-
-        if (plan.result() == CellTransferLogic.ExportResult.ACCEPTED_WITH_EXTRA_SLOT) {
-            ItemStack shells = menu.getItemInSlot(shellSlot);
-            shells.setAmount((int) (shellAmount - 1));
-            menu.replaceExistingItem(shellSlot, shells);
-            menu.replaceExistingItem(firstFreeOutputSlot(menu, shellSlot), qsItem);
-        } else {
-            // 消耗空壳：原槽位被灌成带内容的量子储存
-            menu.replaceExistingItem(shellSlot, qsItem);
-        }
-        ctx.cache().takeItem(ctx.entry().sample, ctx.entry().amount);
+        consumeOneShell(menu, matchedSlot);
+        long newUnits = CellTransferLogic.upgradedUnits(current, maxUnits);
+        CellPersistence.setCurrentPerTypeLimit(cellItem, newUnits);
+        StorageCell.applyLore(cellItem, per, newUnits);
+        menu.replaceExistingItem(CELL_SLOT, cellItem);
+        player.sendMessage(Lang.getString(CellnetText.CELL_UPGRADE_SUCCESS,
+            NumberFormat.formatNumber(newUnits), NumberFormat.formatNumber(maxUnits)));
         refresh(menu);
-
         CellPersistence.saveAsync();
     }
 
-    @Nullable
-    private static NetworkQuantumStorage findStorageForAmount(long amount) {
-        return CellTier.storageForAmount(amount);
+    private void handleEmptyStorageClick(
+        @NotNull Player player,
+        @NotNull ItemStack cellItem,
+        @NotNull QuantumEntry entry) {
+        long per = StorageCell.getPerTypeLimit(cellItem);
+        NetworkQuantumStorage required = CellTier.upgradeMaterialOf(per);
+        if (required == null || entry.storage() != required) {
+            player.sendMessage(Lang.getString(CellnetText.CONVERTER_UPGRADE_TIER_MISMATCH));
+            return;
+        }
+        if (!canUpgrade(cellItem)) {
+            player.sendMessage(Lang.getString(CellnetText.CELL_UPGRADE_MAXED,
+                NumberFormat.formatNumber(CellPersistence.getMaxUnitsFor(per))));
+            return;
+        }
+        player.sendMessage(Lang.getString(CellnetText.CONVERTER_UPGRADE_CLICK_HINT));
     }
 
-    @Nullable
-    private QuantumImport resolveQuantumImport(@NotNull BlockMenu menu, @NotNull Player player, int displaySlot) {
+    private static void consumeOneShell(@NotNull BlockMenu menu, int slot) {
+        ItemStack stack = menu.getItemInSlot(slot);
+        if (stack == null) {
+            return;
+        }
+        if (stack.getAmount() <= 1) {
+            menu.replaceExistingItem(slot, null);
+            return;
+        }
+        ItemStack remaining = stack.clone();
+        remaining.setAmount(stack.getAmount() - 1);
+        menu.replaceExistingItem(slot, remaining);
+    }
+
+    // ---------------------------------------------------------------------
+    // 量子储存 -> 元件
+    // ---------------------------------------------------------------------
+
+    private void importItem(@NotNull BlockMenu menu, @NotNull Player player, int displaySlot) {
         ItemStack cellItem = menu.getItemInSlot(CELL_SLOT);
         if (cellItem == null || !StorageCell.isStorageCell(cellItem)) {
-            return null;
+            return;
         }
+        int idx = displayIndex(menu, displaySlot);
+        List<QuantumEntry> entries = visibleQuantumEntries(menu);
+        if (idx < 0 || idx >= entries.size()) {
+            return;
+        }
+        QuantumEntry entry = entries.get(idx);
+
+        if (!entry.hasItem()) {
+            handleEmptyStorageClick(player, cellItem, entry);
+            return;
+        }
+
+        ItemStack sample = entry.cache().getItemStack();
         long per = StorageCell.getPerTypeLimit(cellItem);
         CellLedger cache = StorageCell.loadCellCache(cellItem, per);
 
-        int idx = displayIndex(menu, displaySlot);
-        if (idx < 0) {
-            return null;
-        }
-        List<Integer> qsSlots = visibleQuantumSlots(menu, listQuantumSlots(menu));
-        if (idx >= qsSlots.size()) {
-            return null;
-        }
-        int sourceSlot = qsSlots.get(idx);
-        ItemStack qsItem = menu.getItemInSlot(sourceSlot);
-        QuantumCache qc = Keys.getQuantumCache(qsItem.getItemMeta());
-        if (qc == null || qc.getItemStack() == null || qc.getAmountLong() <= 0) {
-            player.sendMessage(Lang.getString(CellnetText.CONVERTER_NO_QUANTUM_STORAGE));
-            return null;
-        }
-        NetworkQuantumStorage storage = asQuantumStorage(qsItem);
-        if (storage == null) {
-            player.sendMessage(Lang.getString(CellnetText.CONVERTER_TIER_MISMATCH));
-            return null;
-        }
-        // 量子储存档位必须与元件档位需要的量子储存一致，不一致拒绝转入
-        // （无限档元件没有固定档位要求，不在此拦截）
-        if (!CellPersistence.isUnlimited(per) && storage != CellTier.upgradeMaterialOf(per)) {
-            player.sendMessage(Lang.getString(CellnetText.CONVERTER_TIER_MISMATCH));
-            return null;
-        }
-        return new QuantumImport(cellItem, cache, per, sourceSlot, qc, storage);
-    }
-
-    private void importItem(@NotNull BlockMenu menu, @NotNull Player player, int displaySlot) {
-        QuantumImport target = resolveQuantumImport(menu, player, displaySlot);
-        if (target == null) {
-            return;
-        }
-        CellLedger cache = target.cache();
-        long per = target.per();
-
-        ItemKey targetKey = new ItemKey(target.qc().getItemStack());
-        long existing = cache.getAmount(targetKey);
-        long maxUnits = CellPersistence.getMaxUnitsFor(per);
-
-        if (cache.isWhitelistEnabled() && !isInCellWhitelist(cache, target.qc().getItemStack())) {
+        if (cache.isWhitelistEnabled() && !isInCellWhitelist(cache, sample)) {
             player.sendMessage(Lang.getString(CellnetText.CONVERTER_WHITELIST_REJECTED));
             return;
         }
-
-        ItemStack qsItem = menu.getItemInSlot(target.sourceSlot());
-        CellTransferLogic.ImportPlan plan = CellTransferLogic.planImport(
-            qsItem.getAmount(), target.qc().getAmountLong(),
-            existing, per, cache.typeCount(), maxUnits);
-        if (!plan.accepted()) {
-            player.sendMessage(Lang.getString(switch (plan.result()) {
-                case REJECT_UNITS_FULL -> CellnetText.CONVERTER_UNITS_FULL;
-                case REJECT_TYPE_FULL -> CellnetText.CONVERTER_ITEM_CAPACITY_FULL;
-                case REJECT_SHELL_OVERFLOW -> CellnetText.CONVERTER_SHELL_OVERFLOW;
-                case REJECT_NO_SLOT -> CellnetText.CONVERTER_NO_FREE_SLOT;
-                default -> CellnetText.CONVERTER_NO_QUANTUM_STORAGE;
-            }));
+        if (StackUtils.isBlacklisted(sample)) {
+            player.sendMessage(Lang.getString(CellnetText.CONVERTER_BLACKLISTED));
+            return;
+        }
+        if (entry.stack().getAmount() != 1) {
+            player.sendMessage(Lang.getString(CellnetText.CONVERTER_SINGLE_STORAGE_ONLY));
+            return;
+        }
+        if (!entry.isValid()) {
+            player.sendMessage(Lang.getString(CellnetText.CONVERTER_INVALID_STORAGE));
             return;
         }
 
-        if (plan.needExtraSlot()) {
-            int extraSlot = firstFreeOutputSlot(menu, target.sourceSlot());
-            if (extraSlot < 0) {
-                player.sendMessage(Lang.getString(CellnetText.CONVERTER_NO_FREE_SLOT));
-                return;
-            }
-            menu.replaceExistingItem(extraSlot, CellQuantumConverter.buildQuantumStorage(
-                target.qc().getItemStack(), plan.remainder(), target.storage()));
+        ItemKey key = new ItemKey(sample);
+        long existing = cache.getAmount(key);
+        long maxUnits = CellPersistence.getMaxUnitsFor(per);
+        long planned = CellTransferLogic.importable(
+            entry.amount(), existing, per, cache.typeCount(), maxUnits);
+        if (planned <= 0) {
+            player.sendMessage(Lang.getString(existing > 0 && existing >= per
+                ? CellnetText.CONVERTER_ITEM_CAPACITY_FULL
+                : CellnetText.CONVERTER_UNITS_FULL));
+            return;
         }
 
-        cache.pushItemLong(targetKey, plan.transferAmount());
+        long moved = cache.pushItemLong(key, planned);
+        if (moved <= 0) {
+            player.sendMessage(Lang.getString(CellnetText.CONVERTER_ITEM_CAPACITY_FULL));
+            return;
+        }
 
-        if (plan.consumeAll()) {
-            menu.replaceExistingItem(target.sourceSlot(), null);
-        } else if (plan.fullShells() <= 0) {
-            menu.replaceExistingItem(target.sourceSlot(), CellQuantumConverter.buildQuantumStorage(
-                target.qc().getItemStack(), plan.remainder(), target.storage()));
+        long remainder = entry.amount() - moved;
+        if (remainder <= 0) {
+            ItemStack empty = CellQuantumConverter.buildEmptyQuantumStorage(entry.storage());
+            empty.setAmount(entry.stack().getAmount());
+            menu.replaceExistingItem(entry.slot(), empty);
         } else {
-            ItemStack fullShells = CellQuantumConverter.buildQuantumStorage(
-                target.qc().getItemStack(), target.qc().getAmountLong(), target.storage());
-            fullShells.setAmount((int) plan.fullShells());
-            menu.replaceExistingItem(target.sourceSlot(), fullShells);
+            menu.replaceExistingItem(entry.slot(), CellQuantumConverter.buildQuantumStorage(
+                sample, remainder, entry.storage(), entry.limit()));
         }
 
         refresh(menu);
-
         CellPersistence.saveAsync();
     }
 
-    private int firstFreeOutputSlot(@NotNull BlockMenu menu, int excludeSlot) {
-        for (int slot : OUTPUT_SLOTS) {
-            if (slot == excludeSlot) {
+    // ---------------------------------------------------------------------
+    // 元件 -> 量子储存
+    // ---------------------------------------------------------------------
+
+    private void transferItem(@NotNull BlockMenu menu, @NotNull Player player, int displaySlot) {
+        CellContext ctx = resolveCellContext(menu, displaySlot);
+        if (ctx == null || ctx.entry().amount <= 0) {
+            return;
+        }
+
+        ItemStack sample = ctx.entry().sample;
+        long cellAmount = ctx.entry().amount;
+        ItemKey key = new ItemKey(sample);
+
+        List<QuantumEntry> candidates = new ArrayList<>();
+        for (QuantumEntry entry : listQuantumEntries(menu)) {
+            if (entry.stack().getAmount() != 1) {
                 continue;
             }
+            boolean reusable = entry.isEmpty()
+                || (entry.isValid() && new ItemKey(entry.cache().getItemStack()).equals(key));
+            if (reusable && entry.freeCapacity() > 0) {
+                candidates.add(entry);
+            }
+        }
+
+        long[] freeCapacities = new long[candidates.size()];
+        for (int i = 0; i < candidates.size(); i++) {
+            freeCapacities[i] = candidates.get(i).freeCapacity();
+        }
+        int pick = CellTransferLogic.pickStorage(freeCapacities, cellAmount);
+        if (pick >= 0) {
+            QuantumEntry target = candidates.get(pick);
+            long planned = CellTransferLogic.exportable(cellAmount, target.limit(), target.amount());
+            long taken = planned > 0 ? ctx.cache().takeItemAmount(key, planned) : 0L;
+            if (taken > 0) {
+                ItemStack storedSample = target.isValid() ? target.cache().getItemStack() : sample;
+                menu.replaceExistingItem(target.slot(), CellQuantumConverter.buildQuantumStorage(
+                    storedSample, target.amount() + taken, target.storage(), target.limit()));
+                player.sendMessage(Lang.getString(CellnetText.CONVERTER_TRANSFER_SUCCESS));
+                refresh(menu);
+                CellPersistence.saveAsync();
+                return;
+            }
+        }
+
+        int freeSlot = firstFreeOutputSlot(menu);
+        if (freeSlot < 0) {
+            player.sendMessage(Lang.getString(CellnetText.CONVERTER_OUTPUT_FULL));
+            return;
+        }
+        NetworkQuantumStorage targetStorage = resolveTargetStorage(ctx.per(), cellAmount);
+        if (targetStorage == null) {
+            player.sendMessage(Lang.getString(CellnetText.CONVERTER_NO_MATCHING_STORAGE));
+            return;
+        }
+        long amount = Math.min(cellAmount, targetStorage.getMaxAmount());
+        long taken = amount > 0 ? ctx.cache().takeItemAmount(key, amount) : 0L;
+        if (taken <= 0) {
+            return;
+        }
+
+        consumeStackedShell(menu);
+        menu.replaceExistingItem(freeSlot,
+            CellQuantumConverter.buildQuantumStorage(sample, taken, targetStorage));
+        player.sendMessage(Lang.getString(CellnetText.CONVERTER_TRANSFER_SUCCESS));
+        refresh(menu);
+        CellPersistence.saveAsync();
+    }
+
+    @Nullable
+    private static NetworkQuantumStorage resolveTargetStorage(long per, long amount) {
+        return CellPersistence.isUnlimited(per)
+            ? CellTier.storageForAmount(amount)
+            : CellTier.upgradeMaterialOf(per);
+    }
+
+    private static void consumeStackedShell(@NotNull BlockMenu menu) {
+        for (int slot : OUTPUT_SLOTS) {
+            ItemStack stack = menu.getItemInSlot(slot);
+            if (stack == null || stack.getType().isAir() || stack.getAmount() <= 1) {
+                continue;
+            }
+            if (asQuantumStorage(stack) == null || !isEmptyStorage(stack)) {
+                continue;
+            }
+            consumeOneShell(menu, slot);
+            return;
+        }
+    }
+
+    private int firstFreeOutputSlot(@NotNull BlockMenu menu) {
+        for (int slot : OUTPUT_SLOTS) {
             ItemStack onSlot = menu.getItemInSlot(slot);
             if (onSlot == null || onSlot.getType().isAir()) {
                 return slot;
@@ -552,52 +697,79 @@ public class CellConverter extends AbstractCellBrowser {
         return -1;
     }
 
-    private static List<Integer> listQuantumSlots(@NotNull BlockMenu menu) {
-        List<Integer> slots = new ArrayList<>();
+    // ---------------------------------------------------------------------
+    // 量子储存扫描与展示
+    // ---------------------------------------------------------------------
+
+    @NotNull
+    private static List<QuantumEntry> listQuantumEntries(@NotNull BlockMenu menu) {
+        List<QuantumEntry> entries = new ArrayList<>();
         for (int slot : OUTPUT_SLOTS) {
-            ItemStack onSlot = menu.getItemInSlot(slot);
-            if (onSlot == null || onSlot.getType().isAir()) {
+            ItemStack stack = menu.getItemInSlot(slot);
+            if (stack == null || stack.getType().isAir()) {
                 continue;
             }
-            QuantumCache qc = Keys.getQuantumCache(onSlot.getItemMeta());
-            if (qc != null && qc.getAmountLong() > 0) {
-                slots.add(slot);
+            NetworkQuantumStorage storage = asQuantumStorage(stack);
+            if (storage == null) {
+                continue;
             }
+            ItemMeta meta = stack.getItemMeta();
+            QuantumCache qc = meta == null ? null : Keys.getQuantumCache(meta);
+            entries.add(new QuantumEntry(slot, stack, qc, storage));
         }
-        return slots;
-    }
-
-    private static boolean isInCellWhitelist(@NotNull CellLedger cache, @NotNull ItemStack sample) {
-        for (ItemStack template : cache.getWhitelist()) {
-            if (StackUtils.itemsMatch(template, sample)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    @Nullable
-    private static NetworkQuantumStorage asQuantumStorage(@NotNull ItemStack item) {
-        SlimefunItem sf = SlimefunItem.getByItem(item);
-        return sf instanceof NetworkQuantumStorage storage ? storage : null;
+        return entries;
     }
 
     @NotNull
-    private List<Integer> visibleQuantumSlots(@NotNull BlockMenu menu, @NotNull List<Integer> qsSlots) {
+    private List<QuantumEntry> visibleQuantumEntries(@NotNull BlockMenu menu) {
+        List<QuantumEntry> entries = listQuantumEntries(menu);
         String search = SEARCH_TERMS.get(menu.getLocation());
         if (search == null) {
-            return qsSlots;
+            return entries;
         }
-        List<Integer> filtered = new ArrayList<>(qsSlots.size());
-        for (int slot : qsSlots) {
-            ItemStack qsItem = menu.getItemInSlot(slot);
-            QuantumCache qc = qsItem == null ? null : Keys.getQuantumCache(qsItem.getItemMeta());
-            if (qc != null && qc.getItemStack() != null
-                && ItemSearch.matches(search, ItemStackHelper.getDisplayName(qc.getItemStack()))) {
-                filtered.add(slot);
+        List<QuantumEntry> filtered = new ArrayList<>(entries.size());
+        for (QuantumEntry entry : entries) {
+            ItemStack label = entry.isValid() ? entry.cache().getItemStack() : entry.stack();
+            String name = ItemStackHelper.getDisplayName(label);
+            if (name != null && ItemSearch.matches(search, name)) {
+                filtered.add(entry);
             }
         }
         return filtered;
+    }
+
+    private void renderQuantumItems(@NotNull BlockMenu menu) {
+        List<QuantumEntry> entries = visibleQuantumEntries(menu);
+        int page = normalizePage(menu, entries.size());
+        for (int i = 0; i < DISPLAY_SLOTS.length; i++) {
+            int index = page * itemsPerPage() + i;
+            if (index < entries.size()) {
+                QuantumEntry entry = entries.get(index);
+                if (entry.isValid()) {
+                    menu.replaceExistingItem(DISPLAY_SLOTS[i], CellSlotUI.displayItem(
+                        entry.cache().getItemStack(), entry.amount(),
+                        CellnetText.CONVERTER_ITEM_COUNT, CellnetText.CONVERTER_TRANSFER_HINT));
+                    continue;
+                }
+                menu.replaceExistingItem(DISPLAY_SLOTS[i], buildEmptyStorageDisplay(entry));
+                continue;
+            }
+            menu.replaceExistingItem(DISPLAY_SLOTS[i], Icon.CLEANER_DISPLAY);
+        }
+    }
+
+    @NotNull
+    private static ItemStack buildEmptyStorageDisplay(@NotNull QuantumEntry entry) {
+        ItemStack display = entry.storage().getItem().clone();
+        display.setAmount(1);
+        String name = ItemStackHelper.getDisplayName(display);
+        display.editMeta(meta -> {
+            meta.setDisplayName(Lang.getString(CellnetText.CONVERTER_EMPTY_STORAGE_TITLE,
+                name == null || name.isEmpty() ? display.getType().name() : name));
+            meta.setLore(List.of(Lang.getString(CellnetText.CONVERTER_EMPTY_STORAGE_HINT)));
+        });
+        GhostItems.mark(display);
+        return display;
     }
 
     private void renderCellItems(@NotNull BlockMenu menu, @NotNull CellLedger cache) {
@@ -621,23 +793,28 @@ public class CellConverter extends AbstractCellBrowser {
         }
     }
 
-    private void renderQuantumItems(@NotNull BlockMenu menu) {
-        List<Integer> qsSlots = visibleQuantumSlots(menu, listQuantumSlots(menu));
-        int page = normalizePage(menu, qsSlots.size());
-        for (int i = 0; i < DISPLAY_SLOTS.length; i++) {
-            int index = page * itemsPerPage() + i;
-            if (index < qsSlots.size()) {
-                ItemStack qsItem = menu.getItemInSlot(qsSlots.get(index));
-                QuantumCache qc = qsItem == null ? null : Keys.getQuantumCache(qsItem.getItemMeta());
-                if (qc != null && qc.getItemStack() != null && qc.getAmountLong() > 0) {
-                    menu.replaceExistingItem(DISPLAY_SLOTS[i], CellSlotUI.displayItem(
-                        qc.getItemStack(), qc.getAmountLong(),
-                        CellnetText.CONVERTER_ITEM_COUNT, CellnetText.CONVERTER_TRANSFER_HINT));
-                    continue;
-                }
-            }
-            menu.replaceExistingItem(DISPLAY_SLOTS[i], Icon.CLEANER_DISPLAY);
+    private static boolean isEmptyStorage(@NotNull ItemStack stack) {
+        ItemMeta meta = stack.getItemMeta();
+        if (meta == null) {
+            return true;
         }
+        QuantumCache qc = Keys.getQuantumCache(meta);
+        return qc == null || qc.getItemStack() == null || qc.getAmountLong() <= 0;
+    }
+
+    private static boolean isInCellWhitelist(@NotNull CellLedger cache, @NotNull ItemStack sample) {
+        for (ItemStack template : cache.getWhitelist()) {
+            if (StackUtils.itemsMatch(template, sample)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Nullable
+    private static NetworkQuantumStorage asQuantumStorage(@NotNull ItemStack item) {
+        SlimefunItem sf = SlimefunItem.getByItem(item);
+        return sf instanceof NetworkQuantumStorage storage ? storage : null;
     }
 
     @NotNull
