@@ -658,21 +658,35 @@ public class CellConverter extends AbstractCellBrowser {
             player.sendMessage(Lang.getString(CellnetText.CONVERTER_OUTPUT_FULL));
             return;
         }
-        // 先确认有壳再扣元件存量，否则禁止输出时物品已被扣除
-        QuantumEntry shell = findShell(menu);
-        if (shell == null) {
-            player.sendMessage(Lang.getString(CellnetText.CONVERTER_NO_SHELL_TO_OUTPUT));
-            return;
+
+        boolean needsShell = CellTransferLogic.consumesShellOnOutput(ctx.per());
+        NetworkQuantumStorage outputStorage;
+        int shellSlot = -1;
+        if (needsShell) {
+            // 先确认有壳再扣元件存量，否则禁止输出时物品已被扣除
+            QuantumEntry shell = findShell(menu);
+            if (shell == null) {
+                player.sendMessage(Lang.getString(CellnetText.CONVERTER_NO_SHELL_TO_OUTPUT));
+                return;
+            }
+            outputStorage = shell.storage();
+            shellSlot = shell.slot();
+        } else {
+            // 无限元件没有对应等级壳，直接按最高级量子储存凭空产出
+            outputStorage = CellTier.highestStorage();
         }
-        long amount = Math.min(cellAmount, shell.storage().getMaxAmount());
+
+        long amount = Math.min(cellAmount, outputStorage.getMaxAmount());
         long taken = amount > 0 ? ctx.cache().takeItemAmount(key, amount) : 0L;
         if (taken <= 0) {
             return;
         }
 
-        consumeOneShell(menu, shell.slot());
+        if (shellSlot >= 0) {
+            consumeOneShell(menu, shellSlot);
+        }
         menu.replaceExistingItem(freeSlot,
-            CellQuantumConverter.buildQuantumStorage(sample, taken, shell.storage()));
+            CellQuantumConverter.buildQuantumStorage(sample, taken, outputStorage));
         player.sendMessage(Lang.getString(CellnetText.CONVERTER_TRANSFER_SUCCESS));
         refresh(menu);
         CellPersistence.saveAsync();

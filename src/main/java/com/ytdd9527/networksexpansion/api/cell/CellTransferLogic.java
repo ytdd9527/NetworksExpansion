@@ -79,4 +79,15 @@ public final class CellTransferLogic {
     public static long upgradedUnits(long current, long maxUnits) {
         return Math.min(maxUnits, current + 1);
     }
+
+    public static boolean isUnlimited(long perTypeLimit) {
+        return perTypeLimit >= Long.MAX_VALUE / 2;
+    }
+
+    /**
+     * 元件 -&gt; 量子储存新建输出时是否需要消耗空壳；无限元件无对应等级壳，凭空产出。
+     */
+    public static boolean consumesShellOnOutput(long perTypeLimit) {
+        return !isUnlimited(perTypeLimit);
+    }
 }

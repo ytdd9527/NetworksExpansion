@@ -87,7 +87,7 @@ public class CellLedger {
     }
 
     public static boolean isUnlimitedPerType(long perTypeLimit) {
-        return perTypeLimit >= Long.MAX_VALUE / 2;
+        return CellTransferLogic.isUnlimited(perTypeLimit);
     }
 
     public synchronized long getStored() {

@@ -2,6 +2,7 @@ package com.ytdd9527.networksexpansion.api.cell;
 
 import io.github.thebusybiscuit.slimefun4.core.handlers.ItemUseHandler;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
@@ -27,7 +28,12 @@ public final class CellUseHandler {
             if (!use.prepare(e.getPlayer(), cell)) {
                 return;
             }
-            e.getPlayer().getInventory().setItemInMainHand(cell);
+            // 写回触发事件的那只手，否则副手右键会把元件复制到主手
+            if (e.getHand() == EquipmentSlot.OFF_HAND) {
+                e.getPlayer().getInventory().setItemInOffHand(cell);
+            } else {
+                e.getPlayer().getInventory().setItemInMainHand(cell);
+            }
             use.open(e.getPlayer(), cell);
         };
     }
