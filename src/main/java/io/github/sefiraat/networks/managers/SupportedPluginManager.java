@@ -26,6 +26,7 @@ public class SupportedPluginManager {
     private final @Getter boolean roseStacker;
     private final @Getter boolean wildStacker;
     private final @Getter boolean guguSlimefunLib;
+    private final @Getter boolean simpleStorage;
     private @Getter RoseStackerAPI roseStackerAPI;
     private final @Getter boolean finalTECH;
     @Setter
@@ -56,6 +57,7 @@ public class SupportedPluginManager {
 
         this.wildStacker = Bukkit.getPluginManager().isPluginEnabled("WildStacker");
         this.guguSlimefunLib = Bukkit.getPluginManager().isPluginEnabled("GuguSlimefunLib");
+        this.simpleStorage = Bukkit.getPluginManager().isPluginEnabled("SimpleStorage");
         this.finalTECH = Bukkit.getPluginManager().isPluginEnabled("FinalTECH") || Bukkit.getPluginManager().isPluginEnabled("FinalTECH-Changed");
 
         Networks.getInstance()

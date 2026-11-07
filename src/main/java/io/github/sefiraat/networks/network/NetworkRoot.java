@@ -19,6 +19,7 @@ import com.ytdd9527.networksexpansion.utils.ItemHashMap;
 import com.ytdd9527.networksexpansion.utils.ItemKey;
 import com.ytdd9527.networksexpansion.implementation.machines.networks.advanced.AdvancedGreedyBlock;
 import com.ytdd9527.networksexpansion.implementation.machines.unit.NetworksDrawer;
+import com.ytdd9527.networksexpansion.implementation.storage.SimpleStorageChest;
 import io.github.mooy1.infinityexpansion.items.storage.StorageCache;
 import io.github.mooy1.infinityexpansion.items.storage.StorageUnit;
 import io.github.sefiraat.networks.Networks;
@@ -114,6 +115,10 @@ public class NetworkRoot extends NetworkNode {
         barrels = null,
         inputAbleBarrels = null,
         outputAbleBarrels = null;
+
+    private volatile @Nullable Set<SimpleStorageChest>
+        inputAbleSimpleStorageChests = null,
+        outputAbleSimpleStorageChests = null;
 
     private volatile @Nullable Map<Location, StorageUnitData>
         drawerData = null,
@@ -621,6 +626,13 @@ public class NetworkRoot extends NetworkNode {
             }
         }
 
+        // SimpleStorage chests（细胞语义：多格多物品）
+        for (SimpleStorageChest chest : getOutputAbleSimpleStorageChests()) {
+            for (ItemStack itemStack : chest.getSlotItems()) {
+                addKeyedAmount(itemStacks, itemStack, itemStack);
+            }
+        }
+
         for (BlockMenu blockMenu : getAdvancedGreedyBlockMenus()) {
             ItemStack template = blockMenu.getItemInSlot(AdvancedGreedyBlock.TEMPLATE_SLOT);
             if (template == null || template.getType() == Material.AIR) continue;
@@ -918,6 +930,16 @@ public class NetworkRoot extends NetworkNode {
             }
         }
 
+        // SimpleStorage chests
+        for (SimpleStorageChest chest : getOutputAbleSimpleStorageChests()) {
+            for (ItemStack itemStack : chest.getSlotItems()) {
+                if (!StackUtils.itemsMatch(request, itemStack)) continue;
+
+                found += itemStack.getAmount();
+                if (found >= request.getAmount()) return true;
+            }
+        }
+
         // Cell Drives
         found += CellDrive.getStorage().getAmount(driveCache, getOutputAbleCellDriveMenus(), request.getItemStack());
 
@@ -969,6 +991,11 @@ public class NetworkRoot extends NetworkNode {
                     totalAmount += cellItem.getAmount();
                 }
             }
+        }
+
+        // SimpleStorage chests
+        for (SimpleStorageChest chest : getOutputAbleSimpleStorageChests()) {
+            totalAmount += chest.getAmount(itemStack);
         }
 
         // Cell Drives
@@ -1034,6 +1061,10 @@ public class NetworkRoot extends NetworkNode {
                 if (menu == null) continue;
                 total += slotRoomOf(menu, barrel.getInputSlot(), itemStack);
             }
+        }
+
+        for (SimpleStorageChest chest : getInputAbleSimpleStorageChests()) {
+            total += chest.getRoom(itemStack);
         }
 
         for (StorageUnitData unit : getMapInputAbleCargoStorageUnits().values()) {
@@ -1135,6 +1166,18 @@ public class NetworkRoot extends NetworkNode {
                             totalAmounts.put(
                                 itemStack, totalAmounts.getOrDefault(itemStack, 0L) + cellItem.getAmount());
                         }
+                    }
+                }
+            }
+        }
+
+        // SimpleStorage chests
+        for (SimpleStorageChest chest : getOutputAbleSimpleStorageChests()) {
+            for (ItemStack stored : chest.getSlotItems()) {
+                for (ItemStack itemStack : itemStacks) {
+                    if (StackUtils.itemsMatch(stored, itemStack)) {
+                        totalAmounts.put(itemStack,
+                            totalAmounts.getOrDefault(itemStack, 0L) + stored.getAmount());
                     }
                 }
             }
@@ -1332,6 +1375,49 @@ public class NetworkRoot extends NetworkNode {
         outputAbleBarrels = searchBarrels(AccessMode.OUTPUT);
         new NetworkRootLocateStorageEvent(this, StorageType.BARREL, false, true, Bukkit.isPrimaryThread()).callEvent();
         return outputAbleBarrels;
+    }
+
+    /** 监视器面板所贴的 SimpleStorage 箱子（铁/金/钻石/存储单元），细胞语义接入。 */
+    private Set<SimpleStorageChest> searchSimpleStorageChests(AccessMode mode) {
+        if (!Networks.getSupportedPluginManager().isSimpleStorage()) return Set.of();
+
+        final Set<Location> addedLocations = new HashSet<>();
+        final Set<SimpleStorageChest> chests = new HashSet<>();
+
+        final Set<Location> monitor = new HashSet<>(getNodes(NodeType.STORAGE_MONITOR));
+        if (mode.isInputAccess()) monitor.addAll(getNodes(NodeType.INPUT_ONLY_MONITOR));
+        if (mode.isOutputAccess()) monitor.addAll(getNodes(NodeType.OUTPUT_ONLY_MONITOR));
+        for (Location cellLocation : monitor) {
+            final BlockFace face = NetworkDirectional.getSelectedFace(cellLocation);
+            if (face == null) continue;
+
+            final Location testLocation = cellLocation.clone().add(face.getDirection());
+            if (!addedLocations.add(testLocation)) continue;
+
+            final SlimefunItem slimefunItem = StorageCacheUtils.getSfItem(testLocation);
+            if (!(Networks.getSupportedPluginManager().isSimpleStorage()
+                && slimefunItem instanceof io.github.sefiraat.simplestorage.items.chests.SimpleChest)) {
+                continue;
+            }
+
+            final SimpleStorageChest chest = SimpleStorageChest.of(testLocation);
+            if (chest != null) chests.add(chest);
+        }
+        return chests;
+    }
+
+    public Set<SimpleStorageChest> getInputAbleSimpleStorageChests() {
+        if (inputAbleSimpleStorageChests != null) return inputAbleSimpleStorageChests;
+
+        inputAbleSimpleStorageChests = searchSimpleStorageChests(AccessMode.INPUT);
+        return inputAbleSimpleStorageChests;
+    }
+
+    public Set<SimpleStorageChest> getOutputAbleSimpleStorageChests() {
+        if (outputAbleSimpleStorageChests != null) return outputAbleSimpleStorageChests;
+
+        outputAbleSimpleStorageChests = searchSimpleStorageChests(AccessMode.OUTPUT);
+        return outputAbleSimpleStorageChests;
     }
 
     public Map<Location, StorageUnitData> getInputAbleDrawerData() {
@@ -1619,6 +1705,29 @@ public class NetworkRoot extends NetworkNode {
                     }
                 }
                 // </editor-fold>
+            }
+
+            // SimpleStorage chests
+            for (SimpleStorageChest chest : getOutputAbleSimpleStorageChests()) {
+                final ItemStack chestTake = chest.requestItem(request);
+                if (chestTake != null) {
+                    if (stackToReturn == null) {
+                        stackToReturn = chestTake.clone();
+                    } else {
+                        stackToReturn.setAmount(stackToReturn.getAmount() + chestTake.getAmount());
+                    }
+                    request.receiveAmount(chestTake.getAmount());
+
+                    if (request.getAmount() <= 0) {
+                        // Netex - Reduce start
+                        uncontrolAccessOutput(accessor);
+                        // Netex - Reduce end
+                        // Netex - Record start
+                        tryRecord(accessor, request);
+                        // Netex - Record end
+                        return stackToReturn;
+                    }
+                }
             }
 
             // Cell Drives
@@ -2057,6 +2166,36 @@ public class NetworkRoot extends NetworkNode {
                 }
             }
 
+            // SimpleStorage chests
+            for (SimpleStorageChest chest : getOutputAbleSimpleStorageChests()) {
+                for (Iterator<BatchTake> iterator = pending.iterator(); iterator.hasNext(); ) {
+                    final BatchTake take = iterator.next();
+                    final ItemStack takeStack = chest.requestItem(take.request);
+                    if (takeStack != null) {
+                        if (take.collected == null) {
+                            take.collected = takeStack.clone();
+                        } else {
+                            take.collected.setAmount(take.collected.getAmount() + takeStack.getAmount());
+                        }
+                        take.request.receiveAmount(takeStack.getAmount());
+
+                        if (take.request.getAmount() <= 0) {
+                            // Netex - Reduce start
+                            uncontrolAccessOutput(accessor);
+                            // Netex - Reduce end
+                            // Netex - Record start
+                            tryRecord(accessor, take.request);
+                            // Netex - Record end
+                            results.set(take.index, take.collected);
+                            iterator.remove();
+                        }
+                    }
+                }
+                if (pending.isEmpty()) {
+                    return results;
+                }
+            }
+
             // Cell Drives
             for (Iterator<BatchTake> iterator = pending.iterator(); iterator.hasNext(); ) {
                 final BatchTake take = iterator.next();
@@ -2469,6 +2608,21 @@ public class NetworkRoot extends NetworkNode {
                 addCountObservingAccessHistory(accessor, cache.getLastLocation());
             }
             // Netex - Cache end
+
+            if (incoming.getAmount() == 0) {
+                // Netex - Reduce start
+                uncontrolAccessInput(accessor);
+                // Netex - Reduce end
+                // Netex - Record start
+                tryRecord(accessor, beforeItemStack, 0);
+                // Netex - Record end
+                return;
+            }
+        }
+
+        // SimpleStorage chests
+        for (SimpleStorageChest chest : getInputAbleSimpleStorageChests()) {
+            chest.depositItemStack(incoming);
 
             if (incoming.getAmount() == 0) {
                 // Netex - Reduce start
