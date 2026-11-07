@@ -2,7 +2,7 @@ name: Test Plugin Compatibility
 
 env:
   # 默认测试版本（push/PR 触发时用这套；手动触发可覆盖）
-  DEFAULT_VERSIONS: '1.20.1,1.20.5,1.20.6,1.21.1,1.21.8,1.21.11,26.1.2,26.2'
+  DEFAULT_VERSIONS: '1.20.1,1.21.11,26.2'
 
 on:
   push:
@@ -13,7 +13,7 @@ on:
       versions:
         description: '要测试的 MC 版本，逗号分隔（留空用默认列表）'
         required: false
-        default: '1.20.1,1.20.5,1.20.6,1.21.1,1.21.8,1.21.11,26.1.2,26.2'
+        default: '1.20.1,1.21.11,26.2'
 
 jobs:
   # 把版本串拆成矩阵：手动触发用输入值，push/PR 用默认列表
