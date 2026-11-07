@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "com.ytdd9527.networksexpansion"
-version = "2.1.132"
+version = "2.1.133"
 
 java {
     toolchain {
@@ -68,6 +68,7 @@ dependencies {
     compileOnly(libs.gugu.slimefun.lib)
     compileOnly(libs.just.enough.guide)
     compileOnly(libs.tsingshan.technology)
+    compileOnly("com.github.balugaq:SimpleStorage:f49d9e2217")
     // System-scoped local JARs
     compileOnly(fileTree(mapOf("dir" to "lib", "include" to listOf("*.jar"))))
 
