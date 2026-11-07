@@ -23,6 +23,7 @@ softdepend:
   - GuguSlimefunLib
   - FinalTECH
   - FinalTECH-Changed
+  - SimpleStorage
 #  - JustEnoughGuide # Don't add this line, see https://github.com/balugaq/JustEnoughGuide/blob/master/src/main/java/com/balugaq/jeg/implementation/ThirdPartyWarnings.java
 commands:
   networks:
