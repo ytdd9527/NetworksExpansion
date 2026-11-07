@@ -177,6 +177,11 @@ public enum CellTier {
         return null;
     }
 
+    @NotNull
+    public static NetworkQuantumStorage highestStorage() {
+        return VALUES[VALUES.length - 1].upgradeMaterial;
+    }
+
     public static final class Unlimited {
 
         public static final String ID = "NTW_EXPANSION_CELL_INFINITY";

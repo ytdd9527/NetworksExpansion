@@ -4,6 +4,8 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * 纯逻辑测试：不依赖 Bukkit/Slimefun，容量与单元上限均作为参数传入。
@@ -99,6 +101,31 @@ class CellTransferLogicTest {
         void incrementByOneAndClampAtMax() {
             assertEquals(2, CellTransferLogic.upgradedUnits(1, 64));
             assertEquals(64, CellTransferLogic.upgradedUnits(64, 64));
+        }
+    }
+
+    @Nested
+    class UnlimitedOutput {
+
+        @Test
+        void normalCellsConsumeShell() {
+            assertTrue(CellTransferLogic.consumesShellOnOutput(64));
+            assertTrue(CellTransferLogic.consumesShellOnOutput(1_024));
+            assertTrue(CellTransferLogic.consumesShellOnOutput(140_737_488_355_328L));
+        }
+
+        @Test
+        void unlimitedCellDoesNotConsumeShell() {
+            assertFalse(CellTransferLogic.consumesShellOnOutput(Long.MAX_VALUE));
+        }
+
+        @Test
+        void thresholdMatchesLedgerRule() {
+            long threshold = Long.MAX_VALUE / 2;
+            assertTrue(CellTransferLogic.consumesShellOnOutput(threshold - 1));
+            assertFalse(CellTransferLogic.consumesShellOnOutput(threshold));
+            assertTrue(CellTransferLogic.isUnlimited(threshold));
+            assertFalse(CellTransferLogic.isUnlimited(threshold - 1));
         }
     }
 }

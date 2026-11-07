@@ -74,6 +74,10 @@ dependencies {
     testImplementation(platform("org.junit:junit-bom:6.1.3"))
     testImplementation("org.junit.jupiter:junit-jupiter")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+    // compileOnly 依赖不会进入测试 classpath，回归测试需要真实 Bukkit 运行时
+    testImplementation(libs.paper.api)
+    testImplementation(libs.slimefun4)
+    testImplementation("org.mockbukkit.mockbukkit:mockbukkit-v1.21:4.116.3")
 }
 
 tasks.test {

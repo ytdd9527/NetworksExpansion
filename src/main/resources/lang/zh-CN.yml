@@ -4687,6 +4687,7 @@ items:
       - ""
       - "<click_info>点击物品<passive> 转出为量子储存"
       - "<passive>优先复用槽内存储；无可复用时取用 <aqua>1 个<passive> 空壳，产出同等级存储"
+      - "<aqua>无限元件<passive> 例外：无需空壳，直接产出最高级量子储存"
       - "<click_info>切换模式<passive> 转回元件：有内容的量子储存不消耗，转空留空壳"
       - "<passive>转入需本体数量为 <aqua>1<passive>，且通过元件白名单"
       - "<success>点击同档空壳或底部按钮升级元件"
