@@ -6,7 +6,6 @@ import com.ytdd9527.networksexpansion.implementation.items.assembly.core.SmartCo
 import com.ytdd9527.networksexpansion.api.cell.StorageCell;
 import com.ytdd9527.networksexpansion.api.cell.VoidCellSupport;
 import com.ytdd9527.networksexpansion.implementation.machines.drive.CellDrive;
-import com.ytdd9527.networksexpansion.api.drive.DriveStorage;
 import com.ytdd9527.networksexpansion.implementation.machines.drive.EnderDrive;
 import com.ytdd9527.networksexpansion.utils.ItemKey;
 import io.github.sefiraat.networks.network.NetworkRoot;
@@ -157,16 +156,17 @@ public class AssemblyRound {
             state.nextProbeAt[index] = now + PROBE_RETRY_MS;
             return false;
         }
-        boolean fullyAbsorbed = pushOutput(root, location, recipe.output(), feasible * units);
-        state.craftedSince[index] += feasible;
-        if (!fullyAbsorbed) {
+        long absorbed = pushOutput(root, location, recipe.output(), feasible * units);
+        long actual = absorbed / units;
+        state.craftedSince[index] += actual;
+        if (absorbed < feasible * units) {
             state.snapshot = null;
             SHARED_SNAPSHOT_BY_NETWORK.computeIfPresent(root.getNodePosition(), (k, old) ->
                 new SharedSnapshot(old.keyed(), 0L, old.lastAccessAtMs()));
         }
 
         if (limit.mode() == AssemblyDrive.MODE_PLAN) {
-            settlePlanProgress(blockMenu, slot, blueprint, limit.remaining(), feasible, units, state, index);
+            settlePlanProgress(blockMenu, slot, blueprint, limit.remaining(), actual, units, state, index);
         }
         return true;
     }
@@ -277,18 +277,8 @@ public class AssemblyRound {
         if (amount <= 0) {
             return 0L;
         }
-        // 元件驱动容量探针（非破坏性），驱动足够装下（或有虚空格兜底）时直接短路，
-        // 省去 getLeftCapacityFor 的全存储遍历
-        DriveStorage.CapacityProbe capacityProbe = CellDrive.getStorage().probeReceive(
-            root.getDriveCache(), root.getInputAbleCellDriveMenus(), recipe.outputKey(), amount);
-        if (capacityProbe.capacity() >= amount || capacityProbe.voidAccepts()) {
-            return amount;
-        }
-        // 网络剩余容量估算（非破坏性，替代旧的"真推真取"探针）。
-        // getLeftCapacityFor 内部已包含元件驱动部分，此处不再叠加 capacityProbe，
-        // 否则驱动容量会被重复计算导致高估。
-        // getLeftCapacityFor 契约为保守低估：探针结果偏小只会让合成批量偏小，
-        // 不会出现旧实现"推入网络取不回"的凭空产出泄漏。
+        // 探针口径必须与 addItemStack 的实际写入优先级一致，统一走 getLeftCapacityFor；
+        // 元件驱动短路会绕过贪心方块等更前置的存储，导致预估高估、产物落地不全
         return Math.min(amount, root.getLeftCapacityFor(recipe.output()));
     }
 
@@ -345,13 +335,13 @@ public class AssemblyRound {
             return false;
         }
         RoundFetch fetch = withVoidSuspended(() -> fetchRoundMaterials(root, location, lines));
-        boolean active = settleRoundProgress(blockMenu, lines, fetch, state, now);
-        if (!pushRoundOutputs(root, location, fetch)) {
+        Map<ItemKey, Long> absorbed = pushRoundOutputs(root, location, fetch);
+        if (!absorbed.equals(fetch.outputs())) {
             state.snapshot = null;
             SHARED_SNAPSHOT_BY_NETWORK.computeIfPresent(root.getNodePosition(), (k, old) ->
                 new SharedSnapshot(old.keyed(), 0L, old.lastAccessAtMs()));
         }
-        return active;
+        return settleRoundProgress(blockMenu, lines, fetch, absorbed, state, now);
     }
 
     @NotNull
@@ -380,6 +370,18 @@ public class AssemblyRound {
             long batch = probeBatchCapacity(root, location, recipe, units, limit.want(), state, i, now);
             if (batch <= 0) {
                 continue;
+            }
+            // 输入侧预防：按快照库存把 batch 收缩到整除份数，从源头减少取多后需归还的零头
+            if (snapshot != null) {
+                long byStock = Long.MAX_VALUE;
+                for (Ingredient ingredient : recipe.ingredients()) {
+                    long per = Math.max(1L, ingredient.amountPerCraft());
+                    byStock = Math.min(byStock, snapshotStock(snapshot, ingredient.itemKey()) / per);
+                }
+                batch = Math.min(batch, byStock);
+                if (batch <= 0) {
+                    continue;
+                }
             }
             lines.add(new RoundLine(i, blueprint, recipe, limit, units, batch));
         }
@@ -418,6 +420,7 @@ public class AssemblyRound {
             @NotNull BlockMenu blockMenu,
             @NotNull List<RoundLine> lines,
             @NotNull RoundFetch fetch,
+            @NotNull Map<ItemKey, Long> absorbed,
             @NotNull MachineState state,
             long now) {
         boolean active = false;
@@ -427,41 +430,71 @@ public class AssemblyRound {
                 state.nextProbeAt[line.index()] = now + PROBE_RETRY_MS;
                 continue;
             }
+            long units = line.units();
+            long actual = consumeAbsorbed(absorbed, line.recipe().outputKey(), feasible * units) / units;
+            if (actual <= 0) {
+                state.nextProbeAt[line.index()] = now + PROBE_RETRY_MS;
+                continue;
+            }
             active = true;
-            state.craftedSince[line.index()] += feasible;
+            state.craftedSince[line.index()] += actual;
             if (line.limit().mode() == AssemblyDrive.MODE_PLAN) {
                 settlePlanProgress(blockMenu, AssemblyDrive.RECIPE_SLOTS[line.index()], line.blueprint(),
-                    line.limit().remaining(), feasible, line.units(), state, line.index());
+                    line.limit().remaining(), actual, units, state, line.index());
             }
         }
         return active;
     }
 
-    private static boolean pushRoundOutputs(
+    // 多条配方共用同一种产物时按行顺序分摊实际落地量
+    private static long consumeAbsorbed(
+            @NotNull Map<ItemKey, Long> absorbed,
+            @NotNull ItemKey key,
+            long want) {
+        long have = absorbed.getOrDefault(key, 0L);
+        long used = Math.min(have, want);
+        if (used <= 0) {
+            return 0L;
+        }
+        if (used >= have) {
+            absorbed.remove(key);
+        } else {
+            absorbed.put(key, have - used);
+        }
+        return used;
+    }
+
+    @NotNull
+    private static Map<ItemKey, Long> pushRoundOutputs(
             @NotNull NetworkRoot root,
             @NotNull Location location,
             @NotNull RoundFetch fetch) {
-        boolean allAbsorbed = true;
+        Map<ItemKey, Long> absorbed = new LinkedHashMap<>();
         for (Map.Entry<ItemKey, Long> entry : fetch.outputs().entrySet()) {
-            long remaining = entry.getValue();
+            long total = entry.getValue();
+            long remaining = total;
             ItemStack template = fetch.outputTemplates().get(entry.getKey());
             long cellRemaining = CellDrive.getStorage().pushSingle(
                 root.getDriveCache(), root.getInputAbleCellDriveMenus(), template, remaining);
             remaining = Math.max(0L, cellRemaining);
+            long got = total - remaining;
             while (remaining > 0) {
                 long chunk = Math.min(remaining, Integer.MAX_VALUE);
                 ItemStack out = template.clone();
                 out.setAmount((int) chunk);
                 root.addItemStack(location, out);
-                long leftover = Math.max(0L, out.getAmount());
+                long leftover = out.getType().isAir() ? 0L : Math.max(0L, out.getAmount());
+                got += chunk - leftover;
                 if (leftover > 0) {
                     bufferPending(location, template, leftover);
-                    allAbsorbed = false;
                 }
                 remaining -= chunk;
             }
+            if (got > 0) {
+                absorbed.put(entry.getKey(), got);
+            }
         }
-        return allAbsorbed;
+        return absorbed;
     }
 
     private static long ingredientWant(@NotNull RoundLine line, @NotNull Ingredient ingredient) {
@@ -524,11 +557,14 @@ public class AssemblyRound {
         for (RoundLine line : lines) {
             long cap = line.batch();
             for (Ingredient ingredient : line.recipe().ingredients()) {
+                long per = Math.max(1L, ingredient.amountPerCraft());
                 long want = ingredientWant(line, ingredient);
                 long avail = pool.getOrDefault(ingredient.itemKey(), 0L);
                 long take = Math.min(want, avail);
-                pool.put(ingredient.itemKey(), avail - take);
-                cap = Math.min(cap, take / ingredient.amountPerCraft());
+                // 输入侧只消耗整除量，零头留在 pool 走 excess 归还，避免整除截断吞料
+                long usable = take / per * per;
+                pool.put(ingredient.itemKey(), avail - usable);
+                cap = Math.min(cap, usable / per);
             }
             feasible[line.index()] = Math.max(0L, cap);
         }
@@ -607,7 +643,7 @@ public class AssemblyRound {
         returnAll(root, accessor, items);
     }
 
-    private static boolean pushOutput(
+    private static long pushOutput(
             @NotNull NetworkRoot root,
             @NotNull Location accessor,
             @NotNull ItemStack template,
@@ -615,11 +651,11 @@ public class AssemblyRound {
         ItemStack out = template.clone();
         out.setAmount((int) Math.min(total, Integer.MAX_VALUE));
         root.addItemStack(accessor, out);
-        if (!out.getType().isAir() && out.getAmount() > 0) {
-            bufferPending(accessor, template, out.getAmount());
-            return false;
+        long leftover = out.getType().isAir() ? 0L : Math.max(0L, out.getAmount());
+        if (leftover > 0) {
+            bufferPending(accessor, template, leftover);
         }
-        return true;
+        return Math.max(0L, total - leftover);
     }
 
     private static void returnAll(
