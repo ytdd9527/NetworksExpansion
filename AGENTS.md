@@ -86,7 +86,7 @@
 - **当需要新增 Maven 依赖时**：加入 `build.gradle.kts` 的 `dependencies`（区分 `compileOnly` 与 `implementation`；服务端/玩家运行时不打包的用 `compileOnly`），并跑 `gradle build` 验证。
 - **当需要运行时动态加载的库（如 pinyin/opencc4j）时**：通过 Libby 在 `Networks.loadLibraries()` 中声明（`libraryManager.addMavenCentral()` + `Library.builder()...build()`），并在 `shadowJar` 的 `relocate` 中处理冲突（如有）。
 - **当涉及 `lib/` 本地 JAR 时**：保持 `compileOnly(fileTree(...))` 不变，不要删除 `lib/` 下的文件。
-- **当代码需要测试时**：为纯逻辑类（无 Bukkit 运行时依赖的算法/工具类）编写 JUnit 5（Jupiter）测试，放在 `src/test/java`；Mock 用 Mockito。注意：`build.gradle.kts` 目前**尚未配置** `testImplementation("org.junit.jupiter:junit-jupiter:...")` 与 `test { useJUnitPlatform() }`，首次引入测试时须先补齐这两处再写测试。
+- **当代码需要测试时**：为纯逻辑类（无 Bukkit 运行时依赖的算法/工具类）编写 JUnit 5（Jupiter）测试，放在 `src/test/java`；Mock 用 Mockito。测试基建已就绪：`build.gradle.kts` 已配置 JUnit 5.10（junit-bom）与 `test { useJUnitPlatform() }`，CI（build.yml）含独立 `gradle test` 步骤并上传测试报告。
 - **当构建失败时**：先读报错定位（依赖缺失 / 编译错误 / Shadow relocation 冲突），修复后重跑；**禁止**为绕过失败而 `-x test`/`--offline` 硬跳过（本仓库暂无测试，如未来有测试同样禁止跳过）。
 
 ### 3.7 提交与推送

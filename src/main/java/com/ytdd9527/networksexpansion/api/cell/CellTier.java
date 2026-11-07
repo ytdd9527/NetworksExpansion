@@ -1,6 +1,7 @@
 package com.ytdd9527.networksexpansion.api.cell;
 
 import com.balugaq.netex.utils.Lang;
+import com.balugaq.netex.utils.NetworksVersionedMaterial;
 import com.ytdd9527.networksexpansion.utils.NumberFormat;
 import com.ytdd9527.networksexpansion.implementation.machines.manual.ExpansionWorkbench;
 import com.ytdd9527.networksexpansion.utils.TextUtil;
@@ -37,7 +38,7 @@ public enum CellTier {
     T9("9", "134M", 134_217_728L, Material.MUSIC_DISC_STAL, NetworkSlimefunItems.SIMPLE_NANOBOTS::getItem, NetworkSlimefunItems.NETWORK_QUANTUM_STORAGE_6),
     T10("10", "1B", 1_073_741_824L, Material.MUSIC_DISC_STRAD, NetworkSlimefunItems.SIMPLE_NANOBOTS::getItem, NetworkSlimefunItems.NETWORK_QUANTUM_STORAGE_7),
     T11("11", "2.1B", 2_147_483_647L, Material.MUSIC_DISC_WARD, NetworkSlimefunItems.ADVANCED_NANOBOTS::getItem, NetworkSlimefunItems.NETWORK_QUANTUM_STORAGE_8),
-    T12("12", "34.4B", 34_359_738_352L, Material.MUSIC_DISC_CREATOR, NetworkSlimefunItems.ADVANCED_NANOBOTS::getItem, NetworkSlimefunItems.NETWORK_QUANTUM_STORAGE_11),
+    T12("12", "34.4B", 34_359_738_352L, NetworksVersionedMaterial.MUSIC_DISC_CREATOR, NetworkSlimefunItems.ADVANCED_NANOBOTS::getItem, NetworkSlimefunItems.NETWORK_QUANTUM_STORAGE_11),
     T13("13", "549.8B", 549_755_813_888L, Material.MUSIC_DISC_PIGSTEP, NetworkSlimefunItems.SHRINKING_BASE::getItem, NetworkSlimefunItems.NETWORK_QUANTUM_STORAGE_12),
     T14("14", "8.8T", 8_796_093_022_208L, Material.MUSIC_DISC_5, NetworkSlimefunItems.INTERDIMENSIONAL_PRESENCE::getItem, NetworkSlimefunItems.NETWORK_QUANTUM_STORAGE_13),
     T15("15", "140.7T", 140_737_488_355_328L, Material.MUSIC_DISC_RELIC, NetworkSlimefunItems.INTERDIMENSIONAL_PRESENCE::getItem, NetworkSlimefunItems.NETWORK_QUANTUM_STORAGE_14);

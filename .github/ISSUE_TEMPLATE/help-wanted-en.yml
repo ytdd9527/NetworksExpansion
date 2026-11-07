@@ -18,7 +18,7 @@ body:
       label: Checklist
       description: Before reporting, you need to confirm
       options:
-        - label: You have searched the [list of known issues](https://github.com/SlimefunGuguProject/Networks/issues) and have not found the same issue
+        - label: You have searched the [list of known issues](https://github.com/ytdd9527/NetworksExpansion/issues) and have not found the same issue
           required: true
 
   - type: textarea

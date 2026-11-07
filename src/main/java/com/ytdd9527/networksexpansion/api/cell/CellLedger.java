@@ -111,6 +111,11 @@ public class CellLedger {
         return result;
     }
 
+    /** 实际占用的种类数（含保留的空单元），作为转运判满依据，避免依赖只增不减的计数器 */
+    public synchronized int typeCount() {
+        return storage.size();
+    }
+
     @NotNull
     public synchronized Map<ItemStack, Long> getAllItems() {
         if (allItemsView == null) {
