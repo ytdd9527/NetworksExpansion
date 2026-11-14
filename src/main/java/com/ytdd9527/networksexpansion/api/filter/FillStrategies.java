@@ -284,13 +284,13 @@ public final class FillStrategies {
         public long apply(@NotNull ItemStack template, long obtained) {
             ItemStack unit = template.clone();
             unit.setAmount(1);
-            return data.addStoredItem0(
+            return data.addStoredItem(
                 accessor, unit, (int) Math.min(obtained, Integer.MAX_VALUE), locked, !locked);
         }
 
         @Override
         public boolean hasContent() {
-            return !data.getStoredItems().isEmpty();
+            return !data.getStoredItemsDirectly().isEmpty();
         }
     }
 
