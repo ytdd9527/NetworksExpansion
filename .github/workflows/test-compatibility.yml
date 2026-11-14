@@ -134,14 +134,15 @@ jobs:
           echo "minjava=$MINJAVA" >> $GITHUB_OUTPUT
           echo "url=$URL" >> $GITHUB_OUTPUT
 
-      # 缓存 Paper 服务端本体（jar + 原版库 + 补丁产物），key 按 build 号区分：
-      # 新 build 出来自动 miss 重下，旧 build 命中后由后续步骤跳过下载
+      # 缓存 jar 按 build 号分文件存在 .paper-cache 里，key 也挂 build 号：
+      # 新 build 出来自动 miss 重下并落新缓存，旧 build 命中后脚本跳过下载；
+      # 原版库/补丁产物单独缓存，省掉 paperclip 每次解压的几分钟
       - name: Cache Paper server
         if: steps.resolve.outputs.skip != 'true'
         uses: actions/cache@v4
         with:
           path: |
-            server/paper.jar
+            .paper-cache
             server/cache
             server/caches
             server/libraries
@@ -165,52 +166,14 @@ jobs:
       - name: Run Paper server and load plugin
         id: run-server
         if: steps.resolve.outputs.skip != 'true'
+        env:
+          PAPER_BUILD: ${{ steps.resolve.outputs.build }}
+          PAPER_URL: ${{ steps.resolve.outputs.url }}
+          PAPER_MINJAVA: ${{ steps.resolve.outputs.minjava }}
         run: |
           cp build/libs/*.jar server/plugins/
 
-          VER="${{ matrix.version }}"
-          MINJAVA="${{ steps.resolve.outputs.minjava }}"
-          DOWNLOAD_URL="${{ steps.resolve.outputs.url }}"
-
-          echo "Paper $VER 最低 Java 要求: $MINJAVA"
-          if [ "$MINJAVA" -gt 25 ]; then
-            echo "::error::Paper $VER 需要 Java $MINJAVA，超出当前 CI 预装范围（21/25），请在 setup-java 中补充"
-            exit 1
-          elif [ "$MINJAVA" -gt 21 ]; then
-            if [ -n "$JAVA_HOME_25_X64" ]; then
-              export JAVA_HOME="$JAVA_HOME_25_X64"
-              export PATH="$JAVA_HOME/bin:$PATH"
-              echo "Using Java 25 for Paper $VER: $(java -version 2>&1 | head -n 1)"
-            else
-              echo "::warning::找不到 JAVA_HOME_25_X64，Paper $VER 可能无法启动"
-            fi
-          fi
-
-          # 缓存命中时 paper.jar 已由 actions/cache 恢复，跳过下载；未命中才拉取
-          if [ -s server/paper.jar ]; then
-            echo "命中缓存 server/paper.jar，跳过下载"
-          else
-            echo "Downloading Paper $VER: $DOWNLOAD_URL"
-            curl -L -o server/paper.jar "$DOWNLOAD_URL"
-          fi
-
-          # 接受 EULA，静默启动配置
-          echo "eula=true" > server/eula.txt
-          echo "online-mode=false" > server/server.properties
-          echo "level-type=flat" >> server/server.properties
-          echo "generate-structures=false" >> server/server.properties
-
-          # 启动服务端；后台监视进程盯 console.log，出现 "Done ("（开服完成）后发 stop 正常关服；
-          # 外层 timeout 600 兜底（paperclip 首次启动要解压原版 jar + 装库，较慢）
-          cd server
-          rm -f in.fifo
-          mkfifo in.fifo
-          ( for i in $(seq 1 110); do grep -q 'Done (' console.log 2>/dev/null && break; sleep 5; done; sleep 5; echo stop > in.fifo ) &
-          MON_PID=$!
-          timeout 600 java -Xmx2G -jar paper.jar nogui < in.fifo > console.log 2>&1 || true
-          kill $MON_PID 2>/dev/null || true
-          rm -f in.fifo
-          cd ..
+          bash scripts/run-server.sh "${{ matrix.version }}"
 
           # 服务端控制台日志全量打到 job 日志，方便直接在页面看
           echo "======== server console.log ========"
