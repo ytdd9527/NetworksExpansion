@@ -23,7 +23,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-@SuppressWarnings({"UnusedAssignment", "DuplicatedCode"})
+@SuppressWarnings({"DuplicatedCode", "MathClampMigration"})
 @ToString
 @NullMarked
 public class StorageUnitData {
@@ -229,11 +229,6 @@ public class StorageUnitData {
         return re;
     }
 
-    @Deprecated
-    public List<ItemContainer> getStoredItems() {
-        return copyStoredItems();
-    }
-
     public List<ItemContainer> copyStoredItems() {
         return new ArrayList<>(storedItems.values());
     }
@@ -251,7 +246,7 @@ public class StorageUnitData {
     }
 
     @Nullable
-    public synchronized ItemStack requestItem(@Nullable Location accessor, ItemRequest itemRequest) {
+    public ItemStack requestItem(@Nullable Location accessor, ItemRequest itemRequest) {
         return requestItem(accessor, itemRequest, true);
     }
 
@@ -269,7 +264,6 @@ public class StorageUnitData {
         Map<Integer, Integer> m = getPersistentAccessHistory(accessor);
         if (m != null) {
             // Netex - Cache start
-            boolean found = false;
             List<Integer> misses = new ArrayList<>();
             // Netex - Cache end
             for (Integer i : m.keySet()) {
@@ -296,7 +290,6 @@ public class StorageUnitData {
                     DataStorage.setStoredAmount(id, itemContainer.getId(), itemContainer.getAmount());
                     // Netex - Cache start
                     minusCacheMiss(accessor, i);
-                    found = true;
                     // Netex - Cache end
 
                     ItemStack clone = item.clone();
@@ -310,10 +303,8 @@ public class StorageUnitData {
             }
 
             // Netex - Cache start
-            if (!found) {
-                for (int miss : misses) {
-                    minusCacheMiss(accessor, miss);
-                }
+            for (int miss : misses) {
+                minusCacheMiss(accessor, miss);
             }
             // Netex - Cache end
         }
@@ -372,7 +363,7 @@ public class StorageUnitData {
         entry.setValue(leftover);
     }
 
-    public synchronized void depositItemStack(
+    public void depositItemStack(
         @Nullable Location accessor, Map<ItemStack, Integer> itemsToDeposit, boolean contentLocked) {
         for (Map.Entry<ItemStack, Integer> entry : itemsToDeposit.entrySet()) {
             depositItemStack(accessor, entry, contentLocked);
@@ -380,7 +371,7 @@ public class StorageUnitData {
     }
 
     public void depositItemStack(
-        @Nullable Location accessor, ItemStack [] itemsToDeposit, boolean contentLocked) {
+        @Nullable Location accessor, @Nullable ItemStack [] itemsToDeposit, boolean contentLocked) {
         for (ItemStack item : itemsToDeposit) {
             depositItemStack(accessor, item, contentLocked);
         }
@@ -397,7 +388,7 @@ public class StorageUnitData {
         }
     }
 
-    public void depositItemStack(@Nullable Location accessor, ItemStack item, boolean contentLocked) {
+    public void depositItemStack(@Nullable Location accessor, @Nullable ItemStack item, boolean contentLocked) {
         depositItemStack(accessor, item, contentLocked, false);
     }
 
@@ -417,7 +408,6 @@ public class StorageUnitData {
 
         Map<Integer, Integer> m = getPersistentAccessHistory(accessor);
         if (m != null) {
-            boolean found = false;
             List<Integer> misses = new ArrayList<>();
             for (Integer i : m.keySet()) {
                 // Netex - Cache start
@@ -432,7 +422,7 @@ public class StorageUnitData {
                     // Found existing one, add amount
                     int raw = sizeType.getEachMaxSize() - each.getAmount();
                     if (raw < 0) {
-                        // If super-full, no more add and roll back to normal amount
+                        // If over-full, no more add and roll back to normal amount
                         each.setAmount(sizeType.getEachMaxSize());
                         return 0;
                     }
@@ -451,7 +441,6 @@ public class StorageUnitData {
 
                     // Netex - Cache start
                     minusCacheMiss(accessor, i);
-                    found = true;
                     // Netex - Cache end
                     return add;
                 } else {
@@ -461,10 +450,8 @@ public class StorageUnitData {
                 }
             }
 
-            if (!found) {
-                for (int i : misses) {
-                    addCacheMiss(accessor, i);
-                }
+            for (int i : misses) {
+                addCacheMiss(accessor, i);
             }
         }
 
@@ -474,7 +461,7 @@ public class StorageUnitData {
                 // Found existing one, add amount
                 int raw = sizeType.getEachMaxSize() - each.getAmount();
                 if (raw < 0) {
-                    // If super-full, no more add and roll back to normal amount
+                    // If over-full, no more add and roll back to normal amount
                     each.setAmount(sizeType.getEachMaxSize());
                     return 0;
                 }
@@ -536,7 +523,7 @@ public class StorageUnitData {
     // ============= Fallback methods =============
 
     @Deprecated
-    public synchronized int addStoredItem0(
+    public int addStoredItem0(
         @Nullable Location accessor, ItemStack item, int amount, boolean contentLocked, boolean force) {
         return addStoredItem(accessor, item, amount, contentLocked, force);
     }
@@ -588,36 +575,36 @@ public class StorageUnitData {
 
     @Deprecated
     @Nullable
-    public synchronized ItemStack requestItem(ItemRequest itemRequest) {
+    public ItemStack requestItem(ItemRequest itemRequest) {
         return requestItem(null, itemRequest);
     }
 
     @Deprecated
     @Nullable
-    public synchronized ItemStack requestItem0(@Nullable Location accessor, ItemRequest itemRequest) {
+    public ItemStack requestItem0(@Nullable Location accessor, ItemRequest itemRequest) {
         return requestItem(accessor, itemRequest);
     }
 
     @Deprecated
     @Nullable
-    public synchronized ItemStack requestItem0(@Nullable Location accessor, ItemRequest itemRequest, boolean contentLocked) {
+    public ItemStack requestItem0(@Nullable Location accessor, ItemRequest itemRequest, boolean contentLocked) {
         return requestItem(accessor, itemRequest, contentLocked);
     }
 
     @Deprecated
-    public synchronized void depositItemStacks0(
+    public void depositItemStacks0(
         @Nullable Location accessor, Map<ItemStack, Long> itemsToDeposit, boolean contentLocked) {
         depositItemStacks(accessor, itemsToDeposit, contentLocked);
     }
 
     @Deprecated
-    public synchronized void depositItemStack0(
+    public void depositItemStack0(
         @Nullable Location accessor, Map.Entry<ItemStack, Integer> entry, boolean contentLocked) {
         depositItemStack(accessor, entry, contentLocked);
     }
 
     @Deprecated
-    public synchronized void depositItemStack0(
+    public void depositItemStack0(
         @Nullable Location accessor, Map<ItemStack, Integer> itemsToDeposit, boolean contentLocked) {
         depositItemStack(accessor, itemsToDeposit, contentLocked);
     }
@@ -629,7 +616,7 @@ public class StorageUnitData {
     }
 
     @Deprecated
-    public synchronized void depositItemStack0(
+    public void depositItemStack0(
         @Nullable Location accessor, @Nullable ItemStack itemsToDeposit, boolean contentLocked, boolean force) {
         depositItemStack(accessor, itemsToDeposit, contentLocked, force);
     }
@@ -640,12 +627,47 @@ public class StorageUnitData {
     }
 
     @Deprecated
+    public void depositItemStack0(@Nullable ItemStack item, boolean contentLocked) {
+        depositItemStack(null, item, contentLocked, false);
+    }
+
+    @Deprecated
+    public void depositItemStacks(
+        Map<ItemStack, Long> itemsToDeposit, boolean contentLocked) {
+        depositItemStacks(null, itemsToDeposit, contentLocked);
+    }
+
+    @Deprecated
+    public void depositItemStack(
+        Map.Entry<ItemStack, Integer> entry, boolean contentLocked) {
+        depositItemStack(null, entry, contentLocked);
+    }
+
+    @Deprecated
+    public void depositItemStack(
+        Map<ItemStack, Integer> itemsToDeposit, boolean contentLocked) {
+        depositItemStack(null, itemsToDeposit, contentLocked);
+    }
+
+    @Deprecated
+    public void depositItemStack(
+        @Nullable ItemStack [] itemsToDeposit, boolean contentLocked) {
+        depositItemStack(null, itemsToDeposit, contentLocked);
+    }
+
+    @Deprecated
+    public void depositItemStack(
+        @Nullable ItemStack itemsToDeposit, boolean contentLocked, boolean force) {
+        depositItemStack(null, itemsToDeposit, contentLocked, force);
+    }
+
+    @Deprecated
     public void depositItemStack(@Nullable ItemStack item, boolean contentLocked) {
         depositItemStack(null, item, contentLocked, false);
     }
 
     @Deprecated
-    public void depositItemStack0(@Nullable ItemStack item, boolean contentLocked) {
-        depositItemStack(null, item, contentLocked, false);
+    public List<ItemContainer> getStoredItems() {
+        return copyStoredItems();
     }
 }
