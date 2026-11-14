@@ -29,7 +29,7 @@ import java.util.List;
  * 展示框贴物品棒：右键批量生效——对玩家附近 5x5x5 内每个量子存储，
  * 若该存储方块上恰好贴了 1 个展示框（挂在方块任一面上），从存储取 1 个物品贴上去。
  *
- * @author ytdd9527
+ * @author balugaq
  */
 public class ItemFramePasteStick extends SpecialSlimefunItem {
     // 以玩家为中心的 5x5x5（半径 2）
