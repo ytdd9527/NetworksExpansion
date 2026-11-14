@@ -87,6 +87,7 @@ import com.ytdd9527.networksexpansion.implementation.machines.unit.NetworksDrawe
 import com.ytdd9527.networksexpansion.implementation.machines.viewer.ItemFlowViewer;
 import com.ytdd9527.networksexpansion.implementation.tools.CargoNodeQuickTool;
 import com.ytdd9527.networksexpansion.implementation.tools.DueMachineConfigurator;
+import com.ytdd9527.networksexpansion.implementation.tools.ItemFramePasteStick;
 import com.ytdd9527.networksexpansion.implementation.tools.ItemMover;
 import com.ytdd9527.networksexpansion.implementation.tools.NetworksInfoTool;
 import com.ytdd9527.networksexpansion.implementation.tools.StatusViewer;
@@ -1283,6 +1284,12 @@ public class ExpansionItems {
         ExpansionItemStacks.ITEM_MOVER,
         ExpansionWorkbench.TYPE,
         ExpansionRecipes.ITEM_MOVER);
+
+    public static final SpecialSlimefunItem ITEM_FRAME_PASTE_STICK = new ItemFramePasteStick(
+        ExpansionItemsMenus.MENU_ITEMS,
+        ExpansionItemStacks.ITEM_FRAME_PASTE_STICK,
+        ExpansionWorkbench.TYPE,
+        ExpansionRecipes.ITEM_FRAME_PASTE_STICK);
 
     public static final NetworkBlueprintDecoder NETWORK_BLUEPRINT_DECODER = new NetworkBlueprintDecoder(
         ExpansionItemsMenus.MENU_FUNCTIONAL_MACHINE,

@@ -717,6 +717,11 @@ public class ExpansionRecipes {
         ExpansionItemStacks.ADVANCED_IMPORT,
         NETWORK_QUANTUM_STORAGE_8.getItem()
     };
+    public static final ItemStack[] ITEM_FRAME_PASTE_STICK = new ItemStack[]{
+        null, new ItemStack(Material.ITEM_FRAME), null,
+        new ItemStack(Material.ITEM_FRAME), NETWORK_QUANTUM_STORAGE_1.getItem(), new ItemStack(Material.ITEM_FRAME),
+        null, new ItemStack(Material.BLAZE_ROD), null
+    };
     public static final ItemStack[] NETWORK_BLUEPRINT_DECODER = new ItemStack[]{
         NETWORK_RECIPE_ENCODER.getItem(), NETWORK_RECIPE_ENCODER.getItem(), NETWORK_RECIPE_ENCODER.getItem(),
         NETWORK_RECIPE_ENCODER.getItem(), new ItemStack(Material.DIAMOND), NETWORK_RECIPE_ENCODER.getItem(),

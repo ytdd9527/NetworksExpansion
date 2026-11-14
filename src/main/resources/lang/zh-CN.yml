@@ -379,6 +379,8 @@ messages:
     item_mover:
       deposit_success: "已存储 %sx%s 至物品转移棒"
       withdraw_success: "已输出 %sx%s 至存储"
+    item_frame_paste_stick:
+      success: "<success>已为 %s 个展示框贴上物品"
     manager:
       top_storage_off: "<warning>已取消置顶存储"
       top_storage_on: "<success>已置顶存储"
@@ -429,6 +431,9 @@ messages:
       empty_mover: "&c没有可用的物品."
       full_storage: "&c存储已满"
       suggest_use_drawers: "&c你需要在抽屉界面中使用此物品"
+    item_frame_paste_stick:
+      no_quantum_storage: "<error>附近 5x5x5 范围内没有量子存储"
+      nothing_pasted: "<warning>没有可贴物品的展示框（只会处理恰好贴了 1 个展示框的量子存储）"
     encoder:
       not_enough_power: "<warning>网络中的电力不足，无法完成该任务"
       invalid_blueprint: "<warning>你需要提供一个正确的空白的蓝图"
@@ -3936,6 +3941,14 @@ items:
       - "&6右键以转移物品至物品转移棒"
       - "&6Shift + 右键以转移物品至指定的存储"
       - "&c不支持无尽存储"
+
+  NTW_EXPANSION_ITEM_FRAME_PASTE_STICK:
+    name: "&6展示框贴物品棒"
+    lore:
+      - "&6右键使用: 为玩家附近 5x5x5 内每个量子存储"
+      - "&6贴在存储上的展示框贴上存储中的物品"
+      - "&6只对恰好贴了 1 个展示框的存储生效"
+      - "&c展示框上已有物品时会跳过"
 
   NTW_EXPANSION_BLUEPRINT_DECODER:
     name: "&6网络蓝图解码器"

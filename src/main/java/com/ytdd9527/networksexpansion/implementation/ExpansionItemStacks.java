@@ -457,6 +457,8 @@ public class ExpansionItemStacks {
         Lang.getItem("NTW_EXPANSION_DUE_MACHINE_CONFIGURATOR", Material.BLAZE_ROD), Theme.TOOL);
     public static final SlimefunItemStack ITEM_MOVER =
         Theme.themedSlimefunItemStack(Lang.getItem("NTW_EXPANSION_ITEM_MOVER", Material.DEBUG_STICK), Theme.TOOL);
+    public static final SlimefunItemStack ITEM_FRAME_PASTE_STICK = Theme.themedSlimefunItemStack(
+        Lang.getItem("NTW_EXPANSION_ITEM_FRAME_PASTE_STICK", Material.BLAZE_ROD), Theme.TOOL);
     public static final SlimefunItemStack NETWORK_BLUEPRINT_DECODER = Theme.themedSlimefunItemStack(
         Lang.getItem("NTW_EXPANSION_BLUEPRINT_DECODER", Material.DEEPSLATE_TILES), Theme.MACHINE);
     public static final SlimefunItemStack DUE_MACHINE =

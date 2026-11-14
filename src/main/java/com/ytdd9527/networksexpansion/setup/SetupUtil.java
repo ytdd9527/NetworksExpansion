@@ -25,6 +25,7 @@ public class SetupUtil {
             ExpansionItems.INFO_TOOL.registerThis(),
             ExpansionItems.DUE_MACHINE_CONFIGURATOR.registerThis(),
             ExpansionItems.ITEM_MOVER.registerThis(),
+            ExpansionItems.ITEM_FRAME_PASTE_STICK.registerThis(),
             ExpansionItems.STATUS_VIEWER.registerThis());
 
         /* cargo */
