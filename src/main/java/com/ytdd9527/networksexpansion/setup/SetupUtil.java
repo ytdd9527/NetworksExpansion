@@ -1,16 +1,17 @@
 package com.ytdd9527.networksexpansion.setup;
 
 import com.balugaq.netex.integrations.logitech.LinkBindingStore;
+import com.ytdd9527.networksexpansion.api.cell.CellTier;
+import com.ytdd9527.networksexpansion.core.items.SpecialSlimefunItem;
 import com.ytdd9527.networksexpansion.implementation.ExpansionItems;
 import com.ytdd9527.networksexpansion.implementation.ExpansionItemsMenus;
-import com.ytdd9527.networksexpansion.api.cell.CellTier;
 import io.github.sefiraat.networks.Networks;
 import io.github.sefiraat.networks.slimefun.NetworkSlimefunItems;
-import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
 import net.guizhanss.slimefun4.utils.WikiUtils;
 import org.bukkit.Bukkit;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class SetupUtil {
@@ -155,40 +156,41 @@ public class SetupUtil {
             ExpansionItems.ADVANCED_AUTO_CRAFTING_TABLE.registerThis(),
             ExpansionItems.ADVANCED_AUTO_CRAFTING_TABLE_WITHHOLDING.registerThis());
 
-        ExpansionItemsMenus.SUB_MENU_CELLNET.addTo(
-            ExpansionItems.CHAIN_GRABBER.registerThis(),
-            ExpansionItems.CHAIN_PUSHER.registerThis(),
-            ExpansionItems.CHAIN_TRANSCEIVER.registerThis(),
+        ExpansionItemsMenus.SUB_MENU_TOOL.addTo(
+            ExpansionItems.ASSEMBLY_CARD.registerThis(),
             ExpansionItems.CHAIN_MODULE_RANGE.registerThis(),
             ExpansionItems.CHAIN_MODULE_CAPACITY.registerThis(),
             ExpansionItems.CHAIN_MODULE_MODE.registerThis(),
             ExpansionItems.CHAIN_MODULE_VANILLA.registerThis(),
             ExpansionItems.CHAIN_MODULE_MULTI_DIRECTION.registerThis(),
             ExpansionItems.CHAIN_MODULE_BINDING.registerThis(),
-            ExpansionItems.RUNE_COLLECT.registerThis());
+            ExpansionItems.RUNE_COLLECT.registerThis(),
+            ExpansionItems.CHANNEL_CONFIGURATOR.registerThis(),
+            ExpansionItems.CHAIN_CONFIGURATOR.registerThis(),
+            ExpansionItems.CHAIN_BRUSH.registerThis(),
+            ExpansionItems.OVERCLOCK_CORE.registerThis(),
+            ExpansionItems.SMART_CORE.registerThis()
+        );
 
-        List<SlimefunItem> cellnetItems = new ArrayList<>();
-        cellnetItems.add(ExpansionItems.CELL_DRIVE.registerThis());
-        cellnetItems.add(ExpansionItems.CELL_CLEANER.registerThis());
-        cellnetItems.add(ExpansionItems.CELL_CONVERTER.registerThis());
-        for (CellTier tier : CellTier.values()) {
-            cellnetItems.add(tier.register(ExpansionItemsMenus.MENU_CARGO_SYSTEM));
-        }
-        cellnetItems.add(CellTier.Unlimited.register(ExpansionItemsMenus.MENU_CARGO_SYSTEM));
-        cellnetItems.add(ExpansionItems.ASSEMBLY_DRIVE.registerThis());
-        cellnetItems.add(ExpansionItems.VOID_CELL.registerThis());
-        cellnetItems.add(ExpansionItems.ENDER_DRIVE.registerThis());
-        cellnetItems.add(ExpansionItems.ASSEMBLY_CARD.registerThis());
-        cellnetItems.add(ExpansionItems.ASSEMBLY_WORKSHOP.registerThis());
-        cellnetItems.add(ExpansionItems.CONTAINER_FILLER.registerThis());
-        cellnetItems.add(ExpansionItems.CHANNEL_CONFIGURATOR.registerThis());
-        cellnetItems.add(ExpansionItems.CHAIN_CONFIGURATOR.registerThis());
-        cellnetItems.add(ExpansionItems.CHAIN_BRUSH.registerThis());
-        cellnetItems.add(ExpansionItems.OVERCLOCK_CORE.registerThis());
-        cellnetItems.add(ExpansionItems.SMART_CORE.registerThis());
-        cellnetItems.add(ExpansionItems.ASSEMBLY_MONITOR.registerThis());
-        cellnetItems.add(ExpansionItems.DRIVE_MONITOR.registerThis());
-        ExpansionItemsMenus.SUB_MENU_CELLNET.addTo(cellnetItems);
+        List<SpecialSlimefunItem> cells = new ArrayList<>(Arrays.stream(CellTier.values()).map(tier -> tier.register(ExpansionItemsMenus.MENU_ITEMS)).toList());
+        cells.add(CellTier.Unlimited.register(ExpansionItemsMenus.MENU_ITEMS));
+        cells.add(ExpansionItems.VOID_CELL.registerThis());
+        ExpansionItemsMenus.SUB_MENU_TOOL.addTo(cells);
+
+        ExpansionItemsMenus.SUB_MENU_CELLNET.addTo(
+            ExpansionItems.CELL_DRIVE.registerThis(),
+            ExpansionItems.CELL_CLEANER.registerThis(),
+            ExpansionItems.CELL_CONVERTER.registerThis(),
+            ExpansionItems.ASSEMBLY_DRIVE.registerThis(),
+            ExpansionItems.ENDER_DRIVE.registerThis(),
+            ExpansionItems.ASSEMBLY_WORKSHOP.registerThis(),
+            ExpansionItems.CONTAINER_FILLER.registerThis(),
+            ExpansionItems.ASSEMBLY_MONITOR.registerThis(),
+            ExpansionItems.DRIVE_MONITOR.registerThis(),
+            ExpansionItems.CHAIN_GRABBER.registerThis(),
+            ExpansionItems.CHAIN_PUSHER.registerThis(),
+            ExpansionItems.CHAIN_TRANSCEIVER.registerThis()
+        );
 
         ExpansionItemsMenus.SUB_MENU_BRIDGE.addTo(
             ExpansionItems.NETWORK_BRIDGE_ORDINAL.registerThis(),

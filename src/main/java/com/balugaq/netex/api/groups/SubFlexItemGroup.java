@@ -145,7 +145,7 @@ public class SubFlexItemGroup extends FlexItemGroup {
         }
     }
 
-    public void addTo(@NotNull List<SlimefunItem> slimefunItemList) {
+    public void addTo(@NotNull List<? extends SlimefunItem> slimefunItemList) {
         List<SlimefunItem> slimefunItemList1 = new ArrayList<>();
         for (SlimefunItem slimefunItem : slimefunItemList) {
             if (slimefunItem != null && !slimefunItem.isDisabled()) {
