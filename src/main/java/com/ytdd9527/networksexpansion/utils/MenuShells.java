@@ -7,37 +7,38 @@ import me.mrCookieSlime.Slimefun.api.item_transport.ItemTransportFlow;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NullMarked;
 
+@NullMarked
 public final class MenuShells {
 
     @FunctionalInterface
     public interface CanOpen {
-        boolean test(@NotNull Block block, @NotNull Player player);
+        boolean test(Block block, Player player);
     }
 
     @FunctionalInterface
     public interface TransportSlots {
-        int[] get(@NotNull ItemTransportFlow flow);
+        int[] get(ItemTransportFlow flow);
     }
 
     @FunctionalInterface
     public interface OnReady {
-        void ready(@NotNull BlockMenu menu, @NotNull Block block);
+        void ready(BlockMenu menu, Block block);
     }
 
     private MenuShells() {
     }
 
     public static void create(
-            @NotNull SpecialSlimefunItem owner,
+            SpecialSlimefunItem owner,
             int size,
-            int @NotNull [] backgroundSlots,
+            int [] backgroundSlots,
             @Nullable ItemStack backgroundItem,
-            @NotNull CanOpen canOpen,
-            @NotNull TransportSlots transport,
-            @NotNull OnReady onReady) {
+            CanOpen canOpen,
+            TransportSlots transport,
+            OnReady onReady) {
         new BlockMenuPreset(owner.getId(), owner.getItemName()) {
             @Override
             public void init() {
@@ -52,17 +53,17 @@ public final class MenuShells {
             }
 
             @Override
-            public boolean canOpen(@NotNull Block block, @NotNull Player player) {
+            public boolean canOpen(Block block, Player player) {
                 return canOpen.test(block, player);
             }
 
             @Override
-            public int[] getSlotsAccessedByItemTransport(@NotNull ItemTransportFlow flow) {
+            public int[] getSlotsAccessedByItemTransport(ItemTransportFlow flow) {
                 return transport.get(flow);
             }
 
             @Override
-            public void newInstance(@NotNull BlockMenu menu, @NotNull Block block) {
+            public void newInstance(BlockMenu menu, Block block) {
                 for (int slot : backgroundSlots) {
                     menu.addMenuClickHandler(slot, (p, s, i, a) -> false);
                 }
@@ -72,17 +73,16 @@ public final class MenuShells {
     }
 
     public static void create(
-            @NotNull SpecialSlimefunItem owner,
+            SpecialSlimefunItem owner,
             int size,
-            int @NotNull [] backgroundSlots,
-            @NotNull CanOpen canOpen,
-            @NotNull TransportSlots transport,
-            @NotNull OnReady onReady) {
+            int [] backgroundSlots,
+            CanOpen canOpen,
+            TransportSlots transport,
+            OnReady onReady) {
         create(owner, size, backgroundSlots, null, canOpen, transport, onReady);
     }
 
-    @NotNull
-    public static int[] emptyTransport(@NotNull ItemTransportFlow flow) {
+    public static int[] emptyTransport(ItemTransportFlow flow) {
         return new int[0];
     }
 }

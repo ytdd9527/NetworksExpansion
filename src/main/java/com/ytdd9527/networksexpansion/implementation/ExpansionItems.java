@@ -1,13 +1,26 @@
 package com.ytdd9527.networksexpansion.implementation;
 
 import com.balugaq.netex.api.enums.StorageUnitType;
+import com.ytdd9527.networksexpansion.api.cell.VoidCell;
+import com.ytdd9527.networksexpansion.core.items.AuthorHead;
+import com.ytdd9527.networksexpansion.core.items.Blueprint;
 import com.ytdd9527.networksexpansion.core.items.SpecialSlimefunItem;
+import com.ytdd9527.networksexpansion.core.items.UnusableSlimefunItem;
 import com.ytdd9527.networksexpansion.core.machines.AdvancedAutoCrafter;
 import com.ytdd9527.networksexpansion.core.machines.AutoCrafter;
 import com.ytdd9527.networksexpansion.core.machines.BlueprintEncoder;
-import com.ytdd9527.networksexpansion.core.items.AuthorHead;
-import com.ytdd9527.networksexpansion.core.items.Blueprint;
-import com.ytdd9527.networksexpansion.core.items.UnusableSlimefunItem;
+import com.ytdd9527.networksexpansion.implementation.items.assembly.core.AssemblyCard;
+import com.ytdd9527.networksexpansion.implementation.items.assembly.core.OverclockCore;
+import com.ytdd9527.networksexpansion.implementation.items.assembly.core.SmartCore;
+import com.ytdd9527.networksexpansion.implementation.items.cell.ChainBrush;
+import com.ytdd9527.networksexpansion.implementation.items.cell.ChainConfigurator;
+import com.ytdd9527.networksexpansion.implementation.items.chain.ChainModuleItem;
+import com.ytdd9527.networksexpansion.implementation.items.collect.CollectRune;
+import com.ytdd9527.networksexpansion.implementation.items.drive.ChannelConfigurator;
+import com.ytdd9527.networksexpansion.implementation.items.filler.ContainerFiller;
+import com.ytdd9527.networksexpansion.implementation.machines.assembly.AssemblyDrive;
+import com.ytdd9527.networksexpansion.implementation.machines.assembly.AssemblyMonitor;
+import com.ytdd9527.networksexpansion.implementation.machines.assembly.AssemblyWorkshop;
 import com.ytdd9527.networksexpansion.implementation.machines.cargo.power.power_outlet.line.LinePowerOutlet;
 import com.ytdd9527.networksexpansion.implementation.machines.cargo.transfer.line.advanced.AdvancedLineTransfer;
 import com.ytdd9527.networksexpansion.implementation.machines.cargo.transfer.line.advanced.AdvancedLineTransferBestPusher;
@@ -34,27 +47,14 @@ import com.ytdd9527.networksexpansion.implementation.machines.cargo.transfer.poi
 import com.ytdd9527.networksexpansion.implementation.machines.cargo.transfer.point.basic.TransferMorePusher;
 import com.ytdd9527.networksexpansion.implementation.machines.cargo.transfer.point.basic.TransferPusher;
 import com.ytdd9527.networksexpansion.implementation.machines.cargo.transfer.point.basic.WhitelistedTransferGrabber;
-import com.ytdd9527.networksexpansion.implementation.items.assembly.core.AssemblyCard;
-import com.ytdd9527.networksexpansion.implementation.machines.assembly.AssemblyDrive;
-import com.ytdd9527.networksexpansion.implementation.machines.assembly.AssemblyMonitor;
-import com.ytdd9527.networksexpansion.implementation.machines.assembly.AssemblyWorkshop;
-import com.ytdd9527.networksexpansion.implementation.items.assembly.core.OverclockCore;
-import com.ytdd9527.networksexpansion.implementation.items.assembly.core.SmartCore;
-import com.ytdd9527.networksexpansion.api.cell.VoidCell;
-import com.ytdd9527.networksexpansion.implementation.items.cell.ChainBrush;
-import com.ytdd9527.networksexpansion.implementation.items.cell.ChainConfigurator;
 import com.ytdd9527.networksexpansion.implementation.machines.chain.ChainGrabber;
-import com.ytdd9527.networksexpansion.implementation.items.chain.ChainModuleItem;
 import com.ytdd9527.networksexpansion.implementation.machines.chain.ChainPusher;
 import com.ytdd9527.networksexpansion.implementation.machines.chain.ChainTransceiver;
-import com.ytdd9527.networksexpansion.implementation.items.collect.CollectRune;
 import com.ytdd9527.networksexpansion.implementation.machines.converter.CellCleaner;
 import com.ytdd9527.networksexpansion.implementation.machines.converter.CellConverter;
 import com.ytdd9527.networksexpansion.implementation.machines.drive.CellDrive;
 import com.ytdd9527.networksexpansion.implementation.machines.drive.DriveMonitor;
 import com.ytdd9527.networksexpansion.implementation.machines.drive.EnderDrive;
-import com.ytdd9527.networksexpansion.implementation.items.drive.ChannelConfigurator;
-import com.ytdd9527.networksexpansion.implementation.items.filler.ContainerFiller;
 import com.ytdd9527.networksexpansion.implementation.machines.managers.CrafterManager;
 import com.ytdd9527.networksexpansion.implementation.machines.managers.DrawerManager;
 import com.ytdd9527.networksexpansion.implementation.machines.managers.QuantumManager;
@@ -87,6 +87,7 @@ import com.ytdd9527.networksexpansion.implementation.machines.unit.NetworksDrawe
 import com.ytdd9527.networksexpansion.implementation.machines.viewer.ItemFlowViewer;
 import com.ytdd9527.networksexpansion.implementation.tools.CargoNodeQuickTool;
 import com.ytdd9527.networksexpansion.implementation.tools.DueMachineConfigurator;
+import com.ytdd9527.networksexpansion.implementation.tools.ItemFramePasteStick;
 import com.ytdd9527.networksexpansion.implementation.tools.ItemMover;
 import com.ytdd9527.networksexpansion.implementation.tools.NetworksInfoTool;
 import com.ytdd9527.networksexpansion.implementation.tools.StatusViewer;
@@ -775,55 +776,55 @@ public class ExpansionItems {
         ExpansionRecipes.CHAIN_TRANSCEIVER);
 
     public static final ChainModuleItem CHAIN_MODULE_RANGE = new ChainModuleItem(
-        ExpansionItemsMenus.MENU_CARGO_SYSTEM,
+        ExpansionItemsMenus.MENU_ITEMS,
         ExpansionItemStacks.CHAIN_MODULE_RANGE,
         ExpansionWorkbench.TYPE,
         ExpansionRecipes.CHAIN_MODULE_RANGE);
 
     public static final ChainModuleItem CHAIN_MODULE_CAPACITY = new ChainModuleItem(
-        ExpansionItemsMenus.MENU_CARGO_SYSTEM,
+        ExpansionItemsMenus.MENU_ITEMS,
         ExpansionItemStacks.CHAIN_MODULE_CAPACITY,
         ExpansionWorkbench.TYPE,
         ExpansionRecipes.CHAIN_MODULE_CAPACITY);
 
     public static final ChainModuleItem CHAIN_MODULE_MODE = new ChainModuleItem(
-        ExpansionItemsMenus.MENU_CARGO_SYSTEM,
+        ExpansionItemsMenus.MENU_ITEMS,
         ExpansionItemStacks.CHAIN_MODULE_MODE,
         ExpansionWorkbench.TYPE,
         ExpansionRecipes.CHAIN_MODULE_MODE);
 
     public static final ChainModuleItem CHAIN_MODULE_VANILLA = new ChainModuleItem(
-        ExpansionItemsMenus.MENU_CARGO_SYSTEM,
+        ExpansionItemsMenus.MENU_ITEMS,
         ExpansionItemStacks.CHAIN_MODULE_VANILLA,
         ExpansionWorkbench.TYPE,
         ExpansionRecipes.CHAIN_MODULE_VANILLA);
 
     public static final ChainModuleItem CHAIN_MODULE_MULTI_DIRECTION = new ChainModuleItem(
-        ExpansionItemsMenus.MENU_CARGO_SYSTEM,
+        ExpansionItemsMenus.MENU_ITEMS,
         ExpansionItemStacks.CHAIN_MODULE_MULTI_DIRECTION,
         ExpansionWorkbench.TYPE,
         ExpansionRecipes.CHAIN_MODULE_MULTI_DIRECTION);
 
     public static final ChainModuleItem CHAIN_MODULE_BINDING = new ChainModuleItem(
-        ExpansionItemsMenus.MENU_CARGO_SYSTEM,
+        ExpansionItemsMenus.MENU_ITEMS,
         ExpansionItemStacks.CHAIN_MODULE_BINDING,
         ExpansionWorkbench.TYPE,
         ExpansionRecipes.CHAIN_MODULE_BINDING);
 
     public static final ChainConfigurator CHAIN_CONFIGURATOR = new ChainConfigurator(
-        ExpansionItemsMenus.MENU_CARGO_SYSTEM,
+        ExpansionItemsMenus.MENU_ITEMS,
         ExpansionItemStacks.CHAIN_CONFIGURATOR,
         ExpansionWorkbench.TYPE,
         ExpansionRecipes.CHAIN_CONFIGURATOR);
 
     public static final ChainBrush CHAIN_BRUSH = new ChainBrush(
-        ExpansionItemsMenus.MENU_CARGO_SYSTEM,
+        ExpansionItemsMenus.MENU_ITEMS,
         ExpansionItemStacks.CHAIN_BRUSH,
         ExpansionWorkbench.TYPE,
         ExpansionRecipes.CHAIN_BRUSH);
 
     public static final CollectRune RUNE_COLLECT = new CollectRune(
-        ExpansionItemsMenus.MENU_CARGO_SYSTEM,
+        ExpansionItemsMenus.MENU_ITEMS,
         ExpansionItemStacks.RUNE_COLLECT,
         RecipeType.NULL,
         ExpansionRecipes.RUNE_COLLECT);
@@ -1284,6 +1285,12 @@ public class ExpansionItems {
         ExpansionWorkbench.TYPE,
         ExpansionRecipes.ITEM_MOVER);
 
+    public static final SpecialSlimefunItem ITEM_FRAME_PASTE_STICK = new ItemFramePasteStick(
+        ExpansionItemsMenus.MENU_ITEMS,
+        ExpansionItemStacks.ITEM_FRAME_PASTE_STICK,
+        ExpansionWorkbench.TYPE,
+        ExpansionRecipes.ITEM_FRAME_PASTE_STICK);
+
     public static final NetworkBlueprintDecoder NETWORK_BLUEPRINT_DECODER = new NetworkBlueprintDecoder(
         ExpansionItemsMenus.MENU_FUNCTIONAL_MACHINE,
         ExpansionItemStacks.NETWORK_BLUEPRINT_DECODER,
@@ -1604,7 +1611,7 @@ public class ExpansionItems {
         ExpansionRecipes.ASSEMBLY_DRIVE);
 
     public static final VoidCell VOID_CELL = new VoidCell(
-        ExpansionItemsMenus.MENU_CARGO_SYSTEM,
+        ExpansionItemsMenus.MENU_ITEMS,
         ExpansionItemStacks.VOID_CELL,
         ExpansionWorkbench.TYPE,
         ExpansionRecipes.VOID_CELL);
@@ -1616,7 +1623,7 @@ public class ExpansionItems {
         ExpansionRecipes.ENDER_DRIVE);
 
     public static final AssemblyCard ASSEMBLY_CARD = new AssemblyCard(
-        ExpansionItemsMenus.MENU_CARGO_SYSTEM,
+        ExpansionItemsMenus.MENU_ITEMS,
         ExpansionItemStacks.ASSEMBLY_CARD,
         ExpansionWorkbench.TYPE,
         ExpansionRecipes.ASSEMBLY_CARD);
@@ -1634,20 +1641,20 @@ public class ExpansionItems {
         ExpansionRecipes.CONTAINER_FILLER);
 
     public static final ChannelConfigurator CHANNEL_CONFIGURATOR = new ChannelConfigurator(
-        ExpansionItemsMenus.MENU_CARGO_SYSTEM,
+        ExpansionItemsMenus.MENU_ITEMS,
         ExpansionItemStacks.CHANNEL_CONFIGURATOR,
         ExpansionWorkbench.TYPE,
         ExpansionRecipes.CHANNEL_CONFIGURATOR);
 
     public static final OverclockCore OVERCLOCK_CORE = new OverclockCore(
-        ExpansionItemsMenus.MENU_CARGO_SYSTEM,
+        ExpansionItemsMenus.MENU_ITEMS,
         ExpansionItemStacks.OVERCLOCK_CORE,
         ExpansionWorkbench.TYPE,
         ExpansionRecipes.OVERCLOCK_CORE);
 
 
     public static final SmartCore SMART_CORE = new SmartCore(
-        ExpansionItemsMenus.MENU_CARGO_SYSTEM,
+        ExpansionItemsMenus.MENU_ITEMS,
         ExpansionItemStacks.SMART_CORE,
         ExpansionWorkbench.TYPE,
         ExpansionRecipes.SMART_CORE);
