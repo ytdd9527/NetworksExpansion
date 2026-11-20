@@ -4,35 +4,83 @@ env:
   # 默认测试版本（push/PR 触发时用这套；手动触发可覆盖）
   DEFAULT_VERSIONS: '1.20.1,1.21.11,26.2'
 
-# jar 来自 Build CI 的 artifact（复用产物，不在本流程重复构建）；
-# workflow_run 只在默认分支的 Build CI 成功后触发，PR 上的构建不触发兼容测试
+# push/PR 仅在代码或构建配置变更时触发；手动触发不受路径过滤限制。
+# 先在本次 run 内完成 CI 构建（与 build.yml 同流程），
+# 兼容测试 job 通过 needs 依赖构建 job，复用本次 run 的 jar 产物
 on:
-  workflow_run:
-    workflows: [ "Build CI" ]
-    types: [ completed ]
-    branches: [ master ]
+  push:
+    branches: [ "master" ]
+    paths:
+      - 'src/main/**'
+      - 'gradle/libs.versions.toml'
+      - 'build.gradle.kts'
+      - 'settings.gradle.kts'
+  pull_request:
+    branches: [ "master" ]
+    paths:
+      - 'src/main/**'
+      - 'gradle/libs.versions.toml'
+      - 'build.gradle.kts'
+      - 'settings.gradle.kts'
   workflow_dispatch:
     inputs:
       versions:
         description: '要测试的 MC 版本，逗号分隔（留空用默认列表）'
         required: false
         default: '1.20.1,1.21.11,26.2'
-      run_id:
-        description: '复用哪次 Build CI run 的 jar（留空用最近一次成功的）'
-        required: false
-        default: ''
 
 permissions:
   actions: read
 
 jobs:
-  # 拆版本矩阵 + 确定来源 run：手动触发可用输入，否则查最近一次成功的 Build CI
+  # 与 build.yml 相同的构建流程，产物供本工作流的兼容测试使用
+  build:
+    name: Build (CI)
+    if: startsWith(github.event.head_commit.message, '[ci skip]') == false
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: wrapper
+
+      - name: Cache Gradle dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: ${{ runner.os }}-gradle
+
+      - name: Run tests
+        run: gradle test
+
+      - name: Build with Gradle
+        run: gradle clean build
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: NetworksExpansion
+          path: build/libs/*.jar
+
   prepare:
-    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
+    name: Prepare (split versions)
+    if: startsWith(github.event.head_commit.message, '[ci skip]') == false
+    needs: build
     runs-on: ubuntu-latest
     outputs:
       versions: ${{ steps.split.outputs.versions }}
-      source_run_id: ${{ steps.source-run.outputs.run_id }}
     steps:
       - name: Split versions input
         id: split
@@ -44,24 +92,9 @@ jobs:
           echo "Test versions: $VERSIONS"
           echo "versions=$VERSIONS" >> $GITHUB_OUTPUT
 
-      - name: Resolve source Build CI run
-        id: source-run
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          if [ "$GITHUB_EVENT_NAME" = "workflow_run" ]; then
-            RUN_ID="${{ github.event.workflow_run.id }}"
-          elif [ -n "${{ github.event.inputs.run_id }}" ]; then
-            RUN_ID="${{ github.event.inputs.run_id }}"
-          else
-            RUN_ID=$(gh api "repos/${{ github.repository }}/actions/workflows/build.yml/runs?status=success&branch=master&per_page=1" \
-              --jq '.workflow_runs[0].id')
-          fi
-          echo "Using Build CI run: $RUN_ID"
-          echo "run_id=$RUN_ID" >> $GITHUB_OUTPUT
-
   test:
-    needs: prepare
+    name: Compatibility Test (MC ${{ matrix.version }})
+    needs: [ build, prepare ]
     runs-on: ubuntu-latest
     timeout-minutes: 30
     strategy:
@@ -80,14 +113,12 @@ jobs:
             21
             25
 
-      # 复用 Build CI 的 jar，放到 build/libs/ 让后续判定步骤照常取用
-      - name: Download plugin jar from Build CI
+      # jar 来自本次 run 的构建 job，直接按名字取
+      - name: Download plugin jar from build job
         uses: actions/download-artifact@v4
         with:
           name: NetworksExpansion
           path: build/libs
-          run-id: ${{ needs.prepare.outputs.source_run_id }}
-          github-token: ${{ github.token }}
 
       # 提前解析最新 build 号：缓存 key 挂上它，Paper 出新 build 才 cache miss，
       # 否则命中缓存直接跳过下载（同时校验版本是否存在、取最低 Java 要求）
