@@ -3,12 +3,9 @@ package io.github.sefiraat.networks.slimefun.network.grid;
 import io.github.thebusybiscuit.slimefun4.api.items.ItemGroup;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
 import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
-import io.github.thebusybiscuit.slimefun4.core.handlers.BlockBreakHandler;
-import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
 import org.jspecify.annotations.NullMarked;
 
-import java.util.List;
 
 @SuppressWarnings("DuplicatedCode")
 @NullMarked
@@ -34,40 +31,12 @@ public class NetworkGrid extends AbstractGrid {
 
     public NetworkGrid(ItemGroup itemGroup, SlimefunItemStack item, RecipeType recipeType, ItemStack[] recipe) {
         super(itemGroup, item, recipeType, recipe);
-        addItemHandler(new BlockBreakHandler(false, false) {
-
-            @Override
-            public void onPlayerBreak(BlockBreakEvent event, ItemStack item, List<ItemStack> drops) {
-            }
-        });
-    }
-
-    public int[] getBackgroundSlots() {
-        return BACKGROUND_SLOTS;
-    }
-
-    public int[] getDisplaySlots() {
-        return DISPLAY_SLOTS;
-    }
-
-    public int getInputSlot() {
-        return INPUT_SLOT;
-    }
-
-    public int getChangeSort() {
-        return CHANGE_SORT;
-    }
-
-    public int getPagePrevious() {
-        return PAGE_PREVIOUS;
-    }
-
-    public int getPageNext() {
-        return PAGE_NEXT;
     }
 
     @Override
-    protected int getFilterSlot() {
-        return FILTER;
+    protected SlotLayout slotLayout() {
+        return new SlotLayout(
+            BACKGROUND_SLOTS, DISPLAY_SLOTS, INPUT_SLOT,
+            CHANGE_SORT, PAGE_PREVIOUS, PAGE_NEXT, FILTER);
     }
 }

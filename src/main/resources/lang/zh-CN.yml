@@ -346,6 +346,11 @@ messages:
         number: "按物品数量排序"
         number_reverse: "按物品数量倒序排序"
         addon: "按物品所属附属字母顺序排序"
+        material: "按物品材质排序"
+      sort_display:
+        primary: "<passive>主排序: <gold>%s"
+        secondary: "<passive>次排序: <gold>%s"
+        secondary_none: "<passive>次排序: <gray>无"
     quantum_storage:
       changed_custom_max_amount: "<passive>[<gold>网络拓展<passive>] <success>已更改容量: %s"
     remote:

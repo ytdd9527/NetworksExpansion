@@ -3,7 +3,6 @@ package com.balugaq.netex.api.keybind;
 import com.balugaq.netex.api.enums.AmountHandleStrategy;
 import com.balugaq.netex.api.interfaces.BaseGrid;
 import com.balugaq.netex.api.visual.Screen;
-import com.xzavier0722.mc.plugin.slimefun4.storage.util.StorageCacheUtils;
 import io.github.sefiraat.networks.NetworkStorage;
 import io.github.sefiraat.networks.network.GridItemRequest;
 import io.github.sefiraat.networks.network.NodeDefinition;
@@ -14,10 +13,10 @@ import lombok.EqualsAndHashCode;
 import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.ClickAction;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
 import org.bukkit.Keyed;
-import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.Nullable;
 import org.jspecify.annotations.NullMarked;
 
@@ -90,8 +89,12 @@ public interface Keybind extends Keyed, Comparable<Keybind> {
         });
     }
 
-    default void set(Location location, Keybinds keybind, Action action) {
-        StorageCacheUtils.setData(location, keybind.keybindKey(getKey()), action.getKey().toString());
+    default void set(Player player, Keybinds keybind, Action action) {
+        player.getPersistentDataContainer().set(
+            Keybinds.pdcKey(keybind, this),
+            PersistentDataType.STRING,
+            action.getKey().toString()
+        );
     }
 
     default Keybind register() {

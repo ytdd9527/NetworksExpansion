@@ -22,6 +22,8 @@ public class GridCache {
     private int maxPages;
     private DisplayMode displayMode;
     private SortOrder sortOrder;
+    @Nullable
+    private SortOrder secondarySortOrder;
 
     @Nullable
     private String filter;
@@ -51,16 +53,24 @@ public class GridCache {
         }
     }
 
+    public Comparator<Map.Entry<ItemStack, Long>> comparator() {
+        if (secondarySortOrder == null || secondarySortOrder == sortOrder) {
+            return sortOrder.comparator();
+        }
+        return sortOrder.comparator().thenComparing(secondarySortOrder.comparator());
+    }
+
     @RequiredArgsConstructor
     public enum SortOrder {
         ALPHABETICAL(Sorters.ITEMSTACK_ALPHABETICAL_SORT),
         NUMBER(Sorters.ITEMSTACK_NUMERICAL_SORT.reversed()),
         NUMBER_REVERSE(Sorters.ITEMSTACK_NUMERICAL_SORT),
-        ADDON(Sorters.ITEMSTACK_ADDON_SORT);
+        ADDON(Sorters.ITEMSTACK_ADDON_SORT),
+        MATERIAL(Sorters.ITEMSTACK_MATERIAL_SORT);
 
         final Comparator<Map.Entry<ItemStack, Long>> comparator;
 
-        public SortOrder next(@Range(from = 1, to = 4) int limit) {
+        public SortOrder next(@Range(from = 1, to = 5) int limit) {
             if (this.next().ordinal() + 1 >= limit) {
                 return ALPHABETICAL;
             }
@@ -73,11 +83,12 @@ public class GridCache {
                 case ALPHABETICAL -> NUMBER;
                 case NUMBER -> NUMBER_REVERSE;
                 case NUMBER_REVERSE -> ADDON;
-                case ADDON -> ALPHABETICAL;
+                case ADDON -> MATERIAL;
+                case MATERIAL -> ALPHABETICAL;
             };
         }
 
-        public SortOrder previous(@Range(from = 1, to = 4) int limit) {
+        public SortOrder previous(@Range(from = 1, to = 5) int limit) {
             if (this.previous().ordinal() + 1 >= limit) {
                 return values()[limit - 1];
             }
@@ -87,10 +98,11 @@ public class GridCache {
 
         public SortOrder previous() {
             return switch (this) {
-                case ALPHABETICAL -> ADDON;
+                case ALPHABETICAL -> MATERIAL;
                 case NUMBER -> ALPHABETICAL;
                 case NUMBER_REVERSE -> NUMBER;
                 case ADDON -> NUMBER_REVERSE;
+                case MATERIAL -> ADDON;
             };
         }
 
@@ -98,7 +110,7 @@ public class GridCache {
             return Lang.getString("messages.completed-operation.grid.sort_orders." + name().toLowerCase());
         }
 
-        public Comparator<? super Map.Entry<ItemStack, Long>> comparator() {
+        public Comparator<Map.Entry<ItemStack, Long>> comparator() {
             return comparator;
         }
     }

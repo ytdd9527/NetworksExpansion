@@ -274,6 +274,8 @@ public class HangingGridNewStyle extends NetworkGridNewStyle implements HangingB
             }
         }
 
+        screen.setItem(getChangeSort(), getSortOrderStack(gridCache));
+        screen.setItem(getFilterSlot(), getFilterStack(gridCache.getFilter()));
         screen.setItem(
             getPagePrevious(),
             Icon.getPageStack(getPagePreviousStack(), gridCache.getPage() + 1, gridCache.getMaxPages() + 1));
@@ -382,7 +384,7 @@ public class HangingGridNewStyle extends NetworkGridNewStyle implements HangingB
                 menu.replaceExistingItem(getChangeSort(), getChangeSortStack());
                 menu.addMenuClickHandler(getChangeSort(), (p, slot, item, action) -> {
                     GridCache gridCache = getCacheMap().get(menu.getLocation());
-                    gridCache.setSortOrder(gridCache.getSortOrder().next());
+                    handleSortClick(gridCache, action);
                     getCacheMap().put(menu.getLocation(), gridCache);
                     Location attachon = getAttachon(menu.getLocation());
                     BlockFace attachSide = getAttachSideFromFixed(menu.getLocation());

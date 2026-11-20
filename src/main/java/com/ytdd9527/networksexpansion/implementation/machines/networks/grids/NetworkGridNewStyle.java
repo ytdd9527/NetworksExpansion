@@ -6,14 +6,13 @@ import com.balugaq.netex.api.visual.Screen;
 import com.ytdd9527.networksexpansion.core.machines.AbstractGridNewStyle;
 import io.github.sefiraat.networks.network.NodeType;
 import io.github.sefiraat.networks.slimefun.network.grid.GridCache;
+import io.github.sefiraat.networks.slimefun.network.grid.SlotLayout;
 import io.github.sefiraat.networks.slimefun.network.grid.GridCache.DisplayMode;
 import io.github.thebusybiscuit.slimefun4.api.items.ItemGroup;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
 import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
-import io.github.thebusybiscuit.slimefun4.core.handlers.BlockBreakHandler;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
 import org.bukkit.block.Block;
-import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
 import org.jspecify.annotations.NullMarked;
 
@@ -47,13 +46,6 @@ public class NetworkGridNewStyle extends AbstractGridNewStyle implements Keybind
         RecipeType recipeType,
         ItemStack[] recipe) {
         super(itemGroup, item, recipeType, recipe);
-        addItemHandler(new BlockBreakHandler(false, false) {
-
-            @Override
-            public void onPlayerBreak(BlockBreakEvent event, ItemStack item, List<ItemStack> drops) {
-                onBreak(event);
-            }
-        });
     }
 
     public NetworkGridNewStyle(
@@ -66,7 +58,7 @@ public class NetworkGridNewStyle extends AbstractGridNewStyle implements Keybind
     }
 
     @Override
-    public void postNewInstance(BlockMenu menu, Block b) {
+    public void menuNewInstance(BlockMenu menu, Block b) {
         menu.replaceExistingItem(getToggleModeSlot(), getModeStack(DisplayMode.DISPLAY));
         menu.addMenuClickHandler(getToggleModeSlot(), (p, slot, item, action) -> {
             if (!action.isRightClicked()) {
@@ -82,24 +74,11 @@ public class NetworkGridNewStyle extends AbstractGridNewStyle implements Keybind
         addKeybindSettingsButton(menu, getKeybindButtonSlot());
     }
 
-    public int[] getBackgroundSlots() {
-        return BACKGROUND_SLOTS;
-    }
-
-    public int[] getDisplaySlots() {
-        return DISPLAY_SLOTS;
-    }
-
-    public int getChangeSort() {
-        return CHANGE_SORT;
-    }
-
-    public int getPagePrevious() {
-        return PAGE_PREVIOUS;
-    }
-
-    public int getPageNext() {
-        return PAGE_NEXT;
+    @Override
+    protected SlotLayout slotLayout() {
+        return new SlotLayout(
+            BACKGROUND_SLOTS, DISPLAY_SLOTS, -1,
+            CHANGE_SORT, PAGE_PREVIOUS, PAGE_NEXT, FILTER);
     }
 
     public int getKeybindButtonSlot() {
@@ -108,11 +87,6 @@ public class NetworkGridNewStyle extends AbstractGridNewStyle implements Keybind
 
     public int getToggleModeSlot() {
         return TOGGLE_MODE_SLOT;
-    }
-
-    @Override
-    protected int getFilterSlot() {
-        return FILTER;
     }
 
     @Override
