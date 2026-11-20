@@ -4,13 +4,24 @@ env:
   # 默认测试版本（push/PR 触发时用这套；手动触发可覆盖）
   DEFAULT_VERSIONS: '1.20.1,1.21.11,26.2'
 
-# push/PR 均触发：先在本次 run 内完成 CI 构建（与 build.yml 同流程），
+# push/PR 仅在代码或构建配置变更时触发；手动触发不受路径过滤限制。
+# 先在本次 run 内完成 CI 构建（与 build.yml 同流程），
 # 兼容测试 job 通过 needs 依赖构建 job，复用本次 run 的 jar 产物
 on:
   push:
     branches: [ "master" ]
+    paths:
+      - 'src/main/**'
+      - 'gradle/libs.versions.toml'
+      - 'build.gradle.kts'
+      - 'settings.gradle.kts'
   pull_request:
     branches: [ "master" ]
+    paths:
+      - 'src/main/**'
+      - 'gradle/libs.versions.toml'
+      - 'build.gradle.kts'
+      - 'settings.gradle.kts'
   workflow_dispatch:
     inputs:
       versions:

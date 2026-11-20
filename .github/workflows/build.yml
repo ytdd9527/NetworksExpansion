@@ -3,8 +3,18 @@ name: Build CI
 on:
   push:
     branches: [ "master" ]
+    paths:
+      - 'src/main/**'
+      - 'gradle/libs.versions.toml'
+      - 'build.gradle.kts'
+      - 'settings.gradle.kts'
   pull_request:
     branches: [ "master" ]
+    paths:
+      - 'src/main/**'
+      - 'gradle/libs.versions.toml'
+      - 'build.gradle.kts'
+      - 'settings.gradle.kts'
 
 jobs:
   build:
