@@ -137,3 +137,9 @@ gradle-app.setting
 
 gradle.properties
 .workbuddy/
+
+# AI development frameworks (local-only generated assets)
+.codegraph/
+.codebuddy/
+.trellis/
+.gitattributes
