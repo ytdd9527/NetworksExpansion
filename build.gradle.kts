@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "com.ytdd9527.networksexpansion"
-version = "2.1.135"
+version = "2.1.136"
 
 java {
     toolchain {
@@ -151,7 +151,7 @@ tasks {
             "-Dnet.kyori.adventure.text.warn_when_legacy_formatting_detected=false"
         )
         maxHeapSize = "4G"
-        minecraftVersion("26.2")
+        minecraftVersion("26.3")
     }
 }
 

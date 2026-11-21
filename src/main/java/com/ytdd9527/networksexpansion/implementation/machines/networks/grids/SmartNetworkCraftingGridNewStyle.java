@@ -24,6 +24,7 @@ import io.github.sefiraat.networks.network.NetworkRoot;
 import io.github.sefiraat.networks.network.NodeDefinition;
 import io.github.sefiraat.networks.network.stackcaches.ItemRequest;
 import io.github.sefiraat.networks.slimefun.network.grid.GridCache;
+import io.github.sefiraat.networks.slimefun.network.grid.SlotLayout;
 import io.github.sefiraat.networks.slimefun.network.grid.GridCache.DisplayMode;
 import io.github.sefiraat.networks.utils.Keys;
 import io.github.sefiraat.networks.utils.StackUtils;
@@ -81,7 +82,6 @@ public class SmartNetworkCraftingGridNewStyle extends AbstractGridNewStyle {
         9, 10, 11,
         18, 19, 20
     };
-    private static final Map<Location, GridCache> CACHE_MAP = new HashMap<>();
     public static int THRESHOLD = 4096;
     private final Keybinds smartOutsideKeybinds = Keybinds.create(Keys.newKey("smart-outside-keybinds"), it -> {
             it.usableKeybinds(
@@ -154,7 +154,7 @@ public class SmartNetworkCraftingGridNewStyle extends AbstractGridNewStyle {
     }
 
     @Override
-    public void postNewInstance(BlockMenu menu, Block b) {
+    public void menuNewInstance(BlockMenu menu, Block b) {
         menu.replaceExistingItem(getToggleModeSlot(), getModeStack(DisplayMode.DISPLAY));
         menu.addMenuClickHandler(getToggleModeSlot(), (p, slot, item, action) -> {
             if (!action.isRightClicked()) {
@@ -212,28 +212,11 @@ public class SmartNetworkCraftingGridNewStyle extends AbstractGridNewStyle {
         addKeybindSettingsButton(menu, getKeybindButtonSlot());
     }
 
-    public Map<Location, GridCache> getCacheMap() {
-        return CACHE_MAP;
-    }
-
-    public int[] getBackgroundSlots() {
-        return BACKGROUND_SLOTS;
-    }
-
-    public int[] getDisplaySlots() {
-        return DISPLAY_SLOTS;
-    }
-
-    public int getChangeSort() {
-        return CHANGE_SORT;
-    }
-
-    public int getPagePrevious() {
-        return PAGE_PREVIOUS;
-    }
-
-    public int getPageNext() {
-        return PAGE_NEXT;
+    @Override
+    protected SlotLayout slotLayout() {
+        return new SlotLayout(
+            BACKGROUND_SLOTS, DISPLAY_SLOTS, -1,
+            CHANGE_SORT, PAGE_PREVIOUS, PAGE_NEXT, FILTER);
     }
 
     @Override
@@ -243,11 +226,6 @@ public class SmartNetworkCraftingGridNewStyle extends AbstractGridNewStyle {
 
     public int getToggleModeSlot() {
         return TOGGLE_MODE_SLOT;
-    }
-
-    @Override
-    protected int getFilterSlot() {
-        return FILTER;
     }
 
     @SuppressWarnings("deprecation")

@@ -12,6 +12,7 @@ import io.github.sefiraat.networks.network.GridItemRequest;
 import io.github.sefiraat.networks.network.NetworkRoot;
 import io.github.sefiraat.networks.network.NodeDefinition;
 import io.github.sefiraat.networks.slimefun.network.grid.GridCache;
+import io.github.sefiraat.networks.slimefun.network.grid.SlotLayout;
 import io.github.sefiraat.networks.slimefun.network.grid.GridCache.DisplayMode;
 import io.github.thebusybiscuit.slimefun4.api.items.ItemGroup;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
@@ -55,8 +56,6 @@ public class NetworkCraftingGridNewStyle extends AbstractGridNewStyle {
     private static final int CRAFT_BUTTON_SLOT = 33;
     private static final int OUTPUT_SLOT = 34;
     private static final int[] INGREDIENT_SLOTS = {6, 7, 8, 15, 16, 17, 24, 25, 26};
-    private static final Map<Location, GridCache> CACHE_MAP = new HashMap<>();
-
     public NetworkCraftingGridNewStyle(
         ItemGroup itemGroup,
         SlimefunItemStack item,
@@ -66,7 +65,7 @@ public class NetworkCraftingGridNewStyle extends AbstractGridNewStyle {
     }
 
     @Override
-    public void postNewInstance(BlockMenu menu, Block b) {
+    public void menuNewInstance(BlockMenu menu, Block b) {
         menu.replaceExistingItem(getToggleModeSlot(), getModeStack(DisplayMode.DISPLAY));
         menu.addMenuClickHandler(getToggleModeSlot(), (p, slot, item, action) -> {
             if (!action.isRightClicked()) {
@@ -88,28 +87,11 @@ public class NetworkCraftingGridNewStyle extends AbstractGridNewStyle {
         addKeybindSettingsButton(menu, getKeybindButtonSlot());
     }
 
-    public Map<Location, GridCache> getCacheMap() {
-        return CACHE_MAP;
-    }
-
-    public int[] getBackgroundSlots() {
-        return BACKGROUND_SLOTS;
-    }
-
-    public int[] getDisplaySlots() {
-        return DISPLAY_SLOTS;
-    }
-
-    public int getChangeSort() {
-        return CHANGE_SORT;
-    }
-
-    public int getPagePrevious() {
-        return PAGE_PREVIOUS;
-    }
-
-    public int getPageNext() {
-        return PAGE_NEXT;
+    @Override
+    protected SlotLayout slotLayout() {
+        return new SlotLayout(
+            BACKGROUND_SLOTS, DISPLAY_SLOTS, -1,
+            CHANGE_SORT, PAGE_PREVIOUS, PAGE_NEXT, FILTER);
     }
 
     @Override
@@ -119,11 +101,6 @@ public class NetworkCraftingGridNewStyle extends AbstractGridNewStyle {
 
     public int getToggleModeSlot() {
         return TOGGLE_MODE_SLOT;
-    }
-
-    @Override
-    protected int getFilterSlot() {
-        return FILTER;
     }
 
     @SuppressWarnings("deprecation")

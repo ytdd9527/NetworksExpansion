@@ -42,6 +42,8 @@ public class Sorters {
             }
         },
         Collator.getInstance(Locale.CHINA)::compare);
+    public static final Comparator<Map.Entry<ItemStack, Long>> ITEMSTACK_MATERIAL_SORT =
+        Comparator.comparing(entry -> entry.getKey().getType().name());
 
     public static final Comparator<? super BarrelIdentity> BARREL_ALPHABETICAL_SORT = Comparator.comparing(
         barrel -> {

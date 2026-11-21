@@ -221,7 +221,7 @@ public abstract class AbstractGridNewStyle extends AbstractGrid implements Keybi
             gridCache.setFilter(filter);
         }
 
-        screen.setItem(getChangeSort(), getSortOrderStack(gridCache.getSortOrder()));
+        screen.setItem(getChangeSort(), getSortOrderStack(gridCache));
         screen.setItem(getFilterSlot(), getFilterStack(gridCache.getFilter()));
 
         // Deprecated feature
@@ -402,7 +402,7 @@ public abstract class AbstractGridNewStyle extends AbstractGrid implements Keybi
                     return name.contains(searchTerm);
                 }
             })
-            .sorted(cache.getSortOrder().comparator())
+            .sorted(cache.comparator())
             .toList();
         cache.setEntriesCache(result);
         return result;
@@ -414,12 +414,45 @@ public abstract class AbstractGridNewStyle extends AbstractGrid implements Keybi
     }
 
     @Override
-    protected int getInputSlot() {
-        return -1;
+    public int getSortOrderLimit() {
+        return 5;
     }
 
     @Override
-    public int getSortOrderLimit() {
-        return 4;
+    protected void handleSortClick(GridCache gridCache, ClickAction action) {
+        if (action.isShiftClicked() && !action.isRightClicked()) {
+            gridCache.setSortOrder(GridCache.SortOrder.ALPHABETICAL);
+            gridCache.setSecondarySortOrder(null);
+            return;
+        }
+        if (action.isRightClicked()) {
+            gridCache.setSecondarySortOrder(nextSecondary(gridCache.getSecondarySortOrder()));
+            return;
+        }
+        gridCache.setSortOrder(gridCache.getSortOrder().next());
+    }
+
+    @Nullable
+    private static GridCache.SortOrder nextSecondary(@Nullable GridCache.SortOrder current) {
+        if (current == null) {
+            return GridCache.SortOrder.ALPHABETICAL;
+        }
+        GridCache.SortOrder next = current.next();
+        return next == GridCache.SortOrder.ALPHABETICAL ? null : next;
+    }
+
+    @Override
+    public ItemStack getSortOrderStack(GridCache cache) {
+        ItemStack clone = getChangeSortStack().clone();
+        String primary = Lang.getString(
+            "messages.completed-operation.grid.sort_display.primary",
+            cache.getSortOrder().getTranslationName());
+        String secondary = cache.getSecondarySortOrder() == null
+            ? Lang.getString("messages.completed-operation.grid.sort_display.secondary_none")
+            : Lang.getString(
+                "messages.completed-operation.grid.sort_display.secondary",
+                cache.getSecondarySortOrder().getTranslationName());
+        clone.setLore(List.of(primary, secondary));
+        return clone;
     }
 }

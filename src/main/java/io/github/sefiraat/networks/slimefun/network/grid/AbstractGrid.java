@@ -41,6 +41,8 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.Nullable;
@@ -48,6 +50,7 @@ import org.jetbrains.annotations.Range;
 import org.jspecify.annotations.NullMarked;
 
 import java.text.MessageFormat;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -164,8 +167,18 @@ public abstract class AbstractGrid extends NetworkObject {
 
     public ItemStack getSortOrderStack(GridCache.SortOrder sortOrder) {
         ItemStack clone = getChangeSortStack().clone();
-        clone.setLore(List.of(sortOrder.getTranslationName()));
+        clone.setLore(List.of(Lang.getString(
+            "messages.completed-operation.grid.sort_display.single",
+            sortOrder.getTranslationName())));
         return clone;
+    }
+
+    public ItemStack getSortOrderStack(GridCache cache) {
+        return getSortOrderStack(cache.getSortOrder());
+    }
+
+    protected void handleSortClick(GridCache gridCache, ClickAction action) {
+        updateSortOrder(gridCache, action, getSortOrderLimit());
     }
 
     protected void updateDisplay(BlockMenu menu) {
@@ -200,6 +213,13 @@ public abstract class AbstractGrid extends NetworkObject {
         final NetworkRoot root = definition.getNode().getRoot();
 
         final GridCache gridCache = getCacheMap().get(screen.getLocation().clone());
+        SlimefunBlockData data = StorageCacheUtils.getBlock(location);
+        if (data != null) {
+            String filter = data.getData(BS_FILTER_KEY);
+            if (filter != null) {
+                gridCache.setFilter(filter);
+            }
+        }
         final List<Map.Entry<ItemStack, Long>> entries = getEntries(root, gridCache);
         final int pages = (int) Math.ceil(entries.size() / (double) getDisplaySlots().length) - 1;
 
@@ -211,7 +231,7 @@ public abstract class AbstractGrid extends NetworkObject {
             return;
         }
 
-        screen.setItem(getChangeSort(), getSortOrderStack(gridCache.getSortOrder()));
+        screen.setItem(getChangeSort(), getSortOrderStack(gridCache));
         screen.setItem(getFilterSlot(), getFilterStack(gridCache.getFilter()));
 
         // Rolldown selected page if it no longer exists due to items being removed
@@ -277,7 +297,7 @@ public abstract class AbstractGrid extends NetworkObject {
         if (cache.getEntriesCache() != null) {
             return cache.getEntriesCache();
         }
-        var entries = filterAndSort(networkRoot.getAllNetworkItemsLongTypeView(), cache.getFilter(), cache.getSortOrder());
+        var entries = filterAndSort(networkRoot.getAllNetworkItemsLongTypeView(), cache.getFilter(), cache.comparator());
         cache.setEntriesCache(entries);
         return entries;
     }
@@ -286,6 +306,13 @@ public abstract class AbstractGrid extends NetworkObject {
         Map<ItemStack, Long> items,
         @Nullable String filter,
         GridCache.SortOrder sortOrder) {
+        return filterAndSort(items, filter, sortOrder.comparator());
+    }
+
+    public static List<Map.Entry<ItemStack, Long>> filterAndSort(
+        Map<ItemStack, Long> items,
+        @Nullable String filter,
+        Comparator<? super Map.Entry<ItemStack, Long>> comparator) {
         return items.entrySet().stream()
             .filter(entry -> {
                 if (filter == null) {
@@ -306,7 +333,7 @@ public abstract class AbstractGrid extends NetworkObject {
                     return name.contains(filter);
                 }
             })
-            .sorted(sortOrder.comparator())
+            .sorted(comparator)
             .toList();
     }
 
@@ -474,6 +501,7 @@ public abstract class AbstractGrid extends NetworkObject {
                 drawBackground(getBackgroundSlots());
                 drawBackground(getDisplaySlots());
                 setSize(54);
+                menuInit(this);
             }
 
             @Override
@@ -517,7 +545,7 @@ public abstract class AbstractGrid extends NetworkObject {
                 menu.replaceExistingItem(getChangeSort(), getChangeSortStack());
                 menu.addMenuClickHandler(getChangeSort(), (p, slot, item, action) -> {
                     GridCache gridCache = getCacheMap().get(menu.getLocation());
-                    AbstractGrid.updateSortOrder(gridCache, action, getSortOrderLimit());
+                    handleSortClick(gridCache, action);
                     getCacheMap().put(menu.getLocation(), gridCache);
                     updateDisplay(Screen.of(menu));
                     return false;
@@ -536,13 +564,35 @@ public abstract class AbstractGrid extends NetworkObject {
                     menu.addMenuClickHandler(displaySlot, (p, slot, item, action) -> false);
                 }
 
-                postNewInstance(menu, b);
+                menuNewInstance(menu, b);
             }
         };
     }
-    
-    public void postNewInstance(BlockMenu menu, Block b) {
+
+    protected void menuInit(BlockMenuPreset preset) {
+    }
+
+    public void menuNewInstance(BlockMenu menu, Block b) {
         menu.addPlayerInventoryClickHandler(defaultOutsideKeybind(menu));
+    }
+
+    /** 父类 NetworkObject 的 handler 经此转发，子类覆写 onBlockBreak/onBlockPlace 即可。 */
+    @Override
+    protected final void onBreak(BlockBreakEvent event) {
+        onBlockBreak(event);
+    }
+
+    @Override
+    protected final void onPlace(BlockPlaceEvent event) {
+        onBlockPlace(event);
+    }
+
+    protected void onBlockBreak(BlockBreakEvent event) {
+        super.onBreak(event);
+    }
+
+    protected void onBlockPlace(BlockPlaceEvent event) {
+        super.onPlace(event);
     }
     
     public ChestMenu.MenuClickHandler defaultOutsideKeybind(BlockMenu menu) {
@@ -561,19 +611,36 @@ public abstract class AbstractGrid extends NetworkObject {
         return CACHE_MAP;
     }
 
-    protected abstract int[] getBackgroundSlots();
+    /** 子类只声明一次槽位布局，七个 getter 由基类统一派生。 */
+    protected abstract SlotLayout slotLayout();
 
-    protected abstract int[] getDisplaySlots();
+    public int[] getBackgroundSlots() {
+        return slotLayout().backgroundSlots();
+    }
 
-    protected abstract int getInputSlot();
+    public int[] getDisplaySlots() {
+        return slotLayout().displaySlots();
+    }
 
-    protected abstract int getChangeSort();
+    public int getInputSlot() {
+        return slotLayout().inputSlot();
+    }
 
-    protected abstract int getPagePrevious();
+    public int getChangeSort() {
+        return slotLayout().changeSort();
+    }
 
-    protected abstract int getPageNext();
+    public int getPagePrevious() {
+        return slotLayout().pagePrevious();
+    }
 
-    protected abstract int getFilterSlot();
+    public int getPageNext() {
+        return slotLayout().pageNext();
+    }
+
+    public int getFilterSlot() {
+        return slotLayout().filterSlot();
+    }
 
     @SuppressWarnings("unused")
     protected ItemStack getBlankSlotStack() {

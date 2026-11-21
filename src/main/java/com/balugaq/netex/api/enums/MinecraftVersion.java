@@ -17,6 +17,7 @@ public record MinecraftVersion(int major, int minor, int patch) implements Compa
     public static final MinecraftVersion V1_21 = MinecraftVersion.of(1, 21);
     public static final MinecraftVersion V1_21_3 = MinecraftVersion.of(1, 21, 3);
     public static final MinecraftVersion V1_21_4 = MinecraftVersion.of(1, 21, 4);
+    public static final MinecraftVersion V1_21_5 = MinecraftVersion.of(1, 21, 5);
 
     public MinecraftVersion() {
         this(999, 999, 999);
@@ -53,7 +54,7 @@ public record MinecraftVersion(int major, int minor, int patch) implements Compa
         if (split.length < 2) throw new IllegalArgumentException("Invalid version string: " + s);
         int major = Integer.parseUnsignedInt(split[0]);
         int minor = Integer.parseUnsignedInt(split[1]);
-        int patch = Integer.parseUnsignedInt(split.length == 2 ? "0" : split[2]);
+        int patch = split.length == 2 ? 0 : Integer.parseUnsignedInt(split[2]);
         return MinecraftVersion.of(major, minor, patch);
     }
 
@@ -65,12 +66,30 @@ public record MinecraftVersion(int major, int minor, int patch) implements Compa
         return of(major, minor, 0);
     }
 
+    public static int toNumber(MinecraftVersion version) {
+        return version.major * 1000000 + version.minor * 10000 + version.patch;
+    }
+
     @Override
     public int compareTo(MinecraftVersion o) {
-        return Integer.compare(this.major * 1000000 + this.minor * 10000 + this.patch, o.major * 1000000 + o.minor * 10000 + o.patch);
+        return Integer.compare(toNumber(this), toNumber(o));
+    }
+
+    @Override
+    public int hashCode() {
+        return toNumber(this);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof MinecraftVersion other)) return false;
+        return compareTo(other) == 0;
     }
 
     public String humanize() {
-        return major + "." + minor + "." + patch;
+        if (patch != 0) {
+            return major + "." + minor + "." + patch;
+        }
+        return major + "." + minor;
     }
 }

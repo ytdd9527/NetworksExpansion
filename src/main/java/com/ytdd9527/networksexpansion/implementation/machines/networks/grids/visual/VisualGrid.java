@@ -10,13 +10,11 @@ import com.ytdd9527.networksexpansion.core.machines.AbstractGridNewStyle;
 import io.github.sefiraat.networks.NetworkStorage;
 import io.github.sefiraat.networks.Networks;
 import io.github.sefiraat.networks.network.NodeType;
-import io.github.sefiraat.networks.slimefun.network.grid.GridCache;
+import io.github.sefiraat.networks.slimefun.network.grid.SlotLayout;
 import io.github.thebusybiscuit.slimefun4.api.items.ItemGroup;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
 import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
-import io.github.thebusybiscuit.slimefun4.core.handlers.BlockBreakHandler;
-import io.github.thebusybiscuit.slimefun4.core.handlers.BlockPlaceHandler;
 import me.mrCookieSlime.Slimefun.Objects.handlers.BlockTicker;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenuPreset;
 import org.bukkit.Location;
@@ -28,9 +26,7 @@ import org.bukkit.inventory.ItemStack;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @NullMarked
 @SuppressWarnings("DuplicatedCode")
@@ -58,37 +54,12 @@ public class VisualGrid extends AbstractGridNewStyle implements Keybindable {
     static final int PAGE_NEXT = 80;
     static final int TOGGLE_MODE_SLOT = 44;
 
-    private static final Map<Location, GridCache> CACHE_MAP = new HashMap<>();
-
     public VisualGrid(
         ItemGroup itemGroup,
         SlimefunItemStack item,
         RecipeType recipeType,
         ItemStack[] recipe) {
         super(itemGroup, item, recipeType, recipe, NodeType.VISUAL_GRID);
-        addItemHandler(new BlockPlaceHandler(false) {
-            @Override
-            public void onPlayerPlace(BlockPlaceEvent e) {
-                if (true) { // todo: 实验物品先不开放，不仅是很卡而且还错位了，BIM 的坐标计算有大问题
-                    e.setCancelled(true);
-                    return;
-                }
-                var block = e.getBlockPlaced();
-                ActiveGrid active = Networks.getBIMLoader().getCache().activeGrids().get(BlockPos.from(block.getLocation()));
-                if (active == null || active.getOption() != PRESET) {
-                    var pl = e.getPlayer().getLocation();
-                    active = PRESET.place(BlockPos.from(block.getLocation()), GridOrientation.fromYawPitch(pl.getYaw(), pl.getPitch()).reverse());
-                }
-            }
-        });
-        addItemHandler(new BlockBreakHandler(false, false) {
-            @Override
-            public void onPlayerBreak(BlockBreakEvent e, ItemStack item, List<ItemStack> drops) {
-                if (true) return; // todo
-                var pos = BlockPos.from(e.getBlock().getLocation());
-                Networks.getBIMLoader().getGridUtil().removeGrid(pos, PRESET);
-            }
-        });
         addItemHandler(new BlockTicker() {
 
             private int tick = 1;
@@ -119,6 +90,27 @@ public class VisualGrid extends AbstractGridNewStyle implements Keybindable {
         });
     }
 
+    @Override
+    protected void onBlockPlace(BlockPlaceEvent e) {
+        if (true) { // todo: 实验物品先不开放，不仅是很卡而且还错位了，BIM 的坐标计算有大问题
+            e.setCancelled(true);
+            return;
+        }
+        var block = e.getBlockPlaced();
+        ActiveGrid active = Networks.getBIMLoader().getCache().activeGrids().get(BlockPos.from(block.getLocation()));
+        if (active == null || active.getOption() != PRESET) {
+            var pl = e.getPlayer().getLocation();
+            active = PRESET.place(BlockPos.from(block.getLocation()), GridOrientation.fromYawPitch(pl.getYaw(), pl.getPitch()).reverse());
+        }
+    }
+
+    @Override
+    protected void onBlockBreak(BlockBreakEvent e) {
+        if (true) return; // todo
+        var pos = BlockPos.from(e.getBlock().getLocation());
+        Networks.getBIMLoader().getGridUtil().removeGrid(pos, PRESET);
+    }
+
     public void tryAddItem(Location location, ActiveGrid active) {
         var node = NetworkStorage.getNode(location);
         if (node == null || node.getNode() == null) {
@@ -139,28 +131,11 @@ public class VisualGrid extends AbstractGridNewStyle implements Keybindable {
         return null;
     }
 
-    public Map<Location, GridCache> getCacheMap() {
-        return CACHE_MAP;
-    }
-
-    public int[] getBackgroundSlots() {
-        return BACKGROUND_SLOTS;
-    }
-
-    public int[] getDisplaySlots() {
-        return DISPLAY_SLOTS;
-    }
-
-    public int getChangeSort() {
-        return CHANGE_SORT;
-    }
-
-    public int getPagePrevious() {
-        return PAGE_PREVIOUS;
-    }
-
-    public int getPageNext() {
-        return PAGE_NEXT;
+    @Override
+    protected SlotLayout slotLayout() {
+        return new SlotLayout(
+            BACKGROUND_SLOTS, DISPLAY_SLOTS, -1,
+            CHANGE_SORT, PAGE_PREVIOUS, PAGE_NEXT, FILTER);
     }
 
     public int getKeybindButtonSlot() {
@@ -169,11 +144,6 @@ public class VisualGrid extends AbstractGridNewStyle implements Keybindable {
 
     public int getToggleModeSlot() {
         return TOGGLE_MODE_SLOT;
-    }
-
-    @Override
-    protected int getFilterSlot() {
-        return FILTER;
     }
 
     @Override

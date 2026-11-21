@@ -22,6 +22,8 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jspecify.annotations.NullMarked;
@@ -33,6 +35,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -226,12 +229,20 @@ public @Data class Keybinds implements ChestMenu.MenuClickHandler, Keyed {
         return "keybinds." + this.key + "." + key;
     }
 
-    public LinkedHashMap<Keybind, Action> getKeybinds(Location location) {
-        LinkedHashMap<Keybind, Action> keybinds = new LinkedHashMap<>(defaultKeybinds.get(key));
+    public static NamespacedKey pdcKey(Keybinds keybinds, Keybind keybind) {
+        String value = ("keybinds." + keybinds.key + "." + keybind.getKey())
+            .toLowerCase(Locale.ROOT)
+            .replace(':', '_')
+            .replace('/', '_');
+        return Keys.newKey(value);
+    }
 
-        // Remap actions
+    public LinkedHashMap<Keybind, Action> getKeybinds(Player player) {
+        LinkedHashMap<Keybind, Action> keybinds = new LinkedHashMap<>(defaultKeybinds.get(key));
+        PersistentDataContainer container = player.getPersistentDataContainer();
+
         for (Keybind keybind : keybinds.keySet()) {
-            String type = StorageCacheUtils.getData(location, keybindKey(keybind.getKey()));
+            String type = container.get(pdcKey(this, keybind), PersistentDataType.STRING);
             if (type == null) continue;
 
             NamespacedKey key = NamespacedKey.fromString(type);
@@ -243,7 +254,31 @@ public @Data class Keybinds implements ChestMenu.MenuClickHandler, Keyed {
             keybinds.put(keybind, action);
         }
 
+        migrateFromBlock(player, keybinds);
         return keybinds;
+    }
+
+    private void migrateFromBlock(Player player, LinkedHashMap<Keybind, Action> keybinds) {
+        Location location = getMenu(player) == null ? null : getMenu(player).getLocation();
+        if (location == null) return;
+
+        boolean migrated = false;
+        for (Keybind keybind : keybinds.keySet()) {
+            NamespacedKey pdc = pdcKey(this, keybind);
+            if (player.getPersistentDataContainer().has(pdc, PersistentDataType.STRING)) continue;
+
+            String type = StorageCacheUtils.getData(location, keybindKey(keybind.getKey()));
+            if (type == null) continue;
+
+            player.getPersistentDataContainer().set(pdc, PersistentDataType.STRING, type);
+            NamespacedKey actionKey = NamespacedKey.fromString(type);
+            Action action = actionKey == null ? null : actionRegistry.get(actionKey);
+            if (action != null) keybinds.put(keybind, action);
+            migrated = true;
+        }
+        if (migrated) {
+            Debug.debug("Migrated block-based keybinds to player PDC for " + player.getName());
+        }
     }
 
     @SuppressWarnings("DataFlowIssue")
@@ -259,8 +294,7 @@ public @Data class Keybinds implements ChestMenu.MenuClickHandler, Keyed {
         BlockMenu menu = getMenu(player);
         if (menu == null) return false;
 
-        Location location = menu.getLocation();
-        for (Map.Entry<Keybind, Action> entry : getKeybinds(location).entrySet()) {
+        for (Map.Entry<Keybind, Action> entry : getKeybinds(player).entrySet()) {
             if (entry.getKey().test(player, i, itemStack, clickAction, menu)) {
                 ActionResult result = entry.getValue().apply(player, i, itemStack, clickAction, menu);
                 if (result.handle() == MultiActionHandle.BREAK) {
@@ -314,7 +348,7 @@ public @Data class Keybinds implements ChestMenu.MenuClickHandler, Keyed {
             menu.addItem(slot, Icon.BLUE_BACKGROUND, (p, s, i, a) -> false);
         }
 
-        List<Map.Entry<Keybind, Action>> keybinds = getKeybinds(location).entrySet().stream().toList();
+        List<Map.Entry<Keybind, Action>> keybinds = getKeybinds(player).entrySet().stream().toList();
         for (int slot = 0; slot < keybindsSlots.length; slot++) {
             if (slot >= keybinds.size()) {
                 menu.addItem(keybindsSlots[slot], Icon.LIGHT_GRAY_BACKGROUND, (p, s, i, a) -> false);
@@ -369,8 +403,8 @@ public @Data class Keybinds implements ChestMenu.MenuClickHandler, Keyed {
         for (; i < Math.min(45, actions.size()); i++) {
             Action a = actions.get(i);
             menu.addItem(i, Lang.getIcon("keybinds." + a.getKey().getKey(), Material.REDSTONE_TORCH), (p, s, i1, a2) -> {
-                keybind.set(location, keybinds, a);
-                back.accept(player);
+                keybind.set(p, keybinds, a);
+                back.accept(p);
                 return false;
             });
         }
@@ -407,8 +441,8 @@ public @Data class Keybinds implements ChestMenu.MenuClickHandler, Keyed {
         return key;
     }
 
-    public void upload(Location location, Player p, String keybindsName) {
-        KeybindsScript script = KeybindsScript.warp(p, this, keybindsName, location, ID.nextId());
+    public void upload(Player p, String keybindsName) {
+        KeybindsScript script = KeybindsScript.warp(p, this, keybindsName, ID.nextId());
         script.save();
 
         if (!keybindsScripts.containsKey(key)) {
@@ -435,7 +469,7 @@ public @Data class Keybinds implements ChestMenu.MenuClickHandler, Keyed {
             } else {
                 KeybindsScript script = scripts.get(i);
                 menu.addItem(i, new CustomItemStack(Material.PAPER, String.format(Lang.getString("icons.keybinds.scripts.display.name"), script.getAuthorName(), script.getKeybindsName(), script.getId())), (p, s, i1, a) -> {
-                    copyScript(location, script);
+                    copyScript(p, script);
                     p.sendMessage(Lang.getString("messages.keybind.scripts.copied"));
                     return false;
                 });
@@ -463,7 +497,7 @@ public @Data class Keybinds implements ChestMenu.MenuClickHandler, Keyed {
             p.closeInventory();
             p.sendMessage(Lang.getString("messages.keybind.scripts.upload"));
             ChatUtils.awaitInput(p, name -> {
-                upload(location, player, name);
+                upload(p, name);
                 openScriptsMenu(location, p, page);
             });
             return false;
@@ -472,7 +506,7 @@ public @Data class Keybinds implements ChestMenu.MenuClickHandler, Keyed {
         menu.open(player);
     }
 
-    public void copyScript(Location location, KeybindsScript script) {
-        script.getCode().forEach((key, value) -> key.set(location, script.getKeybinds(), value));
+    public void copyScript(Player player, KeybindsScript script) {
+        script.getCode().forEach((key, value) -> key.set(player, script.getKeybinds(), value));
     }
 }

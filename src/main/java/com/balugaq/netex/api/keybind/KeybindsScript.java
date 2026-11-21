@@ -7,7 +7,6 @@ import io.github.thebusybiscuit.slimefun4.libraries.dough.config.Config;
 import io.github.thebusybiscuit.slimefun4.utils.ChatUtils;
 import lombok.Data;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -33,12 +32,8 @@ public @Data class KeybindsScript {
         this.id = id;
     }
 
-    public KeybindsScript(OfflinePlayer player, Keybinds keybinds, String keybindsName, Location location, long id) {
-        this(player, keybinds, keybindsName, keybinds.getKeybinds(location), id);
-    }
-
-    public static KeybindsScript warp(Player player, Keybinds keybinds, String keybindsName, Location location, long id) {
-        return new KeybindsScript(player, keybinds, keybindsName, location, id);
+    public static KeybindsScript warp(Player player, Keybinds keybinds, String keybindsName, long id) {
+        return new KeybindsScript(player, keybinds, keybindsName, keybinds.getKeybinds(player), id);
     }
 
     @SuppressWarnings("DataFlowIssue")

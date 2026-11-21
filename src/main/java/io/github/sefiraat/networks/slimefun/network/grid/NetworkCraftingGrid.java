@@ -2,7 +2,6 @@ package io.github.sefiraat.networks.slimefun.network.grid;
 
 import com.balugaq.netex.api.helpers.Icon;
 import com.balugaq.netex.api.helpers.SupportedCraftingTableRecipes;
-import com.balugaq.netex.api.visual.Screen;
 import com.balugaq.netex.utils.BlockMenuUtil;
 import com.balugaq.netex.utils.Lang;
 import io.github.sefiraat.networks.NetworkStorage;
@@ -10,26 +9,18 @@ import io.github.sefiraat.networks.events.NetworkCraftEvent;
 import io.github.sefiraat.networks.network.GridItemRequest;
 import io.github.sefiraat.networks.network.NetworkRoot;
 import io.github.sefiraat.networks.network.NodeDefinition;
-import io.github.sefiraat.networks.slimefun.NetworkSlimefunItems;
 import io.github.thebusybiscuit.slimefun4.api.items.ItemGroup;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
 import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
-import io.github.thebusybiscuit.slimefun4.implementation.Slimefun;
-import io.github.thebusybiscuit.slimefun4.libraries.dough.protection.Interaction;
-import io.github.thebusybiscuit.slimefun4.utils.ChestMenuUtils;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
-import me.mrCookieSlime.Slimefun.api.inventory.BlockMenuPreset;
-import me.mrCookieSlime.Slimefun.api.item_transport.ItemTransportFlow;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jspecify.annotations.NullMarked;
 
-import java.util.HashMap;
 import java.util.Map;
 
 @SuppressWarnings("DuplicatedCode")
@@ -55,8 +46,6 @@ public class NetworkCraftingGrid extends AbstractGrid {
     private static final int CRAFT_BUTTON_SLOT = 34;
     private static final int CRAFT_OUTPUT_SLOT = 43;
 
-    private static final Map<Location, GridCache> CACHE_MAP = new HashMap<>();
-
     public NetworkCraftingGrid(
         ItemGroup itemGroup,
         SlimefunItemStack item,
@@ -70,141 +59,24 @@ public class NetworkCraftingGrid extends AbstractGrid {
     }
 
     @Override
-    public void postRegister() {
-        getPreset();
-    }
-
-    @Override
-    public BlockMenuPreset getPreset() {
-        return new BlockMenuPreset(this.getId(), this.getItemName()) {
-
-            @Override
-            public void init() {
-                drawBackground(BACKGROUND_SLOTS);
-                drawBackground(getDisplaySlots());
-                setSize(54);
+    public void menuNewInstance(BlockMenu menu, Block b) {
+        super.menuNewInstance(menu, b);
+        menu.replaceExistingItem(CRAFT_BUTTON_SLOT, Icon.CRAFT_BUTTON);
+        menu.addMenuClickHandler(CRAFT_BUTTON_SLOT, (player, slot, item, action) -> {
+            if (action.isShiftClicked()) {
+                tryReturnItems(menu);
+            } else {
+                tryCraft(menu, player);
             }
-
-            @Override
-            public boolean canOpen(Block block, Player player) {
-                return player.hasPermission("slimefun.inventory.bypass")
-                    || (NetworkSlimefunItems.NETWORK_CRAFTING_GRID.canUse(player, false)
-                    && Slimefun.getProtectionManager()
-                    .hasPermission(player, block.getLocation(), Interaction.INTERACT_BLOCK));
-            }
-
-            @Override
-            public int[] getSlotsAccessedByItemTransport(ItemTransportFlow flow) {
-                return new int[0];
-            }
-
-            @Override
-            public void newInstance(BlockMenu menu, Block b) {
-                CACHE_MAP.put(menu.getLocation(), new GridCache(0, 0, GridCache.SortOrder.ALPHABETICAL));
-
-                menu.replaceExistingItem(getPagePrevious(), getPagePreviousStack());
-                menu.addMenuClickHandler(getPagePrevious(), (p, slot, item, action) -> {
-                    GridCache gridCache = getCacheMap().get(menu.getLocation());
-                    gridCache.setPage(gridCache.getPage() <= 0 ? 0 : gridCache.getPage() - 1);
-                    CACHE_MAP.put(menu.getLocation(), gridCache);
-                    updateDisplay(menu);
-                    return false;
-                });
-
-                menu.replaceExistingItem(getPageNext(), getPageNextStack());
-                menu.addMenuClickHandler(getPageNext(), (p, slot, item, action) -> {
-                    GridCache gridCache = getCacheMap().get(menu.getLocation());
-                    gridCache.setPage(
-                        gridCache.getPage() >= gridCache.getMaxPages()
-                            ? gridCache.getMaxPages()
-                            : gridCache.getPage() + 1);
-                    getCacheMap().put(menu.getLocation(), gridCache);
-                    updateDisplay(menu);
-                    return false;
-                });
-
-                menu.replaceExistingItem(getChangeSort(), getChangeSortStack());
-                menu.addMenuClickHandler(getChangeSort(), (p, slot, item, action) -> {
-                    GridCache gridCache = getCacheMap().get(menu.getLocation());
-                    AbstractGrid.updateSortOrder(gridCache, action, 2);
-                    getCacheMap().put(menu.getLocation(), gridCache);
-                    updateDisplay(menu);
-                    return false;
-                });
-
-                menu.replaceExistingItem(getFilterSlot(), getFilterStack());
-                menu.addMenuClickHandler(getFilterSlot(), (p, slot, item, action) -> {
-                    GridCache gridCache = getCacheMap().get(menu.getLocation());
-                    setFilter(p, menu, gridCache, action);
-                    return false;
-                });
-
-                for (int displaySlot : getDisplaySlots()) {
-                    menu.replaceExistingItem(displaySlot, ChestMenuUtils.getBackground());
-                    menu.addMenuClickHandler(displaySlot, (p, slot, item, action) -> false);
-                }
-
-                menu.replaceExistingItem(CRAFT_BUTTON_SLOT, Icon.CRAFT_BUTTON);
-                menu.addMenuClickHandler(CRAFT_BUTTON_SLOT, (player, slot, item, action) -> {
-                    if (action.isShiftClicked()) {
-                        tryReturnItems(menu);
-                    } else {
-                        tryCraft(menu, player);
-                    }
-                    return false;
-                });
-
-                menu.addPlayerInventoryClickHandler((p, s, i, a) -> {
-                    if (!a.isShiftClicked() || a.isRightClicked()) {
-                        return true;
-                    }
-
-                    // Shift+Left-click
-                    receiveItem(p, i, Screen.of(menu));
-                    return false;
-                });
-            }
-        };
-    }
-    
-    @Override
-    public Map<Location, GridCache> getCacheMap() {
-        return CACHE_MAP;
+            return false;
+        });
     }
 
     @Override
-    public int[] getBackgroundSlots() {
-        return BACKGROUND_SLOTS;
-    }
-
-    @Override
-    public int[] getDisplaySlots() {
-        return DISPLAY_SLOTS;
-    }
-
-    @Override
-    public int getInputSlot() {
-        return INPUT_SLOT;
-    }
-
-    @Override
-    public int getChangeSort() {
-        return CHANGE_SORT;
-    }
-
-    @Override
-    public int getPagePrevious() {
-        return PAGE_PREVIOUS;
-    }
-
-    @Override
-    public int getPageNext() {
-        return PAGE_NEXT;
-    }
-
-    @Override
-    protected int getFilterSlot() {
-        return FILTER;
+    protected SlotLayout slotLayout() {
+        return new SlotLayout(
+            BACKGROUND_SLOTS, DISPLAY_SLOTS, INPUT_SLOT,
+            CHANGE_SORT, PAGE_PREVIOUS, PAGE_NEXT, FILTER);
     }
 
     private void tryCraft(BlockMenu menu, Player player) {

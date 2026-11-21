@@ -1,6 +1,7 @@
 package com.ytdd9527.networksexpansion.core.services;
 
 import com.balugaq.netex.api.data.Language;
+import com.balugaq.netex.api.enums.MinecraftVersion;
 import com.google.common.base.Preconditions;
 import com.ytdd9527.networksexpansion.utils.TextUtil;
 import com.ytdd9527.networksexpansion.utils.itemstacks.ItemStackUtil;
@@ -10,6 +11,9 @@ import io.github.sefiraat.networks.utils.Theme;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
 import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.items.CustomItemStack;
+import io.github.thebusybiscuit.slimefun4.utils.compatibility.VersionedItemFlag;
+import io.papermc.paper.datacomponent.DataComponentTypes;
+import io.papermc.paper.datacomponent.item.TooltipDisplay;
 import lombok.Getter;
 import lombok.Setter;
 import net.md_5.bungee.api.ChatMessageType;
@@ -20,6 +24,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -403,7 +408,23 @@ public class LocalizationService {
     @NotNull
     @ParametersAreNonnullByDefault
     public ItemStack getIcon(String key, Material material) {
-        return getItemStack("icons." + key, material);
+        var icon = getItemStack("icons." + key, material);
+        if (Networks.getInstance().getMinecraftVersion().isAtLeast(MinecraftVersion.V1_21_5)) {
+            icon.setData(DataComponentTypes.TOOLTIP_DISPLAY, TooltipDisplay.tooltipDisplay().hideTooltip(true).addHiddenComponents(
+                DataComponentTypes.POT_DECORATIONS,
+                DataComponentTypes.ENCHANTMENTS,
+                DataComponentTypes.ATTRIBUTE_MODIFIERS,
+                DataComponentTypes.POTION_CONTENTS,
+                DataComponentTypes.POTION_DURATION_SCALE,
+                DataComponentTypes.TRIM,
+                DataComponentTypes.STORED_ENCHANTMENTS
+            ).build());
+        } else {
+            var meta = icon.getItemMeta();
+            meta.addItemFlags(VersionedItemFlag.HIDE_ADDITIONAL_TOOLTIP);
+            icon.setItemMeta(meta);
+        }
+        return icon;
     }
 
     @NotNull

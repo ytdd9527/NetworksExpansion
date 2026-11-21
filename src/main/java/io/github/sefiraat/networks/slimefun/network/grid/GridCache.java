@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @Data
 @NullMarked
@@ -22,6 +23,8 @@ public class GridCache {
     private int maxPages;
     private DisplayMode displayMode;
     private SortOrder sortOrder;
+    @Nullable
+    private SortOrder secondarySortOrder;
 
     @Nullable
     private String filter;
@@ -34,6 +37,27 @@ public class GridCache {
         this.maxPages = maxPages;
         this.sortOrder = sortOrder;
         this.displayMode = DisplayMode.DISPLAY;
+    }
+
+    public void setSortOrder(SortOrder sortOrder) {
+        if (this.sortOrder != sortOrder) {
+            this.entriesCache = null;
+        }
+        this.sortOrder = sortOrder;
+    }
+
+    public void setSecondarySortOrder(@Nullable SortOrder secondarySortOrder) {
+        if (this.secondarySortOrder != secondarySortOrder) {
+            this.entriesCache = null;
+        }
+        this.secondarySortOrder = secondarySortOrder;
+    }
+
+    public void setFilter(@Nullable String filter) {
+        if (!Objects.equals(this.filter, filter)) {
+            this.entriesCache = null;
+        }
+        this.filter = filter;
     }
 
     public void addPullItemHistory(@Nullable ItemStack itemStack) {
@@ -51,21 +75,26 @@ public class GridCache {
         }
     }
 
+    public Comparator<Map.Entry<ItemStack, Long>> comparator() {
+        if (secondarySortOrder == null || secondarySortOrder == sortOrder) {
+            return sortOrder.comparator();
+        }
+        return sortOrder.comparator().thenComparing(secondarySortOrder.comparator());
+    }
+
     @RequiredArgsConstructor
     public enum SortOrder {
         ALPHABETICAL(Sorters.ITEMSTACK_ALPHABETICAL_SORT),
         NUMBER(Sorters.ITEMSTACK_NUMERICAL_SORT.reversed()),
         NUMBER_REVERSE(Sorters.ITEMSTACK_NUMERICAL_SORT),
-        ADDON(Sorters.ITEMSTACK_ADDON_SORT);
+        ADDON(Sorters.ITEMSTACK_ADDON_SORT),
+        MATERIAL(Sorters.ITEMSTACK_MATERIAL_SORT);
 
         final Comparator<Map.Entry<ItemStack, Long>> comparator;
 
-        public SortOrder next(@Range(from = 1, to = 4) int limit) {
-            if (this.next().ordinal() + 1 >= limit) {
-                return ALPHABETICAL;
-            }
-
-            return this.next();
+        public SortOrder next(@Range(from = 1, to = 5) int limit) {
+            int size = Math.max(1, Math.min(limit, values().length));
+            return values()[(ordinal() + 1) % size];
         }
 
         public SortOrder next() {
@@ -73,24 +102,23 @@ public class GridCache {
                 case ALPHABETICAL -> NUMBER;
                 case NUMBER -> NUMBER_REVERSE;
                 case NUMBER_REVERSE -> ADDON;
-                case ADDON -> ALPHABETICAL;
+                case ADDON -> MATERIAL;
+                case MATERIAL -> ALPHABETICAL;
             };
         }
 
-        public SortOrder previous(@Range(from = 1, to = 4) int limit) {
-            if (this.previous().ordinal() + 1 >= limit) {
-                return values()[limit - 1];
-            }
-
-            return this.previous();
+        public SortOrder previous(@Range(from = 1, to = 5) int limit) {
+            int size = Math.max(1, Math.min(limit, values().length));
+            return values()[(ordinal() - 1 + size) % size];
         }
 
         public SortOrder previous() {
             return switch (this) {
-                case ALPHABETICAL -> ADDON;
+                case ALPHABETICAL -> MATERIAL;
                 case NUMBER -> ALPHABETICAL;
                 case NUMBER_REVERSE -> NUMBER;
                 case ADDON -> NUMBER_REVERSE;
+                case MATERIAL -> ADDON;
             };
         }
 
@@ -98,7 +126,7 @@ public class GridCache {
             return Lang.getString("messages.completed-operation.grid.sort_orders." + name().toLowerCase());
         }
 
-        public Comparator<? super Map.Entry<ItemStack, Long>> comparator() {
+        public Comparator<Map.Entry<ItemStack, Long>> comparator() {
             return comparator;
         }
     }
