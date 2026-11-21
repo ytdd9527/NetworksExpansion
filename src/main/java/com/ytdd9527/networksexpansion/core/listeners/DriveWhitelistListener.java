@@ -1,5 +1,7 @@
 package com.ytdd9527.networksexpansion.core.listeners;
 
+import com.balugaq.netex.utils.Scheduling;
+
 import com.balugaq.netex.utils.Lang;
 import com.ytdd9527.networksexpansion.api.cell.CellnetText;
 import com.ytdd9527.networksexpansion.api.drive.DriveWhitelistMenu;
@@ -45,7 +47,7 @@ public class DriveWhitelistListener implements Listener {
             return;
         }
 
-        Bukkit.getScheduler().runTask(Networks.getInstance(), () -> {
+        Scheduling.runTask(() -> {
             if (!player.isOnline()) {
                 return;
             }

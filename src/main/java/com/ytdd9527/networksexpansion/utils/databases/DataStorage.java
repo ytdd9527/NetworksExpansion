@@ -3,11 +3,11 @@ package com.ytdd9527.networksexpansion.utils.databases;
 import com.balugaq.netex.api.data.StorageUnitData;
 import com.balugaq.netex.api.enums.StorageUnitType;
 import com.balugaq.netex.utils.Lang;
+import com.balugaq.netex.utils.Scheduling;
 import io.github.sefiraat.networks.Networks;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
@@ -35,20 +35,17 @@ public class DataStorage {
     }
 
     public static void restoreFromLocation(@NotNull Location l, @NotNull Consumer<Optional<StorageUnitData>> usage) {
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                int id = dataSource.getIdFromLocation(l);
-                if (id == -1) {
-                    usage.accept(Optional.empty());
-                    return;
-                }
-                if (!isContainerLoaded(id)) {
-                    loadContainer(id);
-                }
-                usage.accept(getCachedStorageData(id));
+        Scheduling.runAsync(() -> {
+            int id = dataSource.getIdFromLocation(l);
+            if (id == -1) {
+                usage.accept(Optional.empty());
+                return;
             }
-        }.runTaskAsynchronously(Networks.getInstance());
+            if (!isContainerLoaded(id)) {
+                loadContainer(id);
+            }
+            usage.accept(getCachedStorageData(id));
+        });
     }
 
     @NotNull

@@ -1,5 +1,7 @@
 package com.ytdd9527.networksexpansion.core.listeners;
 
+import com.balugaq.netex.utils.Scheduling;
+
 import com.balugaq.netex.utils.Lang;
 import com.ytdd9527.networksexpansion.api.cell.StorageCell;
 import com.ytdd9527.networksexpansion.api.cell.CellPersistence;
@@ -67,7 +69,7 @@ public class CellMenuListener implements Listener {
     }
 
     private static void closeCellView(@NotNull Player player) {
-        Bukkit.getScheduler().runTask(Networks.getInstance(), () -> {
+        Scheduling.runTask(() -> {
             CellMenu.stopOpening(player.getUniqueId());
             player.closeInventory();
         });
@@ -89,7 +91,7 @@ public class CellMenuListener implements Listener {
             return;
         }
 
-        Bukkit.getScheduler().runTask(Networks.getInstance(), () -> {
+        Scheduling.runTask(() -> {
             ItemStack cell = CellMenuCommon.findCellInPlayer(player, cellUuid);
             if (cell == null) {
                 player.sendMessage(Lang.getString(CellnetText.CELL_RENAME_FAILED));

@@ -1,5 +1,7 @@
 package com.ytdd9527.networksexpansion.core.listeners;
 
+import com.balugaq.netex.utils.Scheduling;
+
 import com.xzavier0722.mc.plugin.slimefun4.storage.util.StorageCacheUtils;
 import com.ytdd9527.networksexpansion.api.drive.DriveSlotGuard;
 import com.ytdd9527.networksexpansion.api.drive.DriveType;
@@ -58,16 +60,12 @@ public class DriveCellOpenListener implements Listener {
             @NotNull BlockMenu menu, int rawSlot, @NotNull ItemStack cell, @NotNull Player player) {
         SlimefunItem cellItem = SlimefunItem.getByItem(cell);
         if (cellItem instanceof VoidCell) {
-            Bukkit.getScheduler().runTask(
-                Networks.getInstance(),
-                () -> VoidCellMenu.openFromDrive(menu, rawSlot, player));
+            Scheduling.runTask(() -> VoidCellMenu.openFromDrive(menu, rawSlot, player));
             return true;
         }
         if (cellItem instanceof StorageCell) {
             ItemStack workingCopy = cell.clone();
-            Bukkit.getScheduler().runTask(
-                Networks.getInstance(),
-                () -> CellMenu.open(player, workingCopy));
+            Scheduling.runTask(() -> CellMenu.open(player, workingCopy));
             return true;
         }
         return false;

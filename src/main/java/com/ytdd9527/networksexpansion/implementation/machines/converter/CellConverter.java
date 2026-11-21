@@ -1,5 +1,7 @@
 package com.ytdd9527.networksexpansion.implementation.machines.converter;
 
+import com.balugaq.netex.utils.Scheduling;
+
 import com.balugaq.netex.api.helpers.Icon;
 import com.balugaq.netex.utils.Lang;
 import com.xzavier0722.mc.plugin.slimefun4.storage.controller.SlimefunBlockData;
@@ -273,7 +275,7 @@ public class CellConverter extends AbstractCellBrowser {
                     if (blockMenu == null || !blockMenu.hasViewer()) {
                         return;
                     }
-                    Bukkit.getScheduler().runTask(Networks.getInstance(), () -> {
+                    Scheduling.runTask(() -> {
                         if (blockMenu.hasViewer()) {
                             refresh(blockMenu);
                         }

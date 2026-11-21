@@ -1,5 +1,8 @@
 package com.ytdd9527.networksexpansion.api.drive;
 
+import com.tcoded.folialib.wrapper.task.WrappedTask;
+import com.balugaq.netex.utils.Scheduling;
+
 import com.balugaq.netex.api.helpers.Icon;
 import com.balugaq.netex.utils.Lang;
 import com.xzavier0722.mc.plugin.slimefun4.storage.util.StorageCacheUtils;
@@ -47,7 +50,7 @@ public final class DriveWhitelistMenu {
     private static final int WHITELIST_BACK_BUTTON_SLOT = 49;
 
     private static final Map<UUID, Location> ADDING_WHITELIST = new ConcurrentHashMap<>();
-    private static final Map<UUID, Integer> ADDING_TIMERS = new ConcurrentHashMap<>();
+    private static final Map<UUID, WrappedTask> ADDING_TIMERS = new ConcurrentHashMap<>();
 
     private DriveWhitelistMenu() {
     }
@@ -182,9 +185,9 @@ public final class DriveWhitelistMenu {
 
     public static void stopAdding(@NotNull UUID playerUuid) {
         ADDING_WHITELIST.remove(playerUuid);
-        Integer taskId = ADDING_TIMERS.remove(playerUuid);
-        if (taskId != null) {
-            Bukkit.getScheduler().cancelTask(taskId);
+        WrappedTask task = ADDING_TIMERS.remove(playerUuid);
+        if (task != null) {
+            task.cancel();
         }
     }
 
@@ -195,7 +198,7 @@ public final class DriveWhitelistMenu {
         player.closeInventory();
         player.sendMessage(Lang.getString(CellnetText.DRIVE_WHITELIST_ENTER_NAME));
 
-        int taskId = Bukkit.getScheduler().runTaskLater(Networks.getInstance(), () -> {
+        WrappedTask task = Scheduling.runLater(() -> {
             if (ADDING_WHITELIST.remove(playerUuid) == null) {
                 return;
             }
@@ -204,8 +207,8 @@ public final class DriveWhitelistMenu {
             if (timeoutPlayer != null) {
                 timeoutPlayer.sendMessage(Lang.getString(CellnetText.DRIVE_WHITELIST_ADD_TIMEOUT));
             }
-        }, WHITELIST_ADD_TIMEOUT_TICKS).getTaskId();
-        ADDING_TIMERS.put(playerUuid, taskId);
+        }, WHITELIST_ADD_TIMEOUT_TICKS);
+        ADDING_TIMERS.put(playerUuid, task);
     }
 
     private static void reopenWhitelistMenu(@NotNull Player player, @NotNull Location location) {

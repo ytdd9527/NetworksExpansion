@@ -2,8 +2,8 @@ package com.ytdd9527.networksexpansion.utils.databases;
 
 import com.balugaq.netex.utils.Debug;
 import com.balugaq.netex.utils.Lang;
+import com.balugaq.netex.utils.Scheduling;
 import io.github.sefiraat.networks.Networks;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.BlockingQueue;
@@ -39,8 +39,8 @@ public class QueryQueue {
 
     public void startThread() {
         if (!threadStarted) {
-            getProcessor(queryTasks).runTaskAsynchronously(Networks.getInstance());
-            getProcessor(updateTasks).runTaskAsynchronously(Networks.getInstance());
+            Scheduling.runAsync(getProcessor(queryTasks));
+            Scheduling.runAsync(getProcessor(updateTasks));
             threadStarted = true;
         }
     }
@@ -69,8 +69,8 @@ public class QueryQueue {
         updateTasks.offer(abortTask);
     }
 
-    private @NotNull BukkitRunnable getProcessor(@NotNull BlockingQueue<QueuedTask> queue) {
-        return new BukkitRunnable() {
+    private @NotNull Runnable getProcessor(@NotNull BlockingQueue<QueuedTask> queue) {
+        return new Runnable() {
             @Override
             public void run() {
                 while (true) {

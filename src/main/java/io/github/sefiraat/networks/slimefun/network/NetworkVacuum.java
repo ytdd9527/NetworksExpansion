@@ -1,5 +1,7 @@
 package io.github.sefiraat.networks.slimefun.network;
 
+import com.balugaq.netex.utils.Scheduling;
+
 import com.balugaq.netex.api.enums.FeedbackType;
 import com.xzavier0722.mc.plugin.slimefun4.storage.controller.SlimefunBlockData;
 import com.xzavier0722.mc.plugin.slimefun4.storage.util.StorageCacheUtils;
@@ -81,7 +83,7 @@ public class NetworkVacuum extends NetworkObject {
                     }
                     addToRegistry(block);
                     tryAddItem(blockMenu);
-                    Bukkit.getScheduler().runTask(Networks.getInstance(), bukkitTask -> findItem(blockMenu));
+                    Scheduling.runAt(block.getLocation(), () -> findItem(blockMenu));
                 }
             }
 

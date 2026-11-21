@@ -11,7 +11,7 @@ import lombok.Getter;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
-import org.bukkit.scheduler.BukkitRunnable;
+import com.balugaq.netex.utils.Scheduling;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -136,16 +136,12 @@ public class NetworkNode {
         SlimefunItem sfItem = StorageCacheUtils.getSfItem(location);
         if (sfItem != null) {
             Slimefun.getDatabaseManager().getBlockDataController().removeBlock(location);
-            BukkitRunnable runnable = new BukkitRunnable() {
-                @Override
-                public void run() {
-                    // fix #99
-                    NetworkController.wipeNetwork(location);
-                    location.getWorld().dropItemNaturally(location, sfItem.getItem());
-                    location.getBlock().setType(Material.AIR);
-                }
-            };
-            runnable.runTask(Networks.getInstance());
+            Scheduling.runAt(location, () -> {
+                // fix #99
+                NetworkController.wipeNetwork(location);
+                location.getWorld().dropItemNaturally(location, sfItem.getItem());
+                location.getBlock().setType(Material.AIR);
+            });
             NetworkController.wipeNetwork(location);
         }
     }

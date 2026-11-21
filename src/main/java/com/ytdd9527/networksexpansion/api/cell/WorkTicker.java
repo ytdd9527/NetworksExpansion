@@ -1,5 +1,7 @@
 package com.ytdd9527.networksexpansion.api.cell;
 
+import com.balugaq.netex.utils.Scheduling;
+
 import com.balugaq.netex.api.enums.FeedbackType;
 import com.xzavier0722.mc.plugin.slimefun4.storage.controller.SlimefunBlockData;
 import com.ytdd9527.networksexpansion.core.machines.AbstractChainMachine;
@@ -40,7 +42,7 @@ public class WorkTicker extends BlockTicker {
         state.nextWorkMs = now + abstractChainMachine.gateIntervalMs();
         if (!state.wired) {
             state.wired = true;
-            Bukkit.getScheduler().runTask(Networks.getInstance(), () -> abstractChainMachine.wireMenu(menu, state));
+            Scheduling.runTask(() -> abstractChainMachine.wireMenu(menu, state));
         }
         int power = abstractChainMachine.requiredPower();
         NetworkRoot root = abstractChainMachine.rootOf(menu);
@@ -52,7 +54,6 @@ public class WorkTicker extends BlockTicker {
             abstractChainMachine.sendFeedback(menu.getLocation(), FeedbackType.NOT_ENOUGH_POWER);
             return;
         }
-        Bukkit.getScheduler().runTask(Networks.getInstance(),
-            () -> abstractChainMachine.runWorkBody(menu, state, root, power));
+        Scheduling.runTask(() -> abstractChainMachine.runWorkBody(menu, state, root, power));
     }
 }

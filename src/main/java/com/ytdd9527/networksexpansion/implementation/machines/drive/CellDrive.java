@@ -1,5 +1,7 @@
 package com.ytdd9527.networksexpansion.implementation.machines.drive;
 
+import com.balugaq.netex.utils.Scheduling;
+
 import com.balugaq.netex.api.helpers.Icon;
 import com.balugaq.netex.integrations.logitech.CellVirtualCache;
 import com.balugaq.netex.integrations.logitech.LinkBindingStore;
@@ -143,7 +145,7 @@ public class CellDrive extends SpecialSlimefunItem {
                     if (!shouldRefresh) {
                         return;
                     }
-                    Bukkit.getScheduler().runTask(Networks.getInstance(), () -> {
+                    Scheduling.runTask(() -> {
                         final BlockMenu blockMenu = StorageCacheUtils.getMenu(location);
                         if (blockMenu == null || !blockMenu.hasViewer()) {
                             return;

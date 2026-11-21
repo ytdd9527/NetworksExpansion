@@ -1,5 +1,7 @@
 package com.ytdd9527.networksexpansion.api.drive;
 
+import com.balugaq.netex.utils.Scheduling;
+
 import com.balugaq.netex.utils.Lang;
 import com.xzavier0722.mc.plugin.slimefun4.storage.util.StorageCacheUtils;
 import com.ytdd9527.networksexpansion.api.cell.CellnetText;
@@ -8,7 +10,7 @@ import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitTask;
+import com.tcoded.folialib.wrapper.task.WrappedTask;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 
@@ -32,10 +34,10 @@ public final class DriveGuide {
         new Particle.DustOptions(Color.fromRGB(0xFFAA00), 1.4F);
 
     private static final class GuideSession {
-        private final BukkitTask task;
+        private final WrappedTask task;
         private long lastActionBar;
 
-        private GuideSession(@NotNull BukkitTask task) {
+        private GuideSession(@NotNull WrappedTask task) {
             this.task = task;
         }
     }
@@ -50,8 +52,7 @@ public final class DriveGuide {
         Location anchor = target.clone().add(0.5D, 0.5D, 0.5D);
         UUID playerId = player.getUniqueId();
         long startedAt = System.currentTimeMillis();
-        BukkitTask task = Networks.getInstance().getServer().getScheduler().runTaskTimer(
-            Networks.getInstance(), () -> tick(player, anchor, startedAt), 0L, PERIOD_TICKS);
+        WrappedTask task = Scheduling.runTimer(() -> tick(player, anchor, startedAt), 0L, PERIOD_TICKS);
         ACTIVE.put(playerId, new GuideSession(task));
         player.sendMessage(Lang.getString(replaced
             ? CellnetText.MANAGER_GUIDE_REPLACED

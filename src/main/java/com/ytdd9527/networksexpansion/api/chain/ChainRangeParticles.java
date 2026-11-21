@@ -1,5 +1,7 @@
 package com.ytdd9527.networksexpansion.api.chain;
 
+import com.balugaq.netex.utils.Scheduling;
+
 import io.github.sefiraat.networks.Networks;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -7,7 +9,7 @@ import org.bukkit.Particle;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.scheduler.BukkitTask;
+import com.tcoded.folialib.wrapper.task.WrappedTask;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -24,8 +26,8 @@ public final class ChainRangeParticles {
     private static final Map<Location, ParticleState> STATES = new ConcurrentHashMap<>();
 
     private static final class ParticleState {
-        volatile BukkitTask active;
-        volatile BukkitTask pendingFade;
+        volatile WrappedTask active;
+        volatile WrappedTask pendingFade;
     }
 
     private ChainRangeParticles() {
@@ -61,8 +63,7 @@ public final class ChainRangeParticles {
                 spans[i] = j;
             }
         }
-        BukkitTask task = Bukkit.getScheduler().runTaskTimerAsynchronously(
-            Networks.getInstance(), () -> draw(world, origin, dirs, spans, dist), 1L, PERIOD_TICKS);
+        WrappedTask task = Scheduling.runTimerAsync(() -> draw(world, origin, dirs, spans, dist), 1L, PERIOD_TICKS);
         STATES.computeIfAbsent(origin, k -> new ParticleState()).active = task;
     }
 
@@ -74,8 +75,8 @@ public final class ChainRangeParticles {
         if (s.pendingFade != null) {
             return;
         }
-        BukkitTask faded = s.active;
-        s.pendingFade = Bukkit.getScheduler().runTaskLaterAsynchronously(Networks.getInstance(), () -> {
+        WrappedTask faded = s.active;
+        s.pendingFade = Scheduling.runLaterAsync(() -> {
             ParticleState st = STATES.get(origin);
             if (st != null && st.active == faded) {
                 if (st.active != null) { st.active.cancel(); st.active = null; }
