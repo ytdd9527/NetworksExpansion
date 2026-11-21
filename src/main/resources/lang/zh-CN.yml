@@ -348,9 +348,10 @@ messages:
         addon: "按物品所属附属字母顺序排序"
         material: "按物品材质排序"
       sort_display:
-        primary: "<passive>主排序: <gold>%s"
-        secondary: "<passive>次排序: <gold>%s"
-        secondary_none: "<passive>次排序: <gray>无"
+        primary: "<passive>主排序: <gold>{0}"
+        secondary: "<passive>次排序: <gold>{0}"
+        secondary_none: "<passive>次排序: &7无"
+        single: "&7{0}"
     quantum_storage:
       changed_custom_max_amount: "<passive>[<gold>网络拓展<passive>] <success>已更改容量: %s"
     remote:

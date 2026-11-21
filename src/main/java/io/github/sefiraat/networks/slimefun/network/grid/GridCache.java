@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @Data
 @NullMarked
@@ -36,6 +37,27 @@ public class GridCache {
         this.maxPages = maxPages;
         this.sortOrder = sortOrder;
         this.displayMode = DisplayMode.DISPLAY;
+    }
+
+    public void setSortOrder(SortOrder sortOrder) {
+        if (this.sortOrder != sortOrder) {
+            this.entriesCache = null;
+        }
+        this.sortOrder = sortOrder;
+    }
+
+    public void setSecondarySortOrder(@Nullable SortOrder secondarySortOrder) {
+        if (this.secondarySortOrder != secondarySortOrder) {
+            this.entriesCache = null;
+        }
+        this.secondarySortOrder = secondarySortOrder;
+    }
+
+    public void setFilter(@Nullable String filter) {
+        if (!Objects.equals(this.filter, filter)) {
+            this.entriesCache = null;
+        }
+        this.filter = filter;
     }
 
     public void addPullItemHistory(@Nullable ItemStack itemStack) {
@@ -71,11 +93,8 @@ public class GridCache {
         final Comparator<Map.Entry<ItemStack, Long>> comparator;
 
         public SortOrder next(@Range(from = 1, to = 5) int limit) {
-            if (this.next().ordinal() + 1 >= limit) {
-                return ALPHABETICAL;
-            }
-
-            return this.next();
+            int size = Math.max(1, Math.min(limit, values().length));
+            return values()[(ordinal() + 1) % size];
         }
 
         public SortOrder next() {
@@ -89,11 +108,8 @@ public class GridCache {
         }
 
         public SortOrder previous(@Range(from = 1, to = 5) int limit) {
-            if (this.previous().ordinal() + 1 >= limit) {
-                return values()[limit - 1];
-            }
-
-            return this.previous();
+            int size = Math.max(1, Math.min(limit, values().length));
+            return values()[(ordinal() - 1 + size) % size];
         }
 
         public SortOrder previous() {

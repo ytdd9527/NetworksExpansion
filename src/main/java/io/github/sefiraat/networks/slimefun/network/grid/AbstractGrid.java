@@ -167,7 +167,9 @@ public abstract class AbstractGrid extends NetworkObject {
 
     public ItemStack getSortOrderStack(GridCache.SortOrder sortOrder) {
         ItemStack clone = getChangeSortStack().clone();
-        clone.setLore(List.of(sortOrder.getTranslationName()));
+        clone.setLore(List.of(Lang.getString(
+            "messages.completed-operation.grid.sort_display.single",
+            sortOrder.getTranslationName())));
         return clone;
     }
 
@@ -211,6 +213,13 @@ public abstract class AbstractGrid extends NetworkObject {
         final NetworkRoot root = definition.getNode().getRoot();
 
         final GridCache gridCache = getCacheMap().get(screen.getLocation().clone());
+        SlimefunBlockData data = StorageCacheUtils.getBlock(location);
+        if (data != null) {
+            String filter = data.getData(BS_FILTER_KEY);
+            if (filter != null) {
+                gridCache.setFilter(filter);
+            }
+        }
         final List<Map.Entry<ItemStack, Long>> entries = getEntries(root, gridCache);
         final int pages = (int) Math.ceil(entries.size() / (double) getDisplaySlots().length) - 1;
 
