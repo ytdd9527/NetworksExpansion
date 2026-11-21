@@ -2,26 +2,25 @@
 # 开服测试：下载/缓存 Paper 服务端并启动，监视 console.log 出现 Done 后正常 stop。
 # 用法: bash scripts/run-server.sh <mc版本>
 # 依赖环境变量（由 workflow 的 resolve 步骤产出）:
-#   PAPER_BUILD   最新 build 号（缓存文件名与 key 的一部分）
-#   PAPER_URL     服务端 jar 下载直链
+#   PAPER_URL     服务端 jar 下载直链（仅缓存未命中时使用）
 #   PAPER_MINJAVA 最低 Java 版本要求
 set -euo pipefail
 
 MCVER="$1"
-: "${PAPER_BUILD:?PAPER_BUILD 未设置}" "${PAPER_URL:?PAPER_URL 未设置}"
+: "${PAPER_URL:?PAPER_URL 未设置}"
 
-# 缓存目录按 build 号分 jar；GitHub 对 7 天无访问的缓存条目整体驱逐，
-# 条目内单文件再按 mtime 14 天清理，避免旧 build jar 长期占额度
+# 缓存按 MC 版本命名，不挂 build 号（否则每次 resolve 拿到新 build 都会 miss）；
+# GitHub 对 7 天无访问的缓存条目整体驱逐，条目内单文件再按 mtime 14 天清理
 mkdir -p .paper-cache
 find .paper-cache -type f -mtime +14 -delete 2>/dev/null || true
-CACHE_JAR=".paper-cache/server-paper-$MCVER-$PAPER_BUILD.jar"
+CACHE_JAR=".paper-cache/server-paper-$MCVER.jar"
 mkdir -p server
 
 if [ -s "$CACHE_JAR" ]; then
   cp "$CACHE_JAR" server/paper.jar
   echo "命中服务端缓存: $CACHE_JAR"
 else
-  echo "下载 Paper $MCVER build $PAPER_BUILD: $PAPER_URL"
+  echo "下载 Paper $MCVER: $PAPER_URL"
   curl -sfL -o server/paper.jar "$PAPER_URL"
   cp server/paper.jar "$CACHE_JAR"
 fi

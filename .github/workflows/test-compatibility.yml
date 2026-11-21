@@ -204,7 +204,10 @@ jobs:
             server/caches
             server/libraries
             server/versions
-          key: paper-server-${{ matrix.version }}-${{ steps.resolve.outputs.build }}
+          # 不挂 build 号：Paper 每日多发版，挂上等于每次 miss，paperclip 会重下全部库
+          key: paper-server-${{ matrix.version }}-v1
+          restore-keys: |
+            paper-server-${{ matrix.version }}-
 
       - name: Download dependencies
         if: steps.resolve.outputs.skip != 'true'
@@ -224,7 +227,6 @@ jobs:
         id: run-server
         if: steps.resolve.outputs.skip != 'true'
         env:
-          PAPER_BUILD: ${{ steps.resolve.outputs.build }}
           PAPER_URL: ${{ steps.resolve.outputs.url }}
           PAPER_MINJAVA: ${{ steps.resolve.outputs.minjava }}
         run: |
