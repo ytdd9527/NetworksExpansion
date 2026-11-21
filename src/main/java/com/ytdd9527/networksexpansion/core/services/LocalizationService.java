@@ -28,6 +28,7 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -410,7 +411,7 @@ public class LocalizationService {
     public ItemStack getIcon(String key, Material material) {
         var icon = getItemStack("icons." + key, material);
         if (Networks.getInstance().getMinecraftVersion().isAtLeast(MinecraftVersion.V1_21_5)) {
-            icon.setData(DataComponentTypes.TOOLTIP_DISPLAY, TooltipDisplay.tooltipDisplay().hideTooltip(true).addHiddenComponents(
+            icon.setData(DataComponentTypes.TOOLTIP_DISPLAY, TooltipDisplay.tooltipDisplay().addHiddenComponents(
                 DataComponentTypes.POT_DECORATIONS,
                 DataComponentTypes.ENCHANTMENTS,
                 DataComponentTypes.ATTRIBUTE_MODIFIERS,
@@ -425,6 +426,20 @@ public class LocalizationService {
             icon.setItemMeta(meta);
         }
         return icon;
+    }
+
+    @Contract("null -> null; !null -> !null")
+    public static ItemStack hideWholeTooltip(@Nullable ItemStack stack) {
+        if (stack == null) return null;
+        if (Networks.getInstance().getMinecraftVersion().isAtLeast(MinecraftVersion.V1_21_5)) {
+            var td = TooltipDisplay.tooltipDisplay().hideTooltip(true);
+            var otd = stack.getData(DataComponentTypes.TOOLTIP_DISPLAY);
+            if (otd != null) {
+                td = td.hiddenComponents(otd.hiddenComponents());
+            }
+            stack.setData(DataComponentTypes.TOOLTIP_DISPLAY, td.build());
+        }
+        return stack;
     }
 
     @NotNull
