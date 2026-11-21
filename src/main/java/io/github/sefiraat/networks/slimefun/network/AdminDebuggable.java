@@ -1,5 +1,7 @@
 package io.github.sefiraat.networks.slimefun.network;
 
+import com.balugaq.netex.utils.Scheduling;
+
 import com.balugaq.netex.utils.Lang;
 import com.xzavier0722.mc.plugin.slimefun4.storage.util.StorageCacheUtils;
 import io.github.sefiraat.networks.Networks;
@@ -22,10 +24,7 @@ public interface AdminDebuggable {
     String DEBUG_KEY = "network_debugging";
 
     static void load() {
-        Bukkit.getScheduler()
-            .runTaskTimerAsynchronously(
-                Networks.getInstance(),
-                () -> {
+        Scheduling.runTimerAsync(() -> {
                     while (!DEBUG_QUEUE.isEmpty()) {
                         final Pair<Location, String> pair = DEBUG_QUEUE.poll();
                         if (pair != null) {

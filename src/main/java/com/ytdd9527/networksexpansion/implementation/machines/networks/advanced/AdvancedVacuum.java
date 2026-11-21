@@ -1,5 +1,7 @@
 package com.ytdd9527.networksexpansion.implementation.machines.networks.advanced;
 
+import com.balugaq.netex.utils.Scheduling;
+
 import com.balugaq.netex.api.enums.FeedbackType;
 import com.balugaq.netex.api.enums.FilterMode;
 import com.balugaq.netex.api.enums.MatchMode;
@@ -114,7 +116,7 @@ public class AdvancedVacuum extends NetworkObject {
 
                     addToRegistry(block);
                     tryAddItem(blockMenu);
-                    Bukkit.getScheduler().runTask(Networks.getInstance(), bukkitTask -> findItem(blockMenu));
+                    Scheduling.runAt(block.getLocation(), () -> findItem(blockMenu));
                 }
             }
 

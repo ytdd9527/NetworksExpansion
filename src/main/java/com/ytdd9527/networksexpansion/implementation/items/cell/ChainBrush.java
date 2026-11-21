@@ -1,5 +1,7 @@
 package com.ytdd9527.networksexpansion.implementation.items.cell;
 
+import com.balugaq.netex.utils.Scheduling;
+
 import com.balugaq.netex.utils.Lang;
 import com.ytdd9527.networksexpansion.core.items.SpecialSlimefunItem;
 import com.ytdd9527.networksexpansion.core.machines.AbstractChainMachine;
@@ -135,7 +137,7 @@ public class ChainBrush extends SpecialSlimefunItem {
             new Vector3f(SUMMARY_SCALE, SUMMARY_SCALE, SUMMARY_SCALE),
             new AxisAngle4f()));
         display.setPersistent(false);
-        Bukkit.getScheduler().runTaskLater(Networks.getInstance(), display::remove, SUMMARY_TICKS);
+        Scheduling.runLater(display::remove, SUMMARY_TICKS);
     }
 
     @NotNull

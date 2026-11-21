@@ -1,5 +1,7 @@
 package com.ytdd9527.networksexpansion.utils;
 
+import com.balugaq.netex.utils.Scheduling;
+
 import io.github.sefiraat.networks.Networks;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -96,18 +98,14 @@ public class ParticleUtil {
                 lastTick = (int) (t / 50);
                 if (tick != lastTick) {
                     final List<Runnable> finalRunnableList = runnableList;
-                    plugin.getServer()
-                        .getScheduler()
-                        .runTaskLaterAsynchronously(plugin, () -> finalRunnableList.forEach(Runnable::run), tick);
+                        Scheduling.runLaterAsync(() -> finalRunnableList.forEach(Runnable::run), tick);
                     tick = lastTick;
                     runnableList = new ArrayList<>();
                 }
             }
             if (!runnableList.isEmpty()) {
                 final List<Runnable> finalRunnableList = runnableList;
-                plugin.getServer()
-                    .getScheduler()
-                    .runTaskLaterAsynchronously(plugin, () -> finalRunnableList.forEach(Runnable::run), tick);
+                    Scheduling.runLaterAsync(() -> finalRunnableList.forEach(Runnable::run), tick);
             }
 
             time += (int) interval;
@@ -152,11 +150,7 @@ public class ParticleUtil {
                         0);
                 }
             } else {
-                plugin.getServer()
-                    .getScheduler()
-                    .runTaskLaterAsynchronously(
-                        plugin,
-                        () -> {
+                    Scheduling.runLaterAsync(() -> {
                             for (int i = 0; i < BLOCK_CUBE_OFFSET_X.length; i++) {
                                 world.spawnParticle(
                                     particle,
@@ -262,11 +256,7 @@ public class ParticleUtil {
                         0);
                 }
             } else {
-                plugin.getServer()
-                    .getScheduler()
-                    .runTaskLaterAsynchronously(
-                        plugin,
-                        () -> {
+                    Scheduling.runLaterAsync(() -> {
                             for (int i = 0; i < BLOCK_CUBE_OFFSET_X.length; i++) {
                                 world.spawnParticle(
                                     particle,
@@ -312,8 +302,7 @@ public class ParticleUtil {
 
     public static void highlightBlock(@NotNull Player player, @NotNull Location location, int shrinkTimes) {
         for (int i = 0; i < shrinkTimes; i++) {
-            Bukkit.getScheduler().runTaskLaterAsynchronously(
-                    Networks.getInstance(), () -> {
+            Scheduling.runLaterAsync(() -> {
                 drawLineFrom(player.getEyeLocation().clone().add(0D, -0.5D, 0D), location);
                 highlightBlock(location);
             }, 20L * i);

@@ -1,5 +1,7 @@
 package com.ytdd9527.networksexpansion.setup;
 
+import com.balugaq.netex.utils.Scheduling;
+
 import com.balugaq.netex.integrations.logitech.LinkBindingStore;
 import com.ytdd9527.networksexpansion.api.cell.CellTier;
 import com.ytdd9527.networksexpansion.core.items.SpecialSlimefunItem;
@@ -366,9 +368,9 @@ public class SetupUtil {
         setupItem();
         setupWiki();
         setupIntegration();
-        Bukkit.getScheduler().runTaskLater(Networks.getInstance(), LinkBindingStore::replayAll, 100L);
+        Scheduling.runLater(LinkBindingStore::replayAll, 100L);
 
         // wait for logitech integration
-        Bukkit.getScheduler().runTaskLaterAsynchronously(Networks.getInstance(), SetupUtil::setupMenu, 2L);
+        Scheduling.runLaterAsync(SetupUtil::setupMenu, 2L);
     }
 }

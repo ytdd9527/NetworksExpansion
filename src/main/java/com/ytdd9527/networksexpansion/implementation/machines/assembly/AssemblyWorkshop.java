@@ -1,5 +1,7 @@
 package com.ytdd9527.networksexpansion.implementation.machines.assembly;
 
+import com.balugaq.netex.utils.Scheduling;
+
 import com.balugaq.netex.api.helpers.Icon;
 import com.balugaq.netex.utils.BlockMenuUtil;
 import com.balugaq.netex.utils.Lang;
@@ -65,7 +67,7 @@ public class AssemblyWorkshop extends SpecialSlimefunItem {
             @NotNull RecipeType recipeType,
             ItemStack @NotNull [] recipe) {
         super(itemGroup, item, recipeType, recipe);
-        Bukkit.getScheduler().runTaskLater(Networks.getInstance(), this::registerRecipeCompletable, 1L);
+        Scheduling.runLater(this::registerRecipeCompletable, 1L);
     }
 
     private void registerRecipeCompletable() {

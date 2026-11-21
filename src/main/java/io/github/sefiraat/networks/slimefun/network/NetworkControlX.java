@@ -1,5 +1,7 @@
 package io.github.sefiraat.networks.slimefun.network;
 
+import com.balugaq.netex.utils.Scheduling;
+
 import com.balugaq.netex.api.enums.FeedbackType;
 import com.balugaq.netex.api.helpers.Icon;
 import com.balugaq.netex.api.interfaces.SoftCellBannable;
@@ -145,7 +147,7 @@ public class NetworkControlX extends NetworkDirectional implements SoftCellBanna
         final OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(uuid);
          */
 
-        Bukkit.getScheduler().runTask(Networks.getInstance(), bukkitTask -> {
+        Scheduling.runAt(targetBlock.getLocation(), () -> {
             /* Netex - #293
             // No longer check permission
             if (!Slimefun.getProtectionManager().hasPermission(offlinePlayer, targetBlock, Interaction.BREAK_BLOCK)) {

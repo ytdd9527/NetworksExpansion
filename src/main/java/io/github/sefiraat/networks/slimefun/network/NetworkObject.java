@@ -1,5 +1,7 @@
 package io.github.sefiraat.networks.slimefun.network;
 
+import com.balugaq.netex.utils.Scheduling;
+
 import com.balugaq.netex.api.interfaces.HangingBlock;
 import com.balugaq.netex.utils.Lang;
 import com.xzavier0722.mc.plugin.slimefun4.storage.controller.SlimefunBlockData;
@@ -50,10 +52,7 @@ public abstract class NetworkObject extends SpecialSlimefunItem implements Admin
         Set.of(BlockFace.UP, BlockFace.DOWN, BlockFace.NORTH, BlockFace.SOUTH, BlockFace.EAST, BlockFace.WEST);
 
     static {
-        Bukkit.getScheduler()
-            .runTaskTimer(
-                Networks.getInstance(),
-                () -> {
+        Scheduling.runTimer(() -> {
                     while (!scheduledHangingTick.isEmpty()) {
                         final Location location = scheduledHangingTick.poll();
                         final Block block = location.getBlock();
@@ -109,7 +108,7 @@ public abstract class NetworkObject extends SpecialSlimefunItem implements Admin
                 public void tick(Block b, SlimefunItem item, SlimefunBlockData data) {
                     if (!firstTickLocations.contains(b.getLocation())) {
                         // Netex - Hanging patch start
-                        Bukkit.getScheduler().runTask(Networks.getInstance(), () -> {
+                        Scheduling.runTask(() -> {
                             HangingBlock.loadHangingBlocks(data);
                             HangingBlock.doFirstTick(data);
                         });

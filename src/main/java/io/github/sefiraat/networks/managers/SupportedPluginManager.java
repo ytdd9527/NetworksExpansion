@@ -1,5 +1,7 @@
 package io.github.sefiraat.networks.managers;
 
+import com.balugaq.netex.utils.Scheduling;
+
 import com.balugaq.netex.integrations.logitech.LogitechIntegration;
 import com.bgsoftware.wildstacker.api.WildStackerAPI;
 import com.google.common.base.Preconditions;
@@ -60,10 +62,7 @@ public class SupportedPluginManager {
         this.simpleStorage = Bukkit.getPluginManager().isPluginEnabled("SimpleStorage");
         this.finalTECH = Bukkit.getPluginManager().isPluginEnabled("FinalTECH") || Bukkit.getPluginManager().isPluginEnabled("FinalTECH-Changed");
 
-        Networks.getInstance()
-            .getServer()
-            .getScheduler()
-            .runTaskLater(Networks.getInstance(), this::firstTickRegistrations, 1);
+        Scheduling.runLater(this::firstTickRegistrations, 1);
     }
 
     public static int getStackAmount(@NotNull Item item) {

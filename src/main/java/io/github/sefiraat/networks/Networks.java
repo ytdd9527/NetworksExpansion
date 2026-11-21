@@ -7,6 +7,8 @@ import com.balugaq.netex.api.enums.MinecraftVersion;
 import com.balugaq.netex.api.keybind.Keybinds;
 import com.balugaq.netex.core.guide.GridNewStyleCustomAmountGuideOption;
 import com.balugaq.netex.utils.Debug;
+import com.balugaq.netex.utils.Scheduling;
+import com.tcoded.folialib.wrapper.task.WrappedTask;
 import com.xzavier0722.mc.plugin.slimefun4.storage.controller.SlimefunBlockData;
 import com.xzavier0722.mc.plugin.slimefun4.storage.util.StorageCacheUtils;
 import com.ytdd9527.networksexpansion.core.managers.ConfigManager;
@@ -37,12 +39,10 @@ import net.byteflux.libby.LibraryManager;
 import net.guizhanss.guizhanlibplugin.updater.GuizhanUpdater;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.AdvancedPie;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.yaml.snakeyaml.error.YAMLException;
@@ -67,10 +67,10 @@ public class Networks extends JavaPlugin implements SlimefunAddon {
     private static QueryQueue queryQueue;
 
     @Getter
-    private static BukkitRunnable autoSaveThread;
+    private static WrappedTask autoSaveThread;
 
     @Getter
-    private static BukkitRunnable aeAutoSaveThread;
+    private static WrappedTask aeAutoSaveThread;
 
     @Getter
     private static CellStorageDatabase cellStorageDatabase;
@@ -128,6 +128,7 @@ public class Networks extends JavaPlugin implements SlimefunAddon {
     @Override
     public void onEnable() {
         instance = this;
+        Scheduling.initialize(this);
 
         loadLibraries();
 
@@ -173,25 +174,13 @@ public class Networks extends JavaPlugin implements SlimefunAddon {
         queryQueue.startThread();
 
         getLogger().info(getLocalizationService().getString("messages.startup.creating-auto-save-thread"));
-        autoSaveThread = new BukkitRunnable() {
-            @Override
-            public void run() {
-                DataStorage.saveAmountChange();
-            }
-        };
         int seconds = getConfig().getInt("drawer-auto-save-period");
         seconds = seconds <= 0 ? 300 : seconds;
         long period = 20L * seconds;
-        autoSaveThread.runTaskTimerAsynchronously(this, 2 * period, period);
+        autoSaveThread = Scheduling.runTimerAsync(DataStorage::saveAmountChange, 2 * period, period);
 
         // 元件驱动器元件数据自动保存
-        aeAutoSaveThread = new BukkitRunnable() {
-            @Override
-            public void run() {
-                CellDrive.saveAllDriveCells();
-            }
-        };
-        aeAutoSaveThread.runTaskTimerAsynchronously(this, 2 * period, period);
+        aeAutoSaveThread = Scheduling.runTimerAsync(CellDrive::saveAllDriveCells, 2 * period, period);
 
         getLogger().info(getLocalizationService().getString("messages.startup.initializing-cell-database"));
         try {
@@ -216,48 +205,36 @@ public class Networks extends JavaPlugin implements SlimefunAddon {
 
         setupMetrics();
 
-        Bukkit.getScheduler()
-            .runTaskTimer(
-                this,
-                () -> slimefunTickCount++,
-                1,
-                Slimefun.getTickerTask().getTickRate());
+        Scheduling.runTimer(() -> slimefunTickCount++, 1, Slimefun.getTickerTask().getTickRate());
 
         // Fix dupe bug where player breaks the network controller data without player interaction
-        Bukkit.getScheduler()
-            .runTaskTimer(
-                this,
-                () -> {
-                    Set<Location> wrongs = new HashSet<>();
-                    Set<Location> controllers = new HashSet<>(
-                        NetworkController.getNetworks().keySet());
-                    for (Location controller : controllers) {
-                        SlimefunBlockData data = StorageCacheUtils.getBlock(controller);
-                        if (data == null
-                            || !NetworksSlimefunItemStacks.NETWORK_CONTROLLER
-                            .getItemId()
-                            .equals(data.getSfId())) {
-                            wrongs.add(controller);
-                        }
-                    }
+        Scheduling.runTimer(() -> {
+            Set<Location> wrongs = new HashSet<>();
+            Set<Location> controllers = new HashSet<>(
+                NetworkController.getNetworks().keySet());
+            for (Location controller : controllers) {
+                SlimefunBlockData data = StorageCacheUtils.getBlock(controller);
+                if (data == null
+                    || !NetworksSlimefunItemStacks.NETWORK_CONTROLLER
+                    .getItemId()
+                    .equals(data.getSfId())) {
+                    wrongs.add(controller);
+                }
+            }
 
-                    for (Location wrong : wrongs) {
-                        NetworkUtils.clearNetwork(wrong);
-                    }
-                },
-                1,
-                Slimefun.getTickerTask().getTickRate());
+            for (Location wrong : wrongs) {
+                NetworkUtils.clearNetwork(wrong);
+            }
+        }, 1, Slimefun.getTickerTask().getTickRate());
 
-        Bukkit.getScheduler()
-            .runTaskTimer(
-                this,
-                () -> NetworkController.getRecords().values().forEach(ItemFlowRecord::gc),
-                1,
-                Slimefun.getTickerTask().getTickRate());
+        Scheduling.runTimer(
+            () -> NetworkController.getRecords().values().forEach(ItemFlowRecord::gc),
+            1,
+            Slimefun.getTickerTask().getTickRate());
 
         AdminDebuggable.load();
         SlimefunGuideSettings.addOption(GridNewStyleCustomAmountGuideOption.instance());
-        Bukkit.getScheduler().runTaskLaterAsynchronously(this, Keybinds::distinctAll, 1L);
+        Scheduling.runLaterAsync(Keybinds::distinctAll, 1L);
         ID.fetchId();
         Keybinds.fetchScripts();
         getLogger().info(getLocalizationService().getString("messages.startup.enabled-successfully"));
@@ -274,12 +251,8 @@ public class Networks extends JavaPlugin implements SlimefunAddon {
             Debug.trace(e);
         }
 
-        if (autoSaveThread != null) {
-            autoSaveThread.cancel();
-        }
-        if (aeAutoSaveThread != null) {
-            aeAutoSaveThread.cancel();
-        }
+        Scheduling.cancel(autoSaveThread);
+        Scheduling.cancel(aeAutoSaveThread);
         DataStorage.saveAmountChange();
         CellDrive.saveAllDriveCells();
         if (cellStorageDatabase != null) {

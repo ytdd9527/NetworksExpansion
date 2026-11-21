@@ -1,5 +1,7 @@
 package com.balugaq.netex.api.interfaces;
 
+import com.balugaq.netex.utils.Scheduling;
+
 import com.balugaq.netex.api.enums.FeedbackType;
 import com.balugaq.netex.utils.Lang;
 import com.balugaq.netex.utils.LocationUtil;
@@ -63,7 +65,7 @@ public interface FeedbackSendable {
         if (Bukkit.isPrimaryThread()) {
             task.run();
         } else {
-            Bukkit.getScheduler().runTask(Networks.getInstance(), task);
+            Scheduling.runTask(task);
         }
     }
 

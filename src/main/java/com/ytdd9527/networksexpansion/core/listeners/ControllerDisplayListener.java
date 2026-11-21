@@ -1,5 +1,7 @@
 package com.ytdd9527.networksexpansion.core.listeners;
 
+import com.balugaq.netex.utils.Scheduling;
+
 import com.balugaq.netex.api.events.NetworkRootReadyEvent;
 import io.github.sefiraat.networks.Networks;
 import io.github.sefiraat.networks.network.NetworkRoot;
@@ -30,7 +32,7 @@ public class ControllerDisplayListener implements Listener {
 
     public ControllerDisplayListener() {
         this.timeoutMillis = (Slimefun.getTickerTask().getTickRate() * 4L + 20L) * 50L;
-        Bukkit.getScheduler().runTaskTimer(Networks.getInstance(), this::heartbeat, 20L, 20L);
+        Scheduling.runTimer(this::heartbeat, 20L, 20L);
     }
 
     @EventHandler

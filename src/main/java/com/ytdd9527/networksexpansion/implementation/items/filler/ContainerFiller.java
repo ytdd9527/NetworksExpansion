@@ -1,5 +1,7 @@
 package com.ytdd9527.networksexpansion.implementation.items.filler;
 
+import com.balugaq.netex.utils.Scheduling;
+
 import com.balugaq.netex.api.helpers.Icon;
 import com.balugaq.netex.utils.Lang;
 import com.xzavier0722.mc.plugin.slimefun4.storage.controller.SlimefunBlockData;
@@ -132,7 +134,7 @@ public class ContainerFiller extends SpecialSlimefunItem {
                 if (menu != null) {
                     // processRound reads/writes the inventory and drops items: main-thread work
                     Location location = b.getLocation();
-                    Bukkit.getScheduler().runTask(Networks.getInstance(), () -> processRound(menu, location));
+                    Scheduling.runTask(() -> processRound(menu, location));
                 }
             }
         });
@@ -184,7 +186,7 @@ public class ContainerFiller extends SpecialSlimefunItem {
                 for (int slot : TEMPLATE_SLOTS) {
                     menu.addMenuClickHandler(slot, (player, si, item, action) -> {
                         if (item != null && !item.getType().isAir() && !isSlotMarker(item)) {
-                            Bukkit.getScheduler().runTask(Networks.getInstance(), () -> syncTemplateMarkers(menu));
+                            Scheduling.runTask(() -> syncTemplateMarkers(menu));
                             return true;
                         }
                         ItemStack cursor = player.getItemOnCursor();

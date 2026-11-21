@@ -1,5 +1,7 @@
 package com.balugaq.netex.api.groups;
 
+import com.balugaq.netex.utils.Scheduling;
+
 import com.balugaq.jeg.utils.clickhandler.OnDisplay;
 import com.balugaq.netex.utils.GuideUtil;
 import com.balugaq.netex.utils.Lang;
@@ -246,10 +248,7 @@ public class SubFlexItemGroup extends FlexItemGroup {
                                 RecipeItemGroup recipeItemGroup = RecipeItemGroup.getByItemStack(
                                     player, playerProfile, slimefunGuideMode, slimefunItem.getItem());
                                 if (recipeItemGroup != null) {
-                                    Bukkit.getScheduler()
-                                        .runTask(
-                                            JAVA_PLUGIN,
-                                            () -> recipeItemGroup.open(player, playerProfile, slimefunGuideMode));
+                                    Scheduling.runTask(() -> recipeItemGroup.open(player, playerProfile, slimefunGuideMode));
                                 }
                                 return false;
                             });

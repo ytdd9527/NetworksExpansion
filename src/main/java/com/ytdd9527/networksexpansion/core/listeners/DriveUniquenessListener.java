@@ -1,5 +1,7 @@
 package com.ytdd9527.networksexpansion.core.listeners;
 
+import com.balugaq.netex.utils.Scheduling;
+
 import com.xzavier0722.mc.plugin.slimefun4.storage.util.StorageCacheUtils;
 import com.ytdd9527.networksexpansion.api.drive.DriveSlotGuard;
 import com.ytdd9527.networksexpansion.api.drive.DriveType;
@@ -36,7 +38,7 @@ public final class DriveUniquenessListener implements Listener {
         if (beingPlaced != null && StorageCell.isStorageCell(beingPlaced)) {
             if (!CellUniqueness.isDuplicate(menu, beingPlaced)) {
                 CellUniqueness.registerCell(menu.getLocation(), beingPlaced);
-                Bukkit.getScheduler().runTask(Networks.getInstance(), () -> CellUniqueness.registerDrive(menu));
+                Scheduling.runTask(() -> CellUniqueness.registerDrive(menu));
                 return;
             }
             event.setCancelled(true);
@@ -45,7 +47,7 @@ public final class DriveUniquenessListener implements Listener {
             return;
         }
         if (isRemovalFromCellSlot(event)) {
-            Bukkit.getScheduler().runTask(Networks.getInstance(), () -> CellUniqueness.registerDrive(menu));
+            Scheduling.runTask(() -> CellUniqueness.registerDrive(menu));
         }
     }
 

@@ -1,5 +1,7 @@
 package com.ytdd9527.networksexpansion.api.drive;
 
+import com.balugaq.netex.utils.Scheduling;
+
 import com.xzavier0722.mc.plugin.slimefun4.storage.controller.SlimefunBlockData;
 import com.xzavier0722.mc.plugin.slimefun4.storage.util.StorageCacheUtils;
 import io.github.sefiraat.networks.Networks;
@@ -37,8 +39,7 @@ public final class DriveOwnership {
             return;
         }
         if (attempt < OWNER_PERSIST_MAX_ATTEMPTS) {
-            Bukkit.getScheduler().runTaskLater(Networks.getInstance(),
-                () -> persistOwner(location, ownerUuid, attempt + 1), 2L);
+            Scheduling.runLater(() -> persistOwner(location, ownerUuid, attempt + 1), 2L);
         }
     }
 

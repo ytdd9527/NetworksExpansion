@@ -28,6 +28,7 @@ repositories {
     maven("https://maven.enginehub.org/repo/")
     maven("https://repo.alessiodp.com/releases")
     maven("https://repo.jeff-media.com/public")
+    maven("https://repo.tcoded.com/releases/")
 }
 
 dependencies {
@@ -41,6 +42,7 @@ dependencies {
     implementation(libs.sefilib)
     implementation(libs.libby.bukkit)
     implementation(libs.big.interaction.menu)
+    implementation(libs.folia.lib)
 
     compileOnly(libs.findbugs.annotations) {
         exclude("net.jcip", "jcip-annotations")
@@ -110,10 +112,15 @@ tasks {
 
         minimize()
 
+        minimize {
+            exclude(dependency("com.tcoded:FoliaLib:.*"))
+        }
+
         // Relocations
         relocate("org.bstats", "io.github.sefiraat.networks.bstats")
         relocate("io.papermc.lib", "dev.sefiraat.cultivation.paperlib")
         relocate("net.byteflux.libby", "com.balugaq.netex.libraries.libby")
+        relocate("com.tcoded.folialib", "io.github.sefiraat.networks.folialib")
 
         // Exclude META-INF
         exclude("META-INF/*")

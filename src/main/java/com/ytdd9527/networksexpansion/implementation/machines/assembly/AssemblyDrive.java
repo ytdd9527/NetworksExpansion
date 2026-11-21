@@ -1,5 +1,7 @@
 package com.ytdd9527.networksexpansion.implementation.machines.assembly;
 
+import com.balugaq.netex.utils.Scheduling;
+
 import com.balugaq.netex.utils.Lang;
 import com.xzavier0722.mc.plugin.slimefun4.storage.controller.SlimefunBlockData;
 import com.xzavier0722.mc.plugin.slimefun4.storage.util.StorageCacheUtils;
@@ -106,7 +108,7 @@ public class AssemblyDrive extends SpecialSlimefunItem {
                     return;
                 }
                 state.nextRun = System.currentTimeMillis() + AssemblyRound.MIN_INTERVAL_MS;
-                Bukkit.getScheduler().runTask(Networks.getInstance(), () -> {
+                Scheduling.runTask(() -> {
                     BlockMenu blockMenu = StorageCacheUtils.getMenu(location);
                     if (blockMenu != null) {
                         tickMain(location, blockMenu, state);

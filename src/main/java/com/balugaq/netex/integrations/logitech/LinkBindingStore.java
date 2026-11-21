@@ -1,5 +1,7 @@
 package com.balugaq.netex.integrations.logitech;
 
+import com.balugaq.netex.utils.Scheduling;
+
 import com.balugaq.netex.utils.Debug;
 import com.xzavier0722.mc.plugin.slimefun4.storage.util.StorageCacheUtils;
 import com.ytdd9527.networksexpansion.api.drive.DriveType;
@@ -153,7 +155,7 @@ public final class LinkBindingStore {
         if (deferred.isEmpty() || ++replayRounds >= MAX_REPLAY_ROUNDS) {
             return;
         }
-        Bukkit.getScheduler().runTaskLater(Networks.getInstance(), LinkBindingStore::replayAll, 100L);
+        Scheduling.runLater(LinkBindingStore::replayAll, 100L);
     }
 
     private static void indexAdd(@NotNull Location target) {

@@ -1,5 +1,7 @@
 package com.ytdd9527.networksexpansion.api.cell;
 
+import com.balugaq.netex.utils.Scheduling;
+
 import com.balugaq.netex.api.helpers.Icon;
 import com.balugaq.netex.utils.Lang;
 import com.xzavier0722.mc.plugin.slimefun4.storage.util.StorageCacheUtils;
@@ -150,7 +152,7 @@ public final class VoidCellMenu {
 
     private static void runNextTick(@NotNull Runnable task) {
         if (Networks.getInstance().isEnabled()) {
-            Bukkit.getScheduler().runTask(Networks.getInstance(), task);
+            Scheduling.runTask(task);
         } else {
             task.run();
         }

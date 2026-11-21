@@ -1,5 +1,7 @@
 package com.ytdd9527.networksexpansion.implementation.machines.drive;
 
+import com.balugaq.netex.utils.Scheduling;
+
 import com.balugaq.netex.utils.Lang;
 import com.xzavier0722.mc.plugin.slimefun4.storage.controller.SlimefunBlockData;
 import com.xzavier0722.mc.plugin.slimefun4.storage.util.StorageCacheUtils;
@@ -116,7 +118,7 @@ public class DriveMonitor extends NetworkObject {
     }
 
     private static void nextTick(@NotNull Runnable action) {
-        Bukkit.getScheduler().runTask(Networks.getInstance(), action);
+        Scheduling.runTask(action);
     }
 
     private void setupHandlers(@NotNull BlockMenu menu) {

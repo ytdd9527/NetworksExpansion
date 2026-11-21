@@ -1,5 +1,7 @@
 package com.ytdd9527.networksexpansion.implementation.machines.drive;
 
+import com.balugaq.netex.utils.Scheduling;
+
 import com.balugaq.netex.api.helpers.Icon;
 import com.balugaq.netex.integrations.logitech.CellVirtualCache;
 import com.balugaq.netex.utils.Lang;
@@ -243,7 +245,7 @@ public class EnderDrive extends CellDrive {
                     return;
                 }
                 state.displayStamp = now;
-                Bukkit.getScheduler().runTask(Networks.getInstance(), () -> {
+                Scheduling.runTask(() -> {
                     BlockMenu blockMenu = StorageCacheUtils.getMenu(location);
                     if (blockMenu == null || !blockMenu.hasViewer()) {
                         return;
@@ -356,7 +358,7 @@ public class EnderDrive extends CellDrive {
     }
 
     private static void enqueueImmediateSync(@NotNull Location location) {
-        Bukkit.getScheduler().runTask(Networks.getInstance(), () -> {
+        Scheduling.runTask(() -> {
             BlockMenu menu = StorageCacheUtils.getMenu(location);
             if (menu != null) {
                 syncMenuMembers(menu);
@@ -380,7 +382,7 @@ public class EnderDrive extends CellDrive {
         if (!SYNC_TIMER_STARTED.compareAndSet(false, true)) {
             return;
         }
-        Bukkit.getScheduler().runTaskTimer(Networks.getInstance(), () -> {
+        Scheduling.runTimer(() -> {
             if (!Networks.getInstance().isEnabled() || STATES.isEmpty()) {
                 return;
             }

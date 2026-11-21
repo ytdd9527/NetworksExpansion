@@ -1,5 +1,7 @@
 package com.balugaq.netex.utils;
 
+import com.balugaq.netex.utils.Scheduling;
+
 import io.github.sefiraat.networks.Networks;
 import io.github.sefiraat.networks.utils.StackUtils;
 import lombok.experimental.UtilityClass;
@@ -105,7 +107,7 @@ public class InventoryUtil {
         if (stack == null) return;
         InventoryUtil.addItem(player, stack);
         if (stack.getAmount() > 0) {
-            Bukkit.getScheduler().runTask(Networks.getInstance(), () -> {
+            Scheduling.runTask(() -> {
                 player.getWorld().dropItem(player.getLocation(), stack);
             });
         }

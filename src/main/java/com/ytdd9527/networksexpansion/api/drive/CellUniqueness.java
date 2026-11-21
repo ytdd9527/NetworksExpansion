@@ -1,5 +1,7 @@
 package com.ytdd9527.networksexpansion.api.drive;
 
+import com.balugaq.netex.utils.Scheduling;
+import com.tcoded.folialib.wrapper.task.WrappedTask;
 import com.balugaq.netex.utils.Lang;
 import com.balugaq.netex.utils.NetworksVersionedParticle;
 import com.ytdd9527.networksexpansion.api.cell.CellPersistence;
@@ -14,7 +16,6 @@ import org.bukkit.World;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -176,26 +177,23 @@ public final class CellUniqueness {
     }
 
     private static void flashEntity(@NotNull Item entity) {
-        new BukkitRunnable() {
-            private int ticks = 0;
-
-            @Override
-            public void run() {
-                if (!entity.isValid()) {
-                    cancel();
-                    return;
-                }
-                entity.setGlowing(ticks % 2 == 0);
-                World world = entity.getWorld();
-                if (world != null) {
-                    Location loc = entity.getLocation();
-                    world.spawnParticle(NetworksVersionedParticle.DUST, loc, 8, 0.3, 0.3, 0.3, new Particle.DustOptions(Color.fromRGB(0xFF5A5A), 1.2f));
-                }
-                if (++ticks >= 4) {
-                    entity.setGlowing(false);
-                    cancel();
-                }
+        WrappedTask[] taskRef = new WrappedTask[1];
+        int[] ticks = {0};
+        taskRef[0] = Scheduling.runTimer(() -> {
+            if (!entity.isValid()) {
+                taskRef[0].cancel();
+                return;
             }
-        }.runTaskTimer(Networks.getInstance(), 0L, 4L);
+            entity.setGlowing(ticks[0] % 2 == 0);
+            World world = entity.getWorld();
+            if (world != null) {
+                Location loc = entity.getLocation();
+                world.spawnParticle(NetworksVersionedParticle.DUST, loc, 8, 0.3, 0.3, 0.3, new Particle.DustOptions(Color.fromRGB(0xFF5A5A), 1.2f));
+            }
+            if (++ticks[0] >= 4) {
+                entity.setGlowing(false);
+                taskRef[0].cancel();
+            }
+        }, 0L, 4L);
     }
 }
