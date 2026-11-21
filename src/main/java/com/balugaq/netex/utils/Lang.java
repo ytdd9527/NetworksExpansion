@@ -7,28 +7,27 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.text.MessageFormat;
 import java.util.List;
 
+@NullMarked
 public class Lang {
     public static LocalizationService get() {
         return Networks.getLocalizationService();
     }
 
-    @NotNull
-    public static ItemStack getMechanism(@NotNull String key) {
+    public static ItemStack getMechanism(String key) {
         return get().getMechanism(key);
     }
 
-    @NotNull
-    public static SlimefunItemStack getItem(@NotNull String key, @NotNull Material material) {
+    public static SlimefunItemStack getItem(String key, Material material) {
         return get().getItem(key, material);
     }
 
-    @NotNull
-    public static SlimefunItemStack getItem(@NotNull String id, @NotNull Material material, Object... args) {
+    public static SlimefunItemStack getItem(String id, Material material, Object... args) {
         SlimefunItemStack stack = get().getItem(id, material);
         if (args.length > 0) {
             ItemMeta meta = stack.getItemMeta();
@@ -42,41 +41,31 @@ public class Lang {
         return stack;
     }
 
-    @NotNull
-    @ParametersAreNonnullByDefault
     public static SlimefunItemStack getItem(String id, String texture, String... extraLore) {
         return get().getItem(id, texture, extraLore);
     }
 
-    @NotNull
-    @ParametersAreNonnullByDefault
     public static SlimefunItemStack getItem(String id, ItemStack itemStack, String... extraLore) {
         return get().getItem(id, itemStack, extraLore);
     }
 
-    @NotNull
-    public static ItemStack getIcon(@NotNull String key, @NotNull Material material) {
+    public static ItemStack getIcon(String key, Material material) {
         return get().getIcon(key, material);
     }
 
-    @NotNull
-    public static String getString(@NotNull String key) {
+    public static String getString(String key) {
         return get().getString(key);
     }
 
-    @ParametersAreNonnullByDefault
-    @NotNull
     public static String getString(String key, Object... args) {
         return get().getString(key, args);
     }
 
-    @NotNull
-    public static List<String> getStringList(@NotNull String key) {
+    public static List<String> getStringList(String key) {
         return get().getStringList(key);
     }
 
-    @NotNull
-    public static String @NotNull [] getStringArray(@NotNull String key) {
+    public static String[] getStringArray(String key) {
         return get().getStringArray(key);
     }
 }

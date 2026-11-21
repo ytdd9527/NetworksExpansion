@@ -9,7 +9,6 @@ import io.github.thebusybiscuit.slimefun4.libraries.dough.items.CustomItemStack;
 import io.github.thebusybiscuit.slimefun4.utils.ChestMenuUtils;
 import io.github.thebusybiscuit.slimefun4.utils.compatibility.VersionedEnchantment;
 import org.bukkit.Material;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -19,12 +18,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static com.ytdd9527.networksexpansion.core.services.LocalizationService.hideWholeTooltip;
+
 /**
  * @author Final_ROOT
  * @author balugaq
  */
 public class Icon {
-    public static final ItemStack BORDER_ICON = ItemStackUtil.getCleanItem(ChestMenuUtils.getBackground());
+    public static final ItemStack BORDER_ICON = hideWholeTooltip(ItemStackUtil.getCleanItem(ChestMenuUtils.getBackground()));
     public static final ItemStack ERROR_ICON = ItemStackUtil.getCleanItem(new ItemStack(Material.BARRIER));
     public static final ItemStack RECIPE_ICON = ItemStackUtil.getCleanItem(new ItemStack(Material.PAPER));
     public static final ItemStack ERROR_BORDER =
@@ -47,9 +48,9 @@ public class Icon {
         Lang.getIcon("blueprint-back-stack", Material.BLUE_STAINED_GLASS_PANE);
     public static final ItemStack ENCODE_STACK = Lang.getIcon("encode-stack", Material.BLUE_STAINED_GLASS_PANE);
     public static final ItemStack BLANK_SLOT_STACK =
-        Lang.getIcon("blank-slot-stack", Material.LIGHT_GRAY_STAINED_GLASS_PANE);
+        hideWholeTooltip(Lang.getIcon("blank-slot-stack", Material.LIGHT_GRAY_STAINED_GLASS_PANE));
     public static final ItemStack DARK_BLANK_SLOT_STACK =
-        Lang.getIcon("blank-slot-stack", Material.BLACK_STAINED_GLASS_PANE);
+        hideWholeTooltip(Lang.getIcon("blank-slot-stack", Material.BLACK_STAINED_GLASS_PANE));
     public static final ItemStack PAGE_PREVIOUS_STACK =
         Lang.getIcon("page-previous-stack", Material.RED_STAINED_GLASS_PANE);
     public static final ItemStack PAGE_NEXT_STACK = Lang.getIcon("page-next-stack", Material.GREEN_STAINED_GLASS_PANE);
@@ -145,7 +146,7 @@ public class Icon {
     public static final ItemStack MATCH_MODE_MATERIAL_MATCH = Lang.getIcon("match-mode-material-match", Material.MAP);
 
     public static final ItemStack ADVANCED_VACUUM_SPLIT_BLOCK =
-        Lang.getIcon("advanced-vacuum-split-block", Material.CYAN_STAINED_GLASS_PANE);
+        hideWholeTooltip(Lang.getIcon("advanced-vacuum-split-block", Material.CYAN_STAINED_GLASS_PANE));
 
     public static final ItemStack BLUE_BACKGROUND =
         Lang.getIcon("blue-background", Material.BLUE_STAINED_GLASS_PANE);
@@ -154,16 +155,16 @@ public class Icon {
         Lang.getIcon("keybind-settings", Material.CLOCK);
 
     public static final ItemStack LIGHT_GRAY_BACKGROUND =
-        Lang.getIcon("light-gray-background", Material.LIGHT_GRAY_STAINED_GLASS_PANE);
+        hideWholeTooltip(Lang.getIcon("light-gray-background", Material.LIGHT_GRAY_STAINED_GLASS_PANE));
 
     public static final ItemStack YELLOW_BORDER =
-        Lang.getIcon("yellow-border", Material.YELLOW_STAINED_GLASS_PANE);
+        hideWholeTooltip(Lang.getIcon("yellow-border", Material.YELLOW_STAINED_GLASS_PANE));
 
     public static final ItemStack UPLOAD_KEYBIND_SCRIPT =
         Lang.getIcon("upload-keybind-script", Material.PAPER);
 
     public static final ItemStack GRAY_BACKGROUND =
-        Lang.getIcon("gray-background", Material.GRAY_STAINED_GLASS_PANE);
+        hideWholeTooltip(Lang.getIcon("gray-background", Material.GRAY_STAINED_GLASS_PANE));
 
     public static final ItemStack SCRIPT_CENTER =
         Lang.getIcon("script-center", Material.COMPASS);
@@ -220,8 +221,8 @@ public class Icon {
     public static final ItemStack VOID_INFO = of("cellnet-void-info", Material.BOOK);
     public static final ItemStack VOID_CLOSE = of("cellnet-void-close", Material.BARRIER);
     public static final ItemStack CLEANER_CELL_SLOT = of("cellnet-cleaner-cell-slot", Material.LIGHT_GRAY_STAINED_GLASS_PANE);
-    public static final ItemStack CLEANER_DISPLAY = of("cellnet-display-placeholder", Material.GREEN_STAINED_GLASS_PANE);
-    public static final ItemStack CONVERTER_BORDER = of("cellnet-converter-border", Material.BLUE_STAINED_GLASS_PANE);
+    public static final ItemStack CLEANER_DISPLAY = hideWholeTooltip(of("cellnet-display-placeholder", Material.GREEN_STAINED_GLASS_PANE));
+    public static final ItemStack CONVERTER_BORDER = hideWholeTooltip(of("cellnet-converter-border", Material.BLUE_STAINED_GLASS_PANE));
     public static final ItemStack CONVERTER_CELL_SLOT = of("cellnet-converter-cell-slot", Material.LIGHT_GRAY_STAINED_GLASS_PANE);
     public static final ItemStack CONVERTER_CLOSE = of("cellnet-converter-close", Material.BARRIER);
     public static final ItemStack CELL_SETTING_SLOT = of("cellnet-setting-slot", Material.GREEN_STAINED_GLASS_PANE);
@@ -282,8 +283,7 @@ public class Icon {
 
     @NotNull
     private static ItemStack of(@NotNull String key, @NotNull Material fallback) {
-        ItemStack icon = Lang.getIcon(key, fallback);
-        return icon != null ? icon : new ItemStack(fallback);
+        return Lang.getIcon(key, fallback);
     }
 
     @NotNull
