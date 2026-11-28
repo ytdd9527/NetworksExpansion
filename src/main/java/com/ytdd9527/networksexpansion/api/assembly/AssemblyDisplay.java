@@ -2,10 +2,10 @@ package com.ytdd9527.networksexpansion.api.assembly;
 
 import com.balugaq.netex.api.helpers.Icon;
 import com.balugaq.netex.utils.Lang;
+import com.ytdd9527.networksexpansion.api.cell.CellnetText;
 import com.ytdd9527.networksexpansion.implementation.machines.assembly.AssemblyDrive;
 import com.ytdd9527.networksexpansion.utils.GhostItems;
 import com.ytdd9527.networksexpansion.utils.NumberFormat;
-import com.ytdd9527.networksexpansion.api.cell.CellnetText;
 import io.github.sefiraat.networks.network.NetworkRoot;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
 import org.bukkit.Material;

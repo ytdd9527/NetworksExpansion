@@ -1,17 +1,15 @@
 package com.ytdd9527.networksexpansion.implementation.items.cell;
 
-import com.balugaq.netex.utils.Scheduling;
-
 import com.balugaq.netex.utils.Lang;
-import com.ytdd9527.networksexpansion.core.items.SpecialSlimefunItem;
-import com.ytdd9527.networksexpansion.core.machines.AbstractChainMachine;
+import com.balugaq.netex.utils.Scheduling;
+import com.ytdd9527.networksexpansion.api.cell.CellnetText;
 import com.ytdd9527.networksexpansion.api.cell.LineState;
 import com.ytdd9527.networksexpansion.api.chain.ChainBindingMenu;
 import com.ytdd9527.networksexpansion.api.chain.ChainBindingStore;
 import com.ytdd9527.networksexpansion.api.chain.ChainModule;
-import com.ytdd9527.networksexpansion.api.cell.CellnetText;
+import com.ytdd9527.networksexpansion.core.items.SpecialSlimefunItem;
+import com.ytdd9527.networksexpansion.core.machines.AbstractChainMachine;
 import com.ytdd9527.networksexpansion.utils.TextUtil;
-import io.github.sefiraat.networks.Networks;
 import io.github.sefiraat.networks.slimefun.network.NetworkDirectional;
 import io.github.thebusybiscuit.slimefun4.api.items.ItemGroup;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
@@ -20,7 +18,6 @@ import io.github.thebusybiscuit.slimefun4.core.handlers.ItemUseHandler;
 import io.github.thebusybiscuit.slimefun4.implementation.Slimefun;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.protection.Interaction;
 import net.kyori.adventure.text.Component;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;

@@ -2,8 +2,8 @@ package com.ytdd9527.networksexpansion.core.listeners;
 
 import com.balugaq.netex.utils.Lang;
 import com.xzavier0722.mc.plugin.slimefun4.storage.util.StorageCacheUtils;
-import com.ytdd9527.networksexpansion.core.services.CollectService;
 import com.ytdd9527.networksexpansion.api.cell.CellnetText;
+import com.ytdd9527.networksexpansion.core.services.CollectService;
 import io.github.sefiraat.networks.slimefun.network.NetworkController;
 import io.github.thebusybiscuit.slimefun4.implementation.Slimefun;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.protection.Interaction;

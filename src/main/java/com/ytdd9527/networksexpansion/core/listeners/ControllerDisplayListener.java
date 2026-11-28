@@ -1,12 +1,10 @@
 package com.ytdd9527.networksexpansion.core.listeners;
 
-import com.balugaq.netex.utils.Scheduling;
-
 import com.balugaq.netex.api.events.NetworkRootReadyEvent;
+import com.balugaq.netex.utils.Scheduling;
 import io.github.sefiraat.networks.Networks;
 import io.github.sefiraat.networks.network.NetworkRoot;
 import io.github.thebusybiscuit.slimefun4.implementation.Slimefun;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;

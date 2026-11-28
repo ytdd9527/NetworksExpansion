@@ -1382,64 +1382,36 @@ public class ExpansionItems {
         RecipeType.NULL,
         ExpansionRecipes.NULL);
 
-    public static final UnusableSlimefunItem NTW_EXPANSION_ANNOUNCE_1 = new UnusableSlimefunItem(
+    public static final UnusableSlimefunItem NTW_EXPANSION_ANNOUNCEMENT_01 = new UnusableSlimefunItem(
         ExpansionItemsMenus.MENU_TROPHY,
-        ExpansionItemStacks.NTW_EXPANSION_ANNOUNCE_1,
+        ExpansionItemStacks.NTW_EXPANSION_ANNOUNCEMENT_01,
         RecipeType.NULL,
         ExpansionRecipes.NULL);
 
-    public static final UnusableSlimefunItem NTW_EXPANSION_ANNOUNCE_2 = new UnusableSlimefunItem(
+    public static final UnusableSlimefunItem NTW_EXPANSION_ANNOUNCEMENT_02 = new UnusableSlimefunItem(
         ExpansionItemsMenus.MENU_TROPHY,
-        ExpansionItemStacks.NTW_EXPANSION_ANNOUNCE_2,
+        ExpansionItemStacks.NTW_EXPANSION_ANNOUNCEMENT_02,
         RecipeType.NULL,
         ExpansionRecipes.NULL);
 
-    public static final UnusableSlimefunItem NTW_EXPANSION_ANNOUNCE_3 = new UnusableSlimefunItem(
+    public static final UnusableSlimefunItem NTW_EXPANSION_ANNOUNCEMENT_03 = new UnusableSlimefunItem(
         ExpansionItemsMenus.MENU_TROPHY,
-        ExpansionItemStacks.NTW_EXPANSION_ANNOUNCE_3,
+        ExpansionItemStacks.NTW_EXPANSION_ANNOUNCEMENT_03,
         RecipeType.NULL,
         ExpansionRecipes.NULL);
 
-    public static final UnusableSlimefunItem NTW_EXPANSION_ANNOUNCE_4 = new UnusableSlimefunItem(
+    public static final UnusableSlimefunItem NTW_EXPANSION_ANNOUNCEMENT_04 = new UnusableSlimefunItem(
         ExpansionItemsMenus.MENU_TROPHY,
-        ExpansionItemStacks.NTW_EXPANSION_ANNOUNCE_4,
+        ExpansionItemStacks.NTW_EXPANSION_ANNOUNCEMENT_04,
         RecipeType.NULL,
         ExpansionRecipes.NULL);
 
-    public static final UnusableSlimefunItem NTW_EXPANSION_ANNOUNCE_5 = new UnusableSlimefunItem(
+    public static final UnusableSlimefunItem NTW_EXPANSION_ANNOUNCEMENT_05 = new UnusableSlimefunItem(
         ExpansionItemsMenus.MENU_TROPHY,
-        ExpansionItemStacks.NTW_EXPANSION_ANNOUNCE_5,
+        ExpansionItemStacks.NTW_EXPANSION_ANNOUNCEMENT_05,
         RecipeType.NULL,
         ExpansionRecipes.NULL);
 
-    public static final UnusableSlimefunItem NTW_EXPANSION_ANNOUNCE_6 = new UnusableSlimefunItem(
-        ExpansionItemsMenus.MENU_TROPHY,
-        ExpansionItemStacks.NTW_EXPANSION_ANNOUNCE_6,
-        RecipeType.NULL,
-        ExpansionRecipes.NULL);
-
-    public static final UnusableSlimefunItem NTW_EXPANSION_ANNOUNCE_7 = new UnusableSlimefunItem(
-        ExpansionItemsMenus.MENU_TROPHY,
-        ExpansionItemStacks.NTW_EXPANSION_ANNOUNCE_7,
-        RecipeType.NULL,
-        ExpansionRecipes.NULL);
-    public static final UnusableSlimefunItem NTW_EXPANSION_ANNOUNCE_8 = new UnusableSlimefunItem(
-        ExpansionItemsMenus.MENU_TROPHY,
-        ExpansionItemStacks.NTW_EXPANSION_ANNOUNCE_8,
-        RecipeType.NULL,
-        ExpansionRecipes.NULL);
-
-    public static final UnusableSlimefunItem NTW_EXPANSION_ANNOUNCE_9 = new UnusableSlimefunItem(
-        ExpansionItemsMenus.MENU_TROPHY,
-        ExpansionItemStacks.NTW_EXPANSION_ANNOUNCE_9,
-        RecipeType.NULL,
-        ExpansionRecipes.NULL);
-
-    public static final UnusableSlimefunItem NTW_EXPANSION_ANNOUNCE_10 = new UnusableSlimefunItem(
-        ExpansionItemsMenus.MENU_TROPHY,
-        ExpansionItemStacks.NTW_EXPANSION_ANNOUNCE_10,
-        RecipeType.NULL,
-        ExpansionRecipes.NULL);
 
     public static final NetworkCraftingGridNewStyle NETWORK_CRAFTING_GRID_NEW_STYLE = new NetworkCraftingGridNewStyle(
         ExpansionItemsMenus.MENU_FUNCTIONAL_MACHINE,

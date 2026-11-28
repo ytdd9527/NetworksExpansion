@@ -1,8 +1,7 @@
 package com.ytdd9527.networksexpansion.setup;
 
-import com.balugaq.netex.utils.Scheduling;
-
 import com.balugaq.netex.integrations.logitech.LinkBindingStore;
+import com.balugaq.netex.utils.Scheduling;
 import com.ytdd9527.networksexpansion.api.cell.CellTier;
 import com.ytdd9527.networksexpansion.core.items.SpecialSlimefunItem;
 import com.ytdd9527.networksexpansion.implementation.ExpansionItems;
@@ -10,7 +9,6 @@ import com.ytdd9527.networksexpansion.implementation.ExpansionItemsMenus;
 import io.github.sefiraat.networks.Networks;
 import io.github.sefiraat.networks.slimefun.NetworkSlimefunItems;
 import net.guizhanss.slimefun4.utils.WikiUtils;
-import org.bukkit.Bukkit;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -291,16 +289,11 @@ public class SetupUtil {
 
         /* announce */
         ExpansionItemsMenus.SUB_MENU_ANNOUNCE.addTo(
-            ExpansionItems.NTW_EXPANSION_ANNOUNCE_1.registerThis(),
-            ExpansionItems.NTW_EXPANSION_ANNOUNCE_2.registerThis(),
-            ExpansionItems.NTW_EXPANSION_ANNOUNCE_3.registerThis(),
-            ExpansionItems.NTW_EXPANSION_ANNOUNCE_4.registerThis(),
-            ExpansionItems.NTW_EXPANSION_ANNOUNCE_5.registerThis(),
-            ExpansionItems.NTW_EXPANSION_ANNOUNCE_6.registerThis(),
-            ExpansionItems.NTW_EXPANSION_ANNOUNCE_7.registerThis(),
-            ExpansionItems.NTW_EXPANSION_ANNOUNCE_8.registerThis(),
-            ExpansionItems.NTW_EXPANSION_ANNOUNCE_9.registerThis(),
-            ExpansionItems.NTW_EXPANSION_ANNOUNCE_10.registerThis());
+            ExpansionItems.NTW_EXPANSION_ANNOUNCEMENT_01.registerThis(),
+            ExpansionItems.NTW_EXPANSION_ANNOUNCEMENT_02.registerThis(),
+            ExpansionItems.NTW_EXPANSION_ANNOUNCEMENT_03.registerThis(),
+            ExpansionItems.NTW_EXPANSION_ANNOUNCEMENT_04.registerThis(),
+            ExpansionItems.NTW_EXPANSION_ANNOUNCEMENT_05.registerThis());
     }
 
     private static void setupMenu() {

@@ -1,9 +1,9 @@
 package com.ytdd9527.networksexpansion.implementation.items.collect;
 
 import com.balugaq.netex.utils.Lang;
+import com.ytdd9527.networksexpansion.api.cell.CellnetText;
 import com.ytdd9527.networksexpansion.core.items.SpecialSlimefunItem;
 import com.ytdd9527.networksexpansion.core.services.CollectService;
-import com.ytdd9527.networksexpansion.api.cell.CellnetText;
 import io.github.thebusybiscuit.slimefun4.api.items.ItemGroup;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
 import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;

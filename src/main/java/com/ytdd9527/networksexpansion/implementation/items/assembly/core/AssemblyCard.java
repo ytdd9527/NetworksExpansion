@@ -1,11 +1,11 @@
 package com.ytdd9527.networksexpansion.implementation.items.assembly.core;
 
 import com.balugaq.netex.utils.Lang;
-import com.ytdd9527.networksexpansion.core.items.SpecialSlimefunItem;
 import com.ytdd9527.networksexpansion.api.assembly.RecipeLegitimacy;
+import com.ytdd9527.networksexpansion.api.cell.CellnetText;
+import com.ytdd9527.networksexpansion.core.items.SpecialSlimefunItem;
 import com.ytdd9527.networksexpansion.utils.CRC32Utils;
 import com.ytdd9527.networksexpansion.utils.SerializeUtils;
-import com.ytdd9527.networksexpansion.api.cell.CellnetText;
 import com.ytdd9527.networksexpansion.utils.itemstacks.ItemStackUtil;
 import io.github.sefiraat.networks.Networks;
 import io.github.sefiraat.networks.utils.Keys;
