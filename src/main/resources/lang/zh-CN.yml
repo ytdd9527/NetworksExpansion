@@ -1913,8 +1913,8 @@ items:
     lore:
       - "<warning> 1) 声明 指代此处的所有声明。"
       - "<warning> 2) 网络(Networks) 是指一个粘液附属，而不是互联网、物联网等意义上的网络，或其他传统意义上的网络。"
-      - "<warning> 3) 网络拓展(NetworksExpansion) (下称\"网络拓展\"、\"此附属\"或\"此项目\") 是指一个粘液附属，由网络拓展开发组在网络的基础上，完全遵守 GPLv3 协议，进行适当增删修改，基于 Paper 1.20.1，汉化版 Slimefun 开发的，不完全兼容 Paper 1.20.5 及以上版本的粘液科技附属。"
-      - "<warning> 4) 网络拓展开发者们(下称\"网络拓展开发组\",\"网络拓展创作者们\") 是开发网络拓展的群体，并非由任何公司或组织所拥有。"
+      - "<warning> 3) 网络拓展(NetworksExpansion) (下称\"网络拓展\"、\"此附属\"或\"此项目\") 是指一个粘液附属，由网络拓展开发组在网络(Networks) 的基础上，完全遵守 GPLv3 协议，进行增删修改，基于 Paper 1.20.1，汉化版 Slimefun 开发的粘液科技附属。"
+      - "<warning> 4) 网络拓展开发者们 是开发网络拓展的群体，并非由任何公司或组织所拥有。"
   NTW_EXPANSION_ANNOUNCEMENT_02:
     name: "<color_random_string>网络拓展作品声明"
     lore:
@@ -1931,60 +1931,20 @@ items:
       - "<warning> 10) 当网络拓展开发者们不追究侵权人的侵权行为时，不代表网络拓展开发者们对侵权行为的认可。也不代表侵权人无需承担任何责任。"
       - "<warning> 请您务必遵守上述声明。"
   NTW_EXPANSION_ANNOUNCEMENT_03:
-    name: "<color_random_string>网络拓展作者声明"
-    lore:
-      - "<warning> 阅读此声明前，请务必先阅读网络拓展使用声明。"
-      - "<warning> 1) 网络拓展开发组成员都是中华人民共和国公民，都发自内心的认可中国特色社会主义理论，坚持中国共产党领导。"
-      - "<warning> 2) 网络拓展开发组成员反对资本主义、帝国主义、霸权主义、封建主义等腐朽落后的思想。"
-      - "<warning> 3) 网络拓展开发组成员自觉遵守宪法和法律，反对网络暴力。"
-      - "<warning> 4) 网络拓展开发组成员自觉遵守社区规范，做到不恶语相向，文明交流。"
-      - "<warning> 5) 如有辱骂攻击网络拓展开发组或网络拓展开发组成员等行为将依法处理，若发现“开盒”等网络暴力行为将报警处理。"
-      - "<warning> 6) 本声明仅代表网络拓展开发组的立场，不代表他人、任何游戏、组织、公司、国家、社会团体，并不代表任何游戏的玩家群体。"
-      - "<warning> 7) 本声明主观上没有偏袒任何一方的行为，仅针对事情本身，对事不对人。"
-      - "<passive> 此附属由 Sefiraat 编写而成，经 ybw0014 汉化，并由 yitoudaidai 与 tinalness 进行了增添删改及后续维护。"
-      - "<passive> 感谢逻辑工艺(LogiTech)的机器提供的作者头颅 hash。"
-      - "<passive> 感谢所有给予信任并安装网络拓展的服主。"
-      - "<passive> 此附属灵感来源于广大玩家。"
-      - "<passive> 尤其要感谢 Utoboy，TouRuya，haiman233，matl114 等玩家的意见提供。"
-      - "<passive> 感谢 Utoboy，TouRuya，haiman233，yitoudaidai，tinalness，matl114，lengshang 等测试员的测试。"
-  NTW_EXPANSION_ANNOUNCEMENT_04:
     name: "<color_random_string>网络拓展相关链接"
     lore:
       - "<warning> 阅读此声明前，请务必先阅读网络拓展作者声明。"
-      - "<passive> 以下是网络拓展的相关的链接: （请认准唯一链接）"
+      - "<passive> 以下是网络拓展的相关的链接:"
       - "<passive> 网络拓展构建站链接: <click_info>https://builds.guizhanss.com/ytdd9527/NetworksExpansion/master/builds"
       - "<passive> 网络拓展稳定版 GitHub 仓库: <click_info>https://github.com/ytdd9527/NetworksExpansion"
       - "<passive> 网络拓展稳定版 GitHub Issues 链接: <click_info>https://github.com/ytdd9527/NetworksExpansion/issues"
       - "<passive> 网络拓展稳定版 GitHub PR 链接: <click_info>https://github.com/ytdd9527/NetworksExpansion/pulls"
       - "<passive> 网络拓展开发版 Github 仓库: <click_info>https://github.com/balugaq/NetworksExpansion"
-      - "<warning> 网络拓展开发版不接受 GitHub Issues"
-      - "<warning> 网络拓展开发版不接受 GitHub PR"
-      - "<passive> 网络拓展作者 GitHub 页面: <click_info>https://github.com/ytdd9527"
-      - "<passive> 网络拓展作者 GitHub 页面: <click_info>https://github.com/balugaq"
-  NTW_EXPANSION_ANNOUNCEMENT_05:
-    name: "<color_random_string>网络拓展相关链接"
-    lore:
-      - "<warning> 阅读此声明前，请务必先阅读网络拓展相关答疑。"
-      - "<warning> 1) 网络拓展开发者们没有义务维护此附属，对于稳定版网络拓展突然出现的错误、漏洞、问题，请及时向此附属稳定版 GitHub 仓库提交 Issue。"
-      - "<passive> 2) 我们不能保证及时修复所有问题，但我们会尽力修复。"
-      - "<passive> 3) 与开发者们交流时，应当保持礼貌，不要恶意攻击或辱骂。这才是有效的解决您的问题的沟通方式。"
-      - "<warning> 4) 当您使用、游玩或修改网络拓展时，即默认您同意遵守这些声明。"
-      - "<passive> 5) 网络拓展开发者们保留随时修改、终止本声明的权利。"
-      - "<warning> 6) 当本声明更新后，您应自觉查阅是否有异议。通常来说，在版本更新后，网络拓展开发组默认您同意遵守这些声明。"
-      - "<passive> 7) 您应避免因使用网络拓展而使\"网络拓展\"或\"网络拓展开发组\"或\"网络拓展开发组成员\"卷入政治和公共事件。<warning>否则网络拓展开发组有权暂停或终止对网络拓展的维护。"
-      - "<passive> 8) 如若出现网络拓展开发者们发布的其他语言的此声明，请以中文版本为准。"
-      - "<passive> 9) 本声明的生效、履行、解释及纠纷解决，适用中华人民共和国大陆地区法律（不包括冲突法）"
-      - "<passive> 10) 本声明中存在的所有标题仅为阅读方便，本身并无任何实际涵义，不能作为本声明涵义解释的依据。"
-      - "<warning> 11) 本声明无论因何种原因部分无效，其余条款仍有效，对各方具有约束力。"
-      - "<warning> 12) 如因屏幕过小等原因，无法查看到完整的声明内容，请自行调整，网络拓展开发组对此不承担任何责任。"
-      - "<warning> 13) 如因屏幕过小等原因，无法查看到完整的物品名称或物品解释，请服主或玩家自行解决，网络拓展开发组对此不承担任何责任。"
-      - "<warning> 14) 网络拓展允许任何人以非盈利目的使用、复制、修改、合并、出版、发行、展览、分发此声明，但任何人不得将此声明用于商业目的。且禁止以网络拓展或网络拓展开发组名义进行任何宣传。"
-      - "<warning> 15) 此附属所有声明解释权归网络拓展开发者们所有。"
-  NTW_EXPANSION_ANNOUNCE_9:
+  NTW_EXPANSION_ANNOUNCEMENT_04:
     name: "<color_random_string>网络拓展版本信息"
     lore:
       - "<warning> 阅读此声明前，请务必先阅读网络拓展补充说明。"
-      - "<passive> 开发者（们）: ytdd9527, balugaq"
+      - "<passive> 主要开发者: ytdd9527, balugaq"
       - "<passive> 开发者 GitHub 页面: <click_info>https://github.com/ytdd9527"
       - "<passive> 开发者 GitHub 页面: <click_info>https://github.com/balugaq"
       - "<passive> 网络拓展稳定版下载地址: https://builds.guizhanss.com/ytdd9527/NetworksExpansion/master/builds"
@@ -1992,19 +1952,6 @@ items:
       - "<passive> 感谢为网络拓展开发贡献过自己的 Issue, PR, commit 的人!"
       - "<passive> 感谢为网络拓展开发提供建议的所有人!"
       - "<passive> 感谢为网络拓展开发提供建议的 Utoboy, TouRuya, haiman233, yitoudaidai, tinalness, matl114 等玩家!"
-  NTW_EXPANSION_ANNOUNCE_10:
-    name: "<color_random_string>网络拓展游玩体验声明"
-    lore:
-      - "<warning> 阅读此声明前，请务必先阅读网络拓展版本信息。"
-      - "<passive> 关于网络合成机丢蓝图，根据粘液开发者发表的公告:"
-      - "<passive> ——物品 PDC 数据过大时，物品无法被保存到粘液数据库中。需服主自行调整数据库表数据类型"
-      - "<passive> ——并在设置中启用 `bypass-item-length-check` 选项以跳过物品大小检查。"
-      - "<passive> 网络合成机的蓝图 PDC 通常十分巨大，这是为了兼容数年前的蓝图，确保玩家游玩体验。"
-      - "<passive> 此外，根据 matl114 的测试，原地升级机器也有可能导致物品丢失:"
-      - "<passive> 在此举出一个<warning>可能<passive>复现的例子: 放置A机器，在B槽放置C数量的D物品，挖掉并更换为E机器，在B槽放置C数量的D物品，"
-      - "<passive> 服务器重启后，E机器中的D物品消失。"
-      - "<passive> 以上原因与网络拓展并无太多关系，建议游玩时应保持理智，不要盲目对网络拓展进行言语攻击。"
-      - "<passive> 声明到此结束。"
 
   NTW_EXPANSION_WORKBENCH:
     name: "网络拓展工作台"

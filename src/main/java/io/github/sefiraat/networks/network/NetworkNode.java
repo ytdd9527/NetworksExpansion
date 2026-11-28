@@ -1,8 +1,8 @@
 package io.github.sefiraat.networks.network;
 
+import com.balugaq.netex.utils.Scheduling;
 import com.xzavier0722.mc.plugin.slimefun4.storage.util.StorageCacheUtils;
 import io.github.sefiraat.networks.NetworkStorage;
-import io.github.sefiraat.networks.Networks;
 import io.github.sefiraat.networks.slimefun.network.NetworkController;
 import io.github.sefiraat.networks.slimefun.network.NetworkPowerNode;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
@@ -11,7 +11,6 @@ import lombok.Getter;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
-import com.balugaq.netex.utils.Scheduling;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

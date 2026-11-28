@@ -469,27 +469,16 @@ public class ExpansionItemStacks {
     public static final SlimefunItemStack BETTER_GRABBER = Theme.themedSlimefunItemStack(
         Lang.getItem("NTW_EXPANSION_BETTER_GRABBER", Material.PINK_STAINED_GLASS), Theme.MACHINE);
 
-    public static final SlimefunItemStack NTW_EXPANSION_ANNOUNCE_1 =
-        Theme.themedSlimefunItemStack(Lang.getItem("NTW_EXPANSION_ANNOUNCE_1", Material.BOOK), Theme.GUIDE);
-    public static final SlimefunItemStack NTW_EXPANSION_ANNOUNCE_2 =
-        Theme.themedSlimefunItemStack(Lang.getItem("NTW_EXPANSION_ANNOUNCE_2", Material.BOOK), Theme.GUIDE);
-    public static final SlimefunItemStack NTW_EXPANSION_ANNOUNCE_3 =
-        Theme.themedSlimefunItemStack(Lang.getItem("NTW_EXPANSION_ANNOUNCE_3", Material.BOOK), Theme.GUIDE);
-    public static final SlimefunItemStack NTW_EXPANSION_ANNOUNCE_4 =
-        Theme.themedSlimefunItemStack(Lang.getItem("NTW_EXPANSION_ANNOUNCE_4", Material.BOOK), Theme.GUIDE);
-    public static final SlimefunItemStack NTW_EXPANSION_ANNOUNCE_5 =
-        Theme.themedSlimefunItemStack(Lang.getItem("NTW_EXPANSION_ANNOUNCE_5", Material.BOOK), Theme.GUIDE);
-    public static final SlimefunItemStack NTW_EXPANSION_ANNOUNCE_6 =
-        Theme.themedSlimefunItemStack(Lang.getItem("NTW_EXPANSION_ANNOUNCE_6", Material.BOOK), Theme.GUIDE);
-    public static final SlimefunItemStack NTW_EXPANSION_ANNOUNCE_7 =
-        Theme.themedSlimefunItemStack(Lang.getItem("NTW_EXPANSION_ANNOUNCE_7", Material.BOOK), Theme.GUIDE);
-    public static final SlimefunItemStack NTW_EXPANSION_ANNOUNCE_8 =
-        Theme.themedSlimefunItemStack(Lang.getItem("NTW_EXPANSION_ANNOUNCE_8", Material.BOOK), Theme.GUIDE);
-    public static final SlimefunItemStack NTW_EXPANSION_ANNOUNCE_9 =
-        Theme.themedSlimefunItemStack(Lang.getItem("NTW_EXPANSION_ANNOUNCE_9", Material.BOOK), Theme.GUIDE);
-
-    public static final SlimefunItemStack NTW_EXPANSION_ANNOUNCE_10 =
-        Theme.themedSlimefunItemStack(Lang.getItem("NTW_EXPANSION_ANNOUNCE_10", Material.BOOK), Theme.GUIDE);
+    public static final SlimefunItemStack NTW_EXPANSION_ANNOUNCEMENT_01 =
+        Theme.themedSlimefunItemStack(Lang.getItem("NTW_EXPANSION_ANNOUNCEMENT_01", Material.BOOK), Theme.GUIDE);
+    public static final SlimefunItemStack NTW_EXPANSION_ANNOUNCEMENT_02 =
+        Theme.themedSlimefunItemStack(Lang.getItem("NTW_EXPANSION_ANNOUNCEMENT_02", Material.BOOK), Theme.GUIDE);
+    public static final SlimefunItemStack NTW_EXPANSION_ANNOUNCEMENT_03 =
+        Theme.themedSlimefunItemStack(Lang.getItem("NTW_EXPANSION_ANNOUNCEMENT_03", Material.BOOK), Theme.GUIDE);
+    public static final SlimefunItemStack NTW_EXPANSION_ANNOUNCEMENT_04 =
+        Theme.themedSlimefunItemStack(Lang.getItem("NTW_EXPANSION_ANNOUNCEMENT_04", Material.BOOK), Theme.GUIDE);
+    public static final SlimefunItemStack NTW_EXPANSION_ANNOUNCEMENT_05 =
+        Theme.themedSlimefunItemStack(Lang.getItem("NTW_EXPANSION_ANNOUNCEMENT_05", Material.BOOK), Theme.GUIDE);
     public static final SlimefunItemStack NETWORK_CRAFTING_GRID_NEW_STYLE = Theme.themedSlimefunItemStack(
         Lang.getItem("NTW_EXPANSION_CRAFTING_GRID_NEW_STYLE", Material.CRAFTING_TABLE), Theme.MACHINE);
     public static final SlimefunItemStack STATUS_VIEWER =

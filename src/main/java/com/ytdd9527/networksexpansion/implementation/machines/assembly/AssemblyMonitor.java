@@ -1,23 +1,21 @@
 package com.ytdd9527.networksexpansion.implementation.machines.assembly;
 
-import com.balugaq.netex.utils.Scheduling;
-
 import com.balugaq.netex.api.helpers.Icon;
 import com.balugaq.netex.utils.Lang;
+import com.balugaq.netex.utils.Scheduling;
 import com.xzavier0722.mc.plugin.slimefun4.storage.util.StorageCacheUtils;
 import com.ytdd9527.networksexpansion.api.assembly.AssemblyMonitorBridge;
 import com.ytdd9527.networksexpansion.api.assembly.DriveOverview;
 import com.ytdd9527.networksexpansion.api.assembly.MonitorLine;
+import com.ytdd9527.networksexpansion.api.cell.CellSlotUI;
+import com.ytdd9527.networksexpansion.api.cell.CellnetText;
 import com.ytdd9527.networksexpansion.api.drive.DriveOwnership;
+import com.ytdd9527.networksexpansion.api.filter.BrowseUI;
 import com.ytdd9527.networksexpansion.utils.ChatInput;
 import com.ytdd9527.networksexpansion.utils.GhostItems;
 import com.ytdd9527.networksexpansion.utils.ItemSearch;
 import com.ytdd9527.networksexpansion.utils.NetworkUtil;
 import com.ytdd9527.networksexpansion.utils.NumberFormat;
-import com.ytdd9527.networksexpansion.api.filter.BrowseUI;
-import com.ytdd9527.networksexpansion.api.cell.CellSlotUI;
-import com.ytdd9527.networksexpansion.api.cell.CellnetText;
-import io.github.sefiraat.networks.Networks;
 import io.github.sefiraat.networks.network.NetworkRoot;
 import io.github.sefiraat.networks.network.NodeType;
 import io.github.sefiraat.networks.slimefun.network.NetworkObject;
@@ -31,7 +29,6 @@ import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenuPreset;
 import me.mrCookieSlime.Slimefun.api.item_transport.ItemTransportFlow;
 import net.guizhanss.minecraft.guizhanlib.gugu.minecraft.helpers.inventory.ItemStackHelper;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;

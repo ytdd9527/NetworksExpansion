@@ -2,8 +2,8 @@ package com.ytdd9527.networksexpansion.api.cell;
 
 import com.balugaq.netex.utils.Lang;
 import com.balugaq.netex.utils.NetworksVersionedMaterial;
-import com.ytdd9527.networksexpansion.utils.NumberFormat;
 import com.ytdd9527.networksexpansion.implementation.machines.manual.ExpansionWorkbench;
+import com.ytdd9527.networksexpansion.utils.NumberFormat;
 import com.ytdd9527.networksexpansion.utils.TextUtil;
 import com.ytdd9527.networksexpansion.utils.itemstacks.ItemStackUtil;
 import io.github.sefiraat.networks.Networks;

@@ -1,8 +1,8 @@
 package io.github.sefiraat.networks.slimefun;
 
+import com.ytdd9527.networksexpansion.core.items.Blueprint;
 import com.ytdd9527.networksexpansion.core.machines.AutoCrafter;
 import com.ytdd9527.networksexpansion.core.machines.BlueprintEncoder;
-import com.ytdd9527.networksexpansion.core.items.Blueprint;
 import io.github.sefiraat.networks.Networks;
 import io.github.sefiraat.networks.slimefun.network.NetworkBridge;
 import io.github.sefiraat.networks.slimefun.network.NetworkCell;

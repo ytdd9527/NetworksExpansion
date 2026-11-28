@@ -2,8 +2,8 @@ package com.ytdd9527.networksexpansion.core.services;
 
 import com.balugaq.netex.utils.Debug;
 import com.balugaq.netex.utils.Lang;
-import com.ytdd9527.networksexpansion.utils.NetworkUtil;
 import com.ytdd9527.networksexpansion.api.cell.CellnetText;
+import com.ytdd9527.networksexpansion.utils.NetworkUtil;
 import io.github.sefiraat.networks.Networks;
 import io.github.sefiraat.networks.network.NetworkRoot;
 import org.bukkit.Bukkit;

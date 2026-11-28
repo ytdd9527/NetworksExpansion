@@ -1,12 +1,10 @@
 package io.github.sefiraat.networks.managers;
 
-import com.balugaq.netex.utils.Scheduling;
-
 import com.balugaq.netex.integrations.logitech.LogitechIntegration;
+import com.balugaq.netex.utils.Scheduling;
 import com.bgsoftware.wildstacker.api.WildStackerAPI;
 import com.google.common.base.Preconditions;
 import dev.rosewood.rosestacker.api.RoseStackerAPI;
-import io.github.sefiraat.networks.Networks;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;

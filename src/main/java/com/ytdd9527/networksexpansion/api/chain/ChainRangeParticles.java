@@ -1,21 +1,19 @@
 package com.ytdd9527.networksexpansion.api.chain;
 
 import com.balugaq.netex.utils.Scheduling;
-
-import io.github.sefiraat.networks.Networks;
-import org.bukkit.Bukkit;
+import com.tcoded.folialib.wrapper.task.WrappedTask;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import com.tcoded.folialib.wrapper.task.WrappedTask;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+
 public final class ChainRangeParticles {
 
     private static final long FADE_DELAY_TICKS = 100L;

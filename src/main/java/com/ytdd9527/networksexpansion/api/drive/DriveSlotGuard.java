@@ -4,11 +4,11 @@ import com.balugaq.netex.utils.VersionUtil;
 import com.ytdd9527.networksexpansion.implementation.machines.drive.CellDrive;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
 public final class DriveSlotGuard {
 
     private DriveSlotGuard() {

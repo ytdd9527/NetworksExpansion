@@ -2,11 +2,11 @@ package com.ytdd9527.networksexpansion.api.cell;
 
 import com.balugaq.netex.api.helpers.Icon;
 import com.balugaq.netex.utils.Lang;
+import com.ytdd9527.networksexpansion.api.filter.BrowseUI;
 import com.ytdd9527.networksexpansion.utils.ChatInput;
 import com.ytdd9527.networksexpansion.utils.ItemKey;
 import com.ytdd9527.networksexpansion.utils.ItemSearch;
 import com.ytdd9527.networksexpansion.utils.NumberFormat;
-import com.ytdd9527.networksexpansion.api.filter.BrowseUI;
 import io.github.sefiraat.networks.network.stackcaches.QuantumCache;
 import io.github.sefiraat.networks.slimefun.network.NetworkQuantumStorage;
 import io.github.sefiraat.networks.utils.Keys;
