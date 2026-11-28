@@ -2,6 +2,7 @@ package com.ytdd9527.networksexpansion.core.listeners;
 
 import com.balugaq.netex.utils.Scheduling;
 
+import com.balugaq.netex.utils.VersionUtil;
 import com.xzavier0722.mc.plugin.slimefun4.storage.util.StorageCacheUtils;
 import com.ytdd9527.networksexpansion.api.drive.DriveSlotGuard;
 import com.ytdd9527.networksexpansion.api.drive.DriveType;
@@ -36,7 +37,7 @@ public class DriveCellOpenListener implements Listener {
         if (cursor != null && !cursor.getType().isAir()) {
             return;
         }
-        if (!(event.getView().getTopInventory().getHolder() instanceof BlockMenu menu)) {
+        if (!(VersionUtil.getTopInventory(event).getHolder() instanceof BlockMenu menu)) {
             return;
         }
         SlimefunItem sf = StorageCacheUtils.getSfItem(menu.getLocation());

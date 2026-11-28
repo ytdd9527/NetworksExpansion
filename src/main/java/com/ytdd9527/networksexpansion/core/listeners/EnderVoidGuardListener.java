@@ -1,6 +1,7 @@
 package com.ytdd9527.networksexpansion.core.listeners;
 
 import com.balugaq.netex.utils.Lang;
+import com.balugaq.netex.utils.VersionUtil;
 import com.xzavier0722.mc.plugin.slimefun4.storage.util.StorageCacheUtils;
 import com.ytdd9527.networksexpansion.api.drive.DriveSlotGuard;
 import com.ytdd9527.networksexpansion.api.drive.DriveType;
@@ -25,7 +26,7 @@ public class EnderVoidGuardListener implements Listener {
         if (!(event.getWhoClicked() instanceof Player player)) {
             return;
         }
-        Inventory top = DriveSlotGuard.topInventory(event);
+        Inventory top = VersionUtil.getTopInventory(event);
         if (top == null || !isEnderDrive(top)) {
             return;
         }
@@ -46,7 +47,7 @@ public class EnderVoidGuardListener implements Listener {
         if (!(event.getWhoClicked() instanceof Player player)) {
             return;
         }
-        Inventory top = DriveSlotGuard.topInventory(event);
+        Inventory top = VersionUtil.getTopInventory(event);
         if (top == null || !isEnderDrive(top)) {
             return;
         }
