@@ -7,6 +7,7 @@ import com.balugaq.netex.api.enums.MinecraftVersion;
 import com.balugaq.netex.api.keybind.Keybinds;
 import com.balugaq.netex.core.guide.GridNewStyleCustomAmountGuideOption;
 import com.balugaq.netex.utils.Debug;
+import com.balugaq.netex.utils.PlatformUtil;
 import com.balugaq.netex.utils.Scheduling;
 import com.tcoded.folialib.wrapper.task.WrappedTask;
 import com.xzavier0722.mc.plugin.slimefun4.storage.controller.SlimefunBlockData;
@@ -36,7 +37,7 @@ import lombok.Getter;
 import net.byteflux.libby.BukkitLibraryManager;
 import net.byteflux.libby.Library;
 import net.byteflux.libby.LibraryManager;
-import net.guizhanss.guizhanlibplugin.updater.GuizhanUpdater;
+import net.guizhanss.minecraft.guizhanlib.updater.GuizhanUpdater;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.AdvancedPie;
 import org.bukkit.Location;
@@ -232,6 +233,7 @@ public class Networks extends JavaPlugin implements SlimefunAddon {
             1,
             Slimefun.getTickerTask().getTickRate());
 
+        PlatformUtil.initialize();
         AdminDebuggable.load();
         SlimefunGuideSettings.addOption(GridNewStyleCustomAmountGuideOption.instance());
         Scheduling.runLaterAsync(Keybinds::distinctAll, 1L);

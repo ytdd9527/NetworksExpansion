@@ -1,6 +1,7 @@
 package io.github.sefiraat.networks.utils;
 
 import com.balugaq.netex.api.enums.MinecraftVersion;
+import com.balugaq.netex.utils.PlatformUtil;
 import com.ytdd9527.networksexpansion.utils.itemstacks.ItemStackUtil;
 import io.github.sefiraat.networks.Networks;
 import io.github.sefiraat.networks.network.stackcaches.ItemStackCache;
@@ -56,6 +57,7 @@ public class StackUtils {
     private static final MinecraftVersion MC_VERSION = Networks.getInstance().getMinecraftVersion();
     public static final boolean IS_1_20_5 = MC_VERSION.isAtLeast(MinecraftVersion.V1_20_5);
     public static final boolean IS_1_21 = MC_VERSION.isAtLeast(MinecraftVersion.V1_21);
+    public static final boolean IS_1_21_1 = MC_VERSION.isAtLeast(MinecraftVersion.V1_21_1);
     public static final boolean IS_1_21_3 = MC_VERSION.isAtLeast(MinecraftVersion.V1_21_3);
     public static final boolean IS_1_21_4 = MC_VERSION.isAtLeast(MinecraftVersion.V1_21_4);
 
@@ -726,9 +728,12 @@ public class StackUtils {
                         }
                     }
                 }
-                // Shield
-                if (metaOne instanceof ShieldMeta instanceOne && metaTwo instanceof ShieldMeta instanceTwo) {
-                    return Objects.equals(instanceOne.getBaseColor(), instanceTwo.getBaseColor());
+
+                if (!PlatformUtil.isLeaves() || IS_1_21_1) { // Fix #477
+                    // Shield
+                    if (metaOne instanceof ShieldMeta instanceOne && metaTwo instanceof ShieldMeta instanceTwo) {
+                        return Objects.equals(instanceOne.getBaseColor(), instanceTwo.getBaseColor());
+                    }
                 }
             }
         }

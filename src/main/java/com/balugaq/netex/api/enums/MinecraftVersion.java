@@ -15,6 +15,7 @@ public record MinecraftVersion(int major, int minor, int patch) implements Compa
     public static final MinecraftVersion V1_20 = MinecraftVersion.of(1, 20);
     public static final MinecraftVersion V1_20_5 = MinecraftVersion.of(1, 20, 5);
     public static final MinecraftVersion V1_21 = MinecraftVersion.of(1, 21);
+    public static final MinecraftVersion V1_21_1 = MinecraftVersion.of(1, 21, 1);
     public static final MinecraftVersion V1_21_3 = MinecraftVersion.of(1, 21, 3);
     public static final MinecraftVersion V1_21_4 = MinecraftVersion.of(1, 21, 4);
     public static final MinecraftVersion V1_21_5 = MinecraftVersion.of(1, 21, 5);

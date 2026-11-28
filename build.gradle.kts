@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "com.ytdd9527.networksexpansion"
-version = "2.1.138"
+version = "2.1.139"
 
 java {
     toolchain {
