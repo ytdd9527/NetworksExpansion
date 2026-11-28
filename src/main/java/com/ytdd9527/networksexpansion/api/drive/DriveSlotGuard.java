@@ -1,5 +1,6 @@
 package com.ytdd9527.networksexpansion.api.drive;
 
+import com.balugaq.netex.utils.VersionUtil;
 import com.ytdd9527.networksexpansion.implementation.machines.drive.CellDrive;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -23,13 +24,8 @@ public final class DriveSlotGuard {
     }
 
     @Nullable
-    public static Inventory topInventory(@NotNull InventoryEvent event) {
-        return event.getView().getTopInventory();
-    }
-
-    @Nullable
     public static ItemStack resolvePlacedItem(@NotNull InventoryClickEvent event) {
-        Inventory top = topInventory(event);
+        Inventory top = VersionUtil.getTopInventory(event);
         if (top == null) {
             return null;
         }

@@ -2,6 +2,7 @@ package com.ytdd9527.networksexpansion.core.listeners;
 
 import com.balugaq.netex.utils.Scheduling;
 
+import com.balugaq.netex.utils.VersionUtil;
 import com.xzavier0722.mc.plugin.slimefun4.storage.util.StorageCacheUtils;
 import com.ytdd9527.networksexpansion.api.drive.DriveSlotGuard;
 import com.ytdd9527.networksexpansion.api.drive.DriveType;
@@ -55,7 +56,7 @@ public final class DriveUniquenessListener implements Listener {
         if (event.getClick() == ClickType.DOUBLE_CLICK) {
             return isCell(event.getCursor());
         }
-        Inventory top = DriveSlotGuard.topInventory(event);
+        Inventory top = VersionUtil.getTopInventory(event);
         if (top == null) {
             return false;
         }
@@ -74,7 +75,7 @@ public final class DriveUniquenessListener implements Listener {
         if (!(event.getWhoClicked() instanceof Player player)) {
             return;
         }
-        Inventory top = DriveSlotGuard.topInventory(event);
+        Inventory top = VersionUtil.getTopInventory(event);
         if (top == null) {
             return;
         }
@@ -107,7 +108,7 @@ public final class DriveUniquenessListener implements Listener {
 
     @Nullable
     private static BlockMenu resolveDriveMenu(@NotNull InventoryClickEvent event) {
-        Inventory top = DriveSlotGuard.topInventory(event);
+        Inventory top = VersionUtil.getTopInventory(event);
         return top == null ? null : resolveDriveMenu(top);
     }
 

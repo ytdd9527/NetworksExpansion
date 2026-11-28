@@ -109,7 +109,7 @@ public final class GhostItems implements Listener {
     public void onDrag(@NotNull InventoryDragEvent event) {
         if (is(event.getOldCursor())) {
             event.setCancelled(true);
-            event.getView().setCursor(null);
+            VersionUtil.setCursor(event, null);
             return;
         }
         ChestMenu menu = menuOf(VersionUtil.getTopInventory(event));
@@ -194,7 +194,7 @@ public final class GhostItems implements Listener {
             return;
         }
         if (is(event.getCursor())) {
-            event.getView().setCursor(null);
+            VersionUtil.setCursor(event, null);
             event.setCancelled(true);
         }
     }
